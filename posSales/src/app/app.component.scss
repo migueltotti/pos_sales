@@ -16,6 +16,7 @@
 /* A segunda coluna ocupa o restante */
 .col-fluid {
     flex: 1;
+    flex-direction: column;
 }
 
 .form-control{
@@ -46,4 +47,19 @@
 
 .search-input:focus{
     box-shadow: 0 0 0 0rem rgba(13, 110, 253, 0.25);
+}
+
+.un{
+    justify-content: center;
+    align-items: center;
+}
+
+.w-custom{
+    width: 98%;
+}
+
+.d-qtde-itens {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
