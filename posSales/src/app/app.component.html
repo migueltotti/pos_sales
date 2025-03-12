@@ -1,1 +1,63 @@
 <app-nav-bar></app-nav-bar>
+
+<div class="container-fluid full-screen-container">
+    <div class="row h-100">
+        <!-- Primeira coluna com largura máxima de 400px -->
+        <div class="col-fixed p-2 text-white d-flex" style="background-color: #2C2C2C;">
+            <app-bucket-card></app-bucket-card>
+
+            <div class="row g-2 mt-1">
+                <div class="col-sm-7">
+                  <div class="form-floating">
+                    <input type="email" class="form-control fw-medium shadow-lg" id="floatingInputGrid" placeholder="name@example.com" value="(18) 99787-2005">
+                    <label for="floatingInputGrid" style="color: black;">Telefone:</label>
+                  </div>
+                </div>
+                <div class="col-sm">
+                  <div class="form-floating">
+                    <input type="text" class="form-control fw-medium shadow-lg" id="floatingInputGrid" placeholder="000" value="001" disabled readonly>
+                    <label for="floatingGrid" style="color: black;">Número do pedido:</label>
+                  </div>
+                </div>
+            </div>
+
+            <div class="row gap-4 mt-4">
+                <div class="col">
+                    <button type="button" class="btn btn-lg btn-success shadow-lg fw-bold">CONFIRMAR</button>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-lg btn-danger shadow-lg fw-bold">CANCELAR</button>
+                </div>
+            </div>
+        
+        </div>
+
+        <!-- Segunda coluna ocupando o restante -->
+        <div class="col-fluid text-white d-flex justify-content-start" style="background-color: #1E1E1E;">
+            <!-- Linha de Funções -->
+            <div class="d-flex flex-wrap mt-1 gap-2" style="height: 30px; width: 100%;">
+                <div class="input-group flex-nowrap rounded-5 flex-grow-1" style="min-width: 260px; max-width: 500px;">
+                    <button class="btn btn-outline-secondary search-input" style="color: #7D0009" type="button" id="button-addon1">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    <input type="text" class="form-control search-input" style="color: black" placeholder="" aria-label="" aria-describedby="addon-wrapping">
+                </div>
+                <button type="button" class="btn btn-sm btn-filter rounded-5" data-bs-toggle="button">BONINOS</button>
+                <button type="button" class="btn btn-sm btn-filter rounded-5" data-bs-toggle="button">SUINOS</button>
+                <button type="button" class="btn btn-sm btn-filter rounded-5" data-bs-toggle="button">AVES</button>
+                <button type="button" class="btn btn-sm btn-filter rounded-5" data-bs-toggle="button">DIVERSOS</button>
+                <button type="button" class="btn btn-sm btn-filter rounded-5" data-bs-toggle="button">TODOS</button>
+            </div>
+
+            <!-- Lista de Itens -->
+            <div class="row"></div>
+
+            <!-- Quantidade e Adicionar -->
+            <div class="row"></div>
+        </div>
+    </div>
+</div>
+
+
+
+

@@ -1,13 +1,49 @@
-.fodase{
+.full-screen-container {
+    height: calc(100vh - 56px); /* 100% da tela menos a altura da navbar */
     display: flex;
-    width: 100vw;
-    height: 100vh;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
 }
 
-.legal{
-    background-color: green;
-    width: 500px;
-    height: 500px;
+/* Define a largura máxima da primeira coluna */
+.col-fixed {
+    max-width: 430px;
+    flex: 1 1 430px; /* Permite que ocupe até 400px, mas se adapte em telas menores */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* A segunda coluna ocupa o restante */
+.col-fluid {
+    flex: 1;
+}
+
+.form-control{
+    font-size: large;
+    color: #7D0009;
+    background-color: #D2D2D2;
+}
+
+.form-floating label::after {
+    background-color: transparent !important;
+}
+
+/* Remove a borda arredondada ao redor do texto do floating-label */
+.form-floating label {
+    background-color: transparent !important;
+}
+
+.btn-filter{
+    background-color: #FDCB58;
+    color: #7D0009;
+    font-weight: bold;
+}
+
+.search-input{
+    background-color: #FDCB58;
+    border: var(--bs-border-width) solid #FDCB58;
+}
+
+.search-input:focus{
+    box-shadow: 0 0 0 0rem rgba(13, 110, 253, 0.25);
 }
