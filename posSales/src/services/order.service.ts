@@ -1,10 +1,10 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, of, tap, throwError } from 'rxjs';
+import { catchError, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { QueryStringParameters } from '../entities/queryStringParameters';
 import { OrderInput } from '../entities/orderInput';
-import { OrderOutput } from '../entities/orderOutPut';
+import { OrderOutput } from '../entities/orderOutput';
 
 const apiUrl = 'https://localhost:44373/api/Orders';
 var httpOptions = {headers: new HttpHeaders({
@@ -26,91 +26,23 @@ export class OrderService {
     httpOptions = {headers: new HttpHeaders({"Authorization" : "Bearer " + token, "Content-Type": "application/json"})}
   }
 
-  getOrders(
-    httpOp: {headers: HttpHeaders} = httpOptions,
-     parameters: QueryStringParameters | null = null) : Observable<OrderOutput[]> 
-  {
-    var apiPagUrl = apiUrl; 
-
-    if(parameters != null){
-      apiPagUrl += `?PageNumber=${parameters!.pageNumber}&PageSize=${parameters!.pageSize}`;
-    }
-
-    return this.http.get<OrderOutput[]>(
-      apiPagUrl,
-      httpOp
-    ).pipe(
-      tap(Order => console.log('orders received successfully')),
-      catchError(err => {
-        console.log(err);
-        return throwError(err);
-      })
-    );
-  }
-
-  getOrdersByUserId(
-    id: number,
-    httpOp: {headers: HttpHeaders} = httpOptions,
-    parameters: QueryStringParameters | null = null) : Observable<OrderOutput[]> 
-  {
-    var url = apiUrl + `/userId/${id}`
-
-    if(parameters != null){
-      url += `?PageNumber=${parameters!.pageNumber}&PageSize=${parameters!.pageSize}`;
-    }
-
+  getAllOrdersByDateTimeNow(pageSize: number, status: string): Observable<OrderOutput[]> {
     this.montarHeaderToken();
+
+    var url = apiUrl + '/Products/DateTimeNow?PageSize=' + pageSize + '&Status=' + status;
 
     return this.http.get<OrderOutput[]>(
       url,
-      httpOp
+      httpOptions
     ).pipe(
-      tap(Order => console.log(`orders from user with id=${id} received successfully`)),
-      catchError(err => {
-        console.log(err);
-        return throwError(err);
-      })
+      tap(Products => console.log('orders received successfully')),
+      catchError(this.handleError('getAllOrdersByDateTimeNow', []))
     );
   }
 
-  getOrdersWithProductsByUserId(
-    id: number,
-    httpOp: {headers: HttpHeaders} = httpOptions,
-    parameters: QueryStringParameters | null = null) : Observable<OrderOutput[]> 
-  {
-    var url = apiUrl + `/Products/${id}`
-
-    if(parameters != null){
-      url += `?PageNumber=${parameters!.pageNumber}&PageSize=${parameters!.pageSize}`;
-    }
-
+  postOrder(order: OrderInput): Observable<OrderOutput> {
     this.montarHeaderToken();
 
-    return this.http.get<OrderOutput[]>(
-      url,
-      httpOp
-    ).pipe(
-      tap(Order => console.log(`orders with product from user with id=${id} received successfully`)),
-      catchError(err => {
-        console.log(err);
-        return throwError(err);
-      })
-    );
-  }
-
-  getOrder(id: number): Observable<OrderOutput> {
-    const url = apiUrl + '/' + id;
-
-    return this.http.get<OrderOutput>(
-      url, httpOptions
-    ).pipe(
-      tap((order: OrderOutput) => console.log('order received successfully')),
-      catchError(this.handleError<OrderOutput>('getOrder id=' + id))
-    );
-  }
-
-  addOrder(order: OrderInput): Observable<OrderOutput> {
-    this.montarHeaderToken();
     return this.http.post<OrderOutput>(
       apiUrl, order, httpOptions
     ).pipe(
@@ -119,17 +51,29 @@ export class OrderService {
     );
   }
 
+  completeOrder(orderId: number): Observable<any> {
+    this.montarHeaderToken();
+
+    var urlSentOrder = apiUrl + '/sent/' + orderId;
+    var urlFinishOrder = apiUrl + '/finish/' + orderId;
+
+    return this.http.post(urlSentOrder, httpOptions).pipe(
+      tap(() => console.log('Order sent successfully')),
+        switchMap(() => this.http.post(urlFinishOrder, httpOptions)), // Chama o segundo endpoint após o primeiro completar
+        tap(() => console.log('Order finished successfully')),
+      catchError(this.handleError<any>('completeOrder'))
+    );
+  }
+
   updateOrder(id: number, order: OrderInput): Observable<any> {
     const url = apiUrl + '/' + id;
 
     this.montarHeaderToken();
-    console.log(url);
-    console.log(httpOptions);
 
-    return this.http.put(
+    return this.http.put<OrderOutput>(
       url, order, httpOptions
     ).pipe(
-      tap(_ => console.log('order edited successfully with id=' + order.orderId)),
+      tap((Order: OrderOutput) => console.log('order edited successfully with id=' + Order.orderId)),
       catchError(this.handleError<OrderOutput>('updateOrder'))
     );
   }
