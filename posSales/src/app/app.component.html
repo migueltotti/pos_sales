@@ -42,64 +42,33 @@
                     </button>
                     <input type="text" class="form-control search-input" style="color: black; border-radius: 0 0.75rem 0.75rem 0;" placeholder="" aria-label="" aria-describedby="addon-wrapping">
                 </div>
-                <button type="button" class="btn btn-sm btn-filter rounded-5" data-bs-toggle="button">BONINOS</button>
-                <button type="button" class="btn btn-sm btn-filter rounded-5" data-bs-toggle="button">SUINOS</button>
-                <button type="button" class="btn btn-sm btn-filter rounded-5" data-bs-toggle="button">AVES</button>
-                <button type="button" class="btn btn-sm btn-filter rounded-5" data-bs-toggle="button">DIVERSOS</button>
-                <button type="button" class="btn btn-sm btn-filter rounded-5" data-bs-toggle="button">TODOS</button>
+                @for (cat of categories; track $index) {
+                    <button type="button" class="btn btn-sm btn-filter rounded-5" [id]="cat.categoryId" data-bs-toggle="button">{{cat.name}}</button>
+                }
+                <button type="button" class="btn btn-sm btn-filter rounded-5" [id]="0" data-bs-toggle="button">TODOS</button>
             </div>
             
 
             <!-- Lista de Itens -->
             <div class="d-flex mx-3 gap-3 flex-column" style="height: 80%;">
-
-                <div class="row w-custom fs-5 fw-bold rounded-4 shadow-lg" style="background-color: #D9D9D9; min-height: 90px;">
-                    <div class="col-9 text-start">
-                        <p class="mt-2" style="color: black;">FRANGO ASSADO</p>
-                        <div class="d-flex" style="color: #7D0009; margin-top: -4px;">
-                            <p class="">R$ 46,90</p>
-                            <p class="ms-3">un</p>
+                
+                @for (prod of products; track $index) {
+                    <div class="row w-custom fs-5 fw-bold rounded-4 shadow-lg" style="background-color: #D9D9D9; min-height: 90px;">
+                        <div class="col-9 text-start">
+                            <p class="mt-2" style="color: black;">{{prod.name}}</p>
+                            <div class="d-flex" style="color: #7D0009; margin-top: -4px;">
+                                <p class="">R$ {{prod.value}}</p>
+                                <p class="ms-3">un</p>
+                            </div>
+                        </div>
+                        <div class="col-3" style="color: #7D0009;">
+                            <div class="d-flex w-100 h-100 un">
+                                <p class="">{{prod.stockQuantity}}</p>
+                                <p class="ms-3">{{prod.typeValue == 1 ? 'un' : 'kg'}}</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-3" style="color: #7D0009;">
-                        <div class="d-flex w-100 h-100 un">
-                            <p class="">20</p>
-                            <p class="ms-3">un</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row w-custom fs-5 fw-bold rounded-4 shadow-lg" style="background-color: #D9D9D9; min-height: 90px;">
-                    <div class="col-9 text-start">
-                        <p class="mt-2" style="color: black;">FRANGO ASSADO RECHEADO COM BACON</p>
-                        <div class="d-flex" style="color: #7D0009; margin-top: -4px;">
-                            <p class="">R$ 62,90</p>
-                            <p class="ms-3">un</p>
-                        </div>
-                    </div>
-                    <div class="col-3" style="color: #7D0009;">
-                        <div class="d-flex w-100 h-100 un">
-                            <p class="">1</p>
-                            <p class="ms-3">un</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row w-custom fs-5 fw-bold rounded-4 shadow-lg" style="background-color: #D9D9D9; min-height: 90px;">
-                    <div class="col-9 text-start">
-                        <p class="mt-2" style="color: black;">FRANGO ASSADO RECHEADO COM BATATA, QUEIJO E CALABRESA</p>
-                        <div class="d-flex" style="color: #7D0009; margin-top: -4px;">
-                            <p class="">R$ 69,90</p>
-                            <p class="ms-3">un</p>
-                        </div>
-                    </div>
-                    <div class="col-3" style="color: #7D0009;">
-                        <div class="d-flex w-100 h-100 un">
-                            <p class="">1</p>
-                            <p class="ms-3">un</p>
-                        </div>
-                    </div>
-                </div>
+                }
 
             </div>
             

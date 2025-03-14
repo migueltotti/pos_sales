@@ -47,6 +47,17 @@ export class ProductService {
     );
   }
 
+  getProductsByName(productName: string) : Observable<Product[]>{
+    const url = apiUrl + '/name' + '?Name=' + productName;
+
+    return this.http.get<Product[]>(
+      url, httpOptions
+    ).pipe(
+      tap(() => console.log('products by name received successfully')),
+      catchError(this.handleError<Product[]>('getProductByName  name=' + productName))
+    );
+  }
+
   private handleError<T> (operation = 'operation', result?: T){
     return (error: any): Observable<T> => {
       console.error(error);
