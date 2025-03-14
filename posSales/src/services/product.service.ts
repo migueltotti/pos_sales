@@ -1,7 +1,7 @@
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, of, tap, throwError } from 'rxjs';
 import { Product } from '../entities/product';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 const apiUrl = 'https://localhost:44373/api/Products';
 var httpOptions = {headers: new HttpHeaders({
