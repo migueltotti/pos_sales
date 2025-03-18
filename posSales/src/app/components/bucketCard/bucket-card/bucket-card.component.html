@@ -1,8 +1,8 @@
 <div class="card text-black shadow-sm">
     <div class="card-body">
         <div class="row g-4">
-            <h4 class="col-10 fw-bold fs-5">MIGUEL TOTTI</h4>
-            <i class="col-1 bi bi-pencil ms-2"></i>
+            <h4 class="col-10 fw-bold fs-5">{{orderHolder.toUpperCase()}}</h4>
+            <a class="col-1" style="color: black"><i class="bi bi-pencil ms-2" (click)="throwSetNameEvent()"></i></a>
         </div>
 
         <hr class="border border-black border-1 my-1 mx-0.5 opacity-100">
@@ -10,41 +10,15 @@
         <h5 class="fw-bold w-100 ms-0.5 fs-6">PRODUTOS:</h5>
 
         <div class="lista-container">
-            <div class="row fs-p">
-                <div class="col-3 text-start">1 un</div>
-                <div class="col-5 text-center">Frango assado</div>
-                <div class="col-4 text-end">R$ 46,90/un</div>
-            </div>
-            <div class="row fs-p">
-                <div class="col-3 text-start">1 un</div>
-                <div class="col-5 text-center">Frango desossado com farofa</div>
-                <div class="col-4 text-end">R$ 65,90/un</div>
-            </div>
-            <div class="row fs-p">
-                <div class="col-3 text-start">1 un</div>
-                <div class="col-5 text-center">Frango desossado com batata</div>
-                <div class="col-4 text-end">R$ 69,90/un</div>
-            </div>
-            <div class="row fs-p">
-                <div class="col-3 text-start">1 kg</div>
-                <div class="col-5 text-center">Cupim recheado</div>
-                <div class="col-4 text-end">R$ 92,90/kg</div>
-            </div>
-            <div class="row fs-p">
-                <div class="col-3 text-start">0,7 kg</div>
-                <div class="col-5 text-center">Frango assado</div>
-                <div class="col-4 text-end">R$ 91,90/kg</div>
-            </div>
-            <div class="row fs-p">
-                <div class="col-3 text-start">0,7 kg</div>
-                <div class="col-5 text-center">Frango assado</div>
-                <div class="col-4 text-end">R$ 91,90/kg</div>
-            </div>
-            <div class="row fs-p">
-                <div class="col-3 text-start">0,7 kg</div>
-                <div class="col-5 text-center">Frango assado</div>
-                <div class="col-4 text-end">R$ 91,90/kg</div>
-            </div>
+
+            @for (item of orderProducts; track $index) {
+                <div class="row fs-p">
+                    <div class="col-3 text-start">{{item.lineItem.amount.toString() + ' ' + (item.product.typeValue == 1 ? 'un' : 'kg')}}</div>
+                    <div class="col-5 text-center">{{ item.product.name }}</div>
+                    <div class="col-4 text-end">{{'R$ ' + item.product.value + '/' + (item.product.typeValue == 1 ? 'un' : 'kg')}}</div>
+                </div>
+            }
+            
         </div>
 
         <hr class="border border-black border-1 mt-4 mx-0.5 opacity-100">
@@ -54,7 +28,7 @@
                 <p class="fw-bold fs-6">Total de produtos: </p>
             </div>
             <div class="col text-start">
-                <p class="fs-6">7</p>
+                <p class="fs-6">{{orderProducts.length}}</p>
             </div>
         </div>
         <div class="row" style="margin-top: -10px;">
@@ -62,7 +36,7 @@
                 <p class="fw-bold fs-6">Sub Total: </p>
             </div>
             <div class="col text-start">
-                <p class="fs-6">R$ 339,93</p>
+                <p class="fs-6">{{'R$ ' + totalValue()}}</p>
             </div>
             <p class="fs-6" style="margin-top: -20px;">( estimado )</p>
         </div>
@@ -71,7 +45,7 @@
 
         <div class="row">
             <h4 class="col-4 fw-bold fs-4">TOTAL: </h4>
-            <p class="col fs-5">R$ 339,93</p>
+            <p class="col fs-5">{{'R$ ' + totalValue()}}</p>
         </div>
     </div>
 </div>
