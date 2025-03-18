@@ -9,13 +9,11 @@ export class OrderInput{
     products!: LineItemInput[];
 
     constructor(
-        orderId: number,
         totalValue: number,
         orderDate: string,
         orderStatus: number,
         holder: string,
         note: string,
-        userId: number,
         products: LineItemInput[]
     ){
         this.totalValue = totalValue;

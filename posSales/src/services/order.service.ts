@@ -96,13 +96,11 @@ export class OrderService {
     console.log(form.value);
 
     const order = new OrderInput(
-      parseInt(form.get('orderId')?.value, 10),
       parseFloat(form.get('totalValue')?.value),
       form.get('orderDate')?.value,
       parseInt(form.get('orderStatus')?.value, 10),
       form.get('holder')?.value,
       form.get('note')?.value,
-      parseInt(form.get('userId')?.value, 10),
       form.get('products')?.value
     );
 

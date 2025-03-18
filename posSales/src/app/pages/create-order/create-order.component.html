@@ -2,18 +2,22 @@
     <div class="row h-100">
         <!-- Primeira coluna com largura máxima de 400px -->
         <div class="col-fixed p-2 text-white d-flex" style="background-color: #2C2C2C;">
-            <app-bucket-card></app-bucket-card>
+            <app-bucket-card 
+                [orderProducts]="orderProducts"
+                [orderHolder]="orderHolder"
+                (setNameEvent)="openHolderModel()"
+            ></app-bucket-card>
 
             <div class="row g-2 mt-1">
                 <div class="col-sm-7">
                   <div class="form-floating">
-                    <input type="email" class="form-control fw-medium shadow-lg" id="floatingInputGrid" placeholder="name@example.com" value="(18) 99787-2005">
+                    <input type="email" class="form-control fw-medium shadow-lg" id="floatingInputGrid" placeholder="name@example.com" [value]="orderPhone">
                     <label for="floatingInputGrid" style="color: black;">Telefone:</label>
                   </div>
                 </div>
                 <div class="col-sm">
                   <div class="form-floating">
-                    <input type="text" class="form-control fw-medium shadow-lg" id="floatingInputGrid" placeholder="000" value="001" disabled readonly>
+                    <input type="text" class="form-control fw-medium shadow-lg" id="floatingInputGrid" placeholder="000" [value]="orderNumber" disabled readonly>
                     <label for="floatingGrid" style="color: black;">Número do pedido:</label>
                   </div>
                 </div>
@@ -21,12 +25,34 @@
 
             <div class="row gap-4 mt-4">
                 <div class="col">
-                    <button type="button" class="btn btn-lg btn-success shadow-lg fw-bold">CONFIRMAR</button>
+                    <button type="button" 
+                        class="btn btn-lg btn-success shadow-lg fw-bold"
+                        (click)="triggerModal(1)"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#modal"
+                    >CONFIRMAR</button>
                 </div>
                 <div class="col">
-                    <button type="button" class="btn btn-lg btn-danger shadow-lg fw-bold">CANCELAR</button>
+                    <button type="button" 
+                        class="btn btn-lg btn-danger shadow-lg fw-bold" 
+                        (click)="triggerModal(0)"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#modal"
+                    >CANCELAR</button>
                 </div>
             </div>
+
+            <!-- Modal -->
+            <app-modal
+                [Title]="modalTitle"
+                [Body]="modalBody"
+                (actionConfirmed)="catchEvent($event)"
+            ></app-modal>
+
+            <app-holder-modal
+                #textModal
+                (holderName)="setHolder($event)"
+            ></app-holder-modal>
         
         </div>
 
@@ -35,70 +61,60 @@
             <!-- Linha de Funções -->
             <div class="d-flex flex-wrap mt-2 mb-4 gap-2" style="min-height: 30px; width: 100%;">
                 <div class="input-group flex-nowrap rounded-6 flex-grow-1" style="min-width: 260px; max-width: 500px; border-radius: 0.75rem;">
-                    <button class="btn btn-outline-secondary search-input" style="color: #7D0009; border-radius: 0.75rem 0 0 0.75rem;" type="button" id="button-addon1">
-                        <i class="bi bi-search"></i>
+                    <button class="btn btn-outline-secondary search-input" 
+                            style="color: #7D0009; border-radius: 0.75rem 0 0 0.75rem;" 
+                            type="button" id="button-addon1"
+                            (click)="getAllProductsByName()"
+                        ><i class="bi bi-search"></i>
                     </button>
-                    <input type="text" class="form-control search-input" style="color: black; border-radius: 0 0.75rem 0.75rem 0;" placeholder="" aria-label="" aria-describedby="addon-wrapping">
+                    <input type="text" class="form-control search-input" style="color: black; border-radius: 0 0.75rem 0.75rem 0;" [value]="prodName" placeholder="" aria-label="" aria-describedby="addon-wrapping">
                 </div>
-                <button type="button" class="btn btn-sm btn-filter rounded-5" data-bs-toggle="button">BONINOS</button>
-                <button type="button" class="btn btn-sm btn-filter rounded-5" data-bs-toggle="button">SUINOS</button>
-                <button type="button" class="btn btn-sm btn-filter rounded-5" data-bs-toggle="button">AVES</button>
-                <button type="button" class="btn btn-sm btn-filter rounded-5" data-bs-toggle="button">DIVERSOS</button>
-                <button type="button" class="btn btn-sm btn-filter rounded-5" data-bs-toggle="button">TODOS</button>
+                @for (cat of categories; track $index) {
+                    <button type="button" 
+                        class="btn btn-sm btn-filter rounded-5" 
+                        data-bs-toggle="button"
+                        (click)="getProductsByCategory(cat)"
+                    >{{cat.name.toUpperCase()}}</button>
+                }
+                <button type="button" 
+                    class="btn btn-sm btn-filter rounded-5" 
+                    data-bs-toggle="button"
+                    (click)="getAllProducts()"
+                >TODOS</button>
             </div>
             
 
             <!-- Lista de Itens -->
             <div class="d-flex mx-3 gap-3 flex-column" style="height: 80%;">
 
-                <div class="row w-custom fs-5 fw-bold rounded-4 shadow-lg" style="background-color: #D9D9D9; min-height: 90px;">
-                    <div class="col-9 text-start">
-                        <p class="mt-2" style="color: black;">FRANGO ASSADO</p>
-                        <div class="d-flex" style="color: #7D0009; margin-top: -4px;">
-                            <p class="">R$ 46,90</p>
-                            <p class="ms-3">un</p>
-                        </div>
-                    </div>
-                    <div class="col-3" style="color: #7D0009;">
-                        <div class="d-flex w-100 h-100 un">
-                            <p class="">20</p>
-                            <p class="ms-3">un</p>
-                        </div>
+                <div *ngIf="isLoading" class="d-flex justify-content-center mt-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
 
-                <div class="row w-custom fs-5 fw-bold rounded-4 shadow-lg" style="background-color: #D9D9D9; min-height: 90px;">
-                    <div class="col-9 text-start">
-                        <p class="mt-2" style="color: black;">FRANGO ASSADO RECHEADO COM BACON</p>
-                        <div class="d-flex" style="color: #7D0009; margin-top: -4px;">
-                            <p class="">R$ 62,90</p>
-                            <p class="ms-3">un</p>
+                <ng-container *ngIf="!isLoading">
+                    @for (prod of products; track $index) {
+                        <div class="row w-custom fs-5 fw-bold rounded-4 shadow-lg prod" 
+                            [ngClass]="{ 'border border-primary border-3': prodId === prod.productId }"
+                            (click)="selectProduct(prod)"
+                            style="cursor: pointer">
+                            <div class="col-9 text-start">
+                                <p class="mt-2" style="color: black;">{{ prod.name.toUpperCase() }}</p>
+                                <div class="d-flex" style="color: #7D0009; margin-top: -4px;">
+                                    <p class="">R$ {{ prod.value }}</p>
+                                    <p class="ms-3">{{ prod.typeValue == 1 ? 'un' : 'kg' }}</p>
+                                </div>
+                            </div>
+                            <div class="col-3" style="color: #7D0009;">
+                                <div class="d-flex w-100 h-100 un">
+                                    <p class="">{{ prod.stockQuantity }}</p>
+                                    <p class="ms-3">{{ prod.typeValue == 1 ? 'un' : 'kg' }}</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-3" style="color: #7D0009;">
-                        <div class="d-flex w-100 h-100 un">
-                            <p class="">1</p>
-                            <p class="ms-3">un</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row w-custom fs-5 fw-bold rounded-4 shadow-lg" style="background-color: #D9D9D9; min-height: 90px;">
-                    <div class="col-9 text-start">
-                        <p class="mt-2" style="color: black;">FRANGO ASSADO RECHEADO COM BATATA, QUEIJO E CALABRESA</p>
-                        <div class="d-flex" style="color: #7D0009; margin-top: -4px;">
-                            <p class="">R$ 69,90</p>
-                            <p class="ms-3">un</p>
-                        </div>
-                    </div>
-                    <div class="col-3" style="color: #7D0009;">
-                        <div class="d-flex w-100 h-100 un">
-                            <p class="">1</p>
-                            <p class="ms-3">un</p>
-                        </div>
-                    </div>
-                </div>
-
+                    }
+                </ng-container>
             </div>
             
             <!-- Quantidade e Adicionar -->
@@ -108,14 +124,14 @@
                         <p class="m-0">QUANTIDADE DE ITENS:</p>
                     </div>
                     <div class="d-qtde-itens w-25 mt-1">
-                        <button type="button" class="btn btn-lg fs-3" style="margin-top: -16px">+</button>
-                        <p class="m-0 mb-2 mx-1">1</p>
-                        <button type="button" class="btn btn-lg fs-3" style="margin-top: -36px">_</button>
+                        <button type="button" class="btn btn-lg fs-3" (click)="increaseAmount()" style="margin-top: -16px">+</button>
+                        <p class="m-0 mb-2 mx-1">{{ prodAmount }}</p>
+                        <button type="button" class="btn btn-lg fs-3" (click)="decreaseAmount()" style="margin-top: -36px">_</button>
                     </div>
                     
                 </div>
                 <div class="col-auto ms-auto">
-                    <button type="button" class="btn btn-lg btn-primary fw-bold shadow-lg" style="color: black;">ADICIONAR</button>
+                    <button type="button" class="btn btn-lg btn-primary fw-bold shadow-lg" (click)="addItem()" style="color: black;">ADICIONAR</button>
                 </div>
             </div>
         </div>
