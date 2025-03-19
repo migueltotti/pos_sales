@@ -1,1 +1,45 @@
-<p>order-card works!</p>
+<div class="card text-black shadow-sm" [ngClass]="{ 'border border-primary border-4': order.orderId == orderId}">
+    <div class="card-body">
+        <div class="row g-4">
+            <h4 class="col fw-bold fs-5">{{order.holder.toUpperCase()}}</h4>
+        </div>
+
+        <hr class="border border-black border-1 my-1 mx-0.5 opacity-100">
+
+        <div class="lista-container">
+
+            @for (item of order.products; track $index) {
+                <div class="row fs-p">
+                    <div class="col-9 text-start prod-name pe-0">{{ getProdName(item.product.name) }}</div>
+                    <div class="col-3 text-start ps-0">
+                        {{item.amount.toString() + ' ' + (item.product.typeValue == 1 ? 'kg' : 'un')}}
+                    </div>
+                </div>
+            }
+            
+        </div>
+    </div>
+</div>
+<div class="triangle-container"  [ngClass]="{ 'border border-primary border-2': order.orderId == orderId}">
+    <!-- Criando 29 triângulos -->
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+</div>
+

@@ -1,0 +1,15 @@
+.full-screen-container {
+    height: calc(100vh - 56px); /* 100% da tela menos a altura da navbar */
+    display: flex;
+    flex-direction: column;
+    background-color: #1E1E1E;
+}
+
+.w-custom{
+    width: 98%;
+}
+
+.prod-list{
+    overflow-y: auto;
+    overflow-x: hidden;
+}

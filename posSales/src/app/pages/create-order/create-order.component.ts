@@ -11,13 +11,15 @@ import { OrderProducts } from '../../../entities/orderProductsDto';
 import { ModalComponent } from "../../components/modal/modal.component";
 import { HolderModalComponent } from '../../components/holder-modal/holder-modal.component';
 import { NgClass, NgIf } from '@angular/common';
+import Toast from 'bootstrap/js/dist/toast';
+import { switchMap } from 'rxjs';
 
 const testProducts: Product[] = [
-  new Product(1, "Arroz Integral", "Pacote de 5kg de arroz integral", 25, 1, 100, "arroz.jpg", 10),
-  new Product(2, "Feijão Preto", "Pacote de 1kg de feijão preto", 8, 2, 80, "feijao.jpg", 10),
-  new Product(3, "Leite Desnatado", "Caixa de leite desnatado 1L", 6, 1, 50, "leite.jpg", 11),
-  new Product(4, "Chocolate Meio Amargo", "Barra de chocolate 70% cacau", 12, 1, 40, "chocolate.jpg", 12),
-  new Product(5, "Cereal Matinal", "Cereal matinal rico em fibras 300g", 15, 1, 60, "cereal.jpg", 13)
+  new Product(1, "Arroz Integral", "Pacote de 5kg de arroz integral", 25, 2, 100, "arroz.jpg", 10),
+  new Product(2, "Feijão Preto", "Pacote de 1kg de feijão preto", 8, 1, 80, "feijao.jpg", 10),
+  new Product(3, "Leite Desnatado", "Caixa de leite desnatado 1L", 6, 2, 50, "leite.jpg", 11),
+  new Product(4, "Chocolate Meio Amargo", "Barra de chocolate 70% cacau", 12, 2, 40, "chocolate.jpg", 12),
+  new Product(5, "Cereal Matinal", "Cereal matinal rico em fibras 300g", 15, 2, 60, "cereal.jpg", 13)
 ];
 
 const testCategories: Category[] = [
@@ -33,6 +35,8 @@ const confirmModalBody = "Tem certeza que quer confirmar e lançar o pedido ?";
 const cancelModalTitle = "Cancelar Pedido";
 const cancelModalBody = "Tem certeza que quer cancelar e limpar o pedido ?";
 
+const successToast = 'Pedido criado com sucesso!';
+const failedToast = 'Erro ao criar pedido!';
 
 @Component({
   selector: 'app-create-order',
@@ -72,6 +76,8 @@ export class CreateOrderComponent implements OnInit{
   modalBody!: string;
   modalType: number = 0;
 
+  toastMessage = '';
+
   constructor(
     private productService: ProductService,
     private orderService: OrderService,
@@ -92,19 +98,19 @@ export class CreateOrderComponent implements OnInit{
 
   increaseAmount(){
     if(this.prodType == 1)
-      this.prodAmount++;
+      this.prodAmount = Math.round((this.prodAmount + 0.1) * 10) / 10;
     else
-    this.prodAmount = Math.round((this.prodAmount + 0.1) * 10) / 10;
+      this.prodAmount++;
   }
 
   decreaseAmount(){
     if(this.prodType == 1){
       if(this.prodAmount > 1)
-        this.prodAmount--;
+        this.prodAmount = Math.round((this.prodAmount - 0.1) * 10) / 10;
     }
     else{
       if(this.prodAmount > 0.1)
-        this.prodAmount = Math.round((this.prodAmount - 0.1) * 10) / 10;
+        this.prodAmount--;
     }
   }
 
@@ -201,11 +207,21 @@ export class CreateOrderComponent implements OnInit{
     this.order.holder = this.orderHolder;
     this.order.note = this.orderPhone;
 
-    //this.orderService.postOrder(this.order);
-    //this.getAllProducts();
-
-    console.log(`Order ${this.orderNumber} posted!`);
-    console.log(this.order);
+    /*this.orderService.postOrder(this.order)
+    .pipe(
+      switchMap(() => {
+        return this.productService.getProducts()
+      })
+    ).subscribe({
+      next: (data) => {
+        this.products = data;
+        this.showToast(successToast);
+      },
+      error: (err) => {
+        console.log(err);
+        this.showToast(failedToast);
+      }
+    });*/
 
     this.orderNumber++;
     this.prodAmount = 1;
@@ -257,5 +273,16 @@ export class CreateOrderComponent implements OnInit{
 
   setHolder(name: string){
     this.orderHolder = name;
+  }
+
+  showToast(text: string){
+      this.toastMessage = text
+  
+      const toastElement = document.getElementById('toast');
+      console.log(toastElement);
+      if(toastElement){
+          const toast = new Toast(toastElement);
+          toast.show();
+      }
   }
 }

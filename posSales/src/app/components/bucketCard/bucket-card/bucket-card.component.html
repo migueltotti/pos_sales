@@ -13,9 +13,9 @@
 
             @for (item of orderProducts; track $index) {
                 <div class="row fs-p">
-                    <div class="col-3 text-start">{{item.lineItem.amount.toString() + ' ' + (item.product.typeValue == 1 ? 'un' : 'kg')}}</div>
+                    <div class="col-3 text-start">{{item.lineItem.amount.toString() + ' ' + (item.product.typeValue == 1 ? 'kg' : 'un')}}</div>
                     <div class="col-5 text-center">{{ item.product.name }}</div>
-                    <div class="col-4 text-end">{{'R$ ' + item.product.value + '/' + (item.product.typeValue == 1 ? 'un' : 'kg')}}</div>
+                    <div class="col-4 text-end">{{'R$ ' + item.product.value + '/' + (item.product.typeValue == 1 ? 'kg' : 'un')}}</div>
                 </div>
             }
             

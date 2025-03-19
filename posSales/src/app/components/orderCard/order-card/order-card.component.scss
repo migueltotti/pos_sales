@@ -1,0 +1,35 @@
+.card{
+    background-color: #FFF6A7;
+    max-width: 290px;
+    max-height: 300px;
+    border-radius: 0.375rem 0.375rem 0 0;
+    border-color: #FFF6A7;
+}
+
+.fs-p{
+    font-size: medium;
+}
+
+.lista-container {
+    height: 210px; /* Define uma altura máxima para a lista */
+    overflow-y: auto; /* Adiciona rolagem vertical quando necessário */
+    overflow-x: hidden;
+}
+
+.triangle-container {
+    display: flex;
+    justify-content: center; /* Centraliza os triângulos */
+    align-items: center;
+    max-width: 290px;
+    gap: 0px;
+    margin-top: -1px;
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+    margin-left: -1px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #FFF6A7; /* Cor do triângulo */
+}

@@ -1,1 +1,51 @@
-<p>orders works!</p>
+<div class="container-fluid full-screen-container">
+    
+    <div *ngIf="isLoading" class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-1 m-3 prod-list" style="height: 80vh;">
+        @for (ord of orders; track $index) {
+            <app-order-card
+                class="col mb-3"
+                (click)="selectProduct(ord)"
+                style="cursor: pointer"
+                [order]="ord"
+                [orderId]="orderId"
+            ></app-order-card>
+        }
+    </div>
+
+    <div class="row w-custom align-items-center">
+        <div class="col-6 ms-3 d-flex fs-6 h-100">
+            <button type="button" class="btn fw-bold text-black me-3" style="background-color: #00D54B;" (click)="completOrder()">
+                COMPLETAR PEDIDO
+            </button>
+            <button type="button" class="btn btn-primary fw-bold">
+                RETORNAR PEDIDO
+            </button>
+        </div>
+        <div class="col-auto ms-auto fw-bold fs-6 h-100" style="width: 170px;">
+            <div class="form-floating">
+                <input type="text" class="form-control fw-medium shadow-lg" id="floatingInputGrid" style="color: #7D0009; font-size: larger;" placeholder="000" 
+                    [value]="orders.length.toString().padStart(4, '0')" disabled readonly>
+                <label for="floatingGrid" style="color: black; font-size: small;">Pedidos realizados:</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toast" class="toast align-items-center text-bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+            <div class="toast-body">
+                {{ toastMessage }}
+            </div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+</div>
