@@ -12,7 +12,6 @@ import { ModalComponent } from "../../components/modal/modal.component";
 import { HolderModalComponent } from '../../components/holder-modal/holder-modal.component';
 import { NgClass, NgIf } from '@angular/common';
 import Toast from 'bootstrap/js/dist/toast';
-import { switchMap } from 'rxjs';
 
 const testProducts: Product[] = [
   new Product(1, "Arroz Integral", "Pacote de 5kg de arroz integral", 25, 2, 100, "arroz.jpg", 10),
