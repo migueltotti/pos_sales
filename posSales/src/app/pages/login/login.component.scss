@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Ropa+Sans:ital@0;1&display=swap');
+
+.full-screen-container {
+    height: calc(100vh - 56px); /* 100% da tela menos a altura da navbar */
+    position: relative;
+    background-color: #1E1E1E;
+}
+
+.login{
+    position: absolute;
+    background-color: #FDCB58;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 400px;
+    min-height: 350px;
+    padding-bottom: 20px;
+    top: 20%;
+    left: 36%;
+    font-family: "Roboto", "Ropa Sans", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}

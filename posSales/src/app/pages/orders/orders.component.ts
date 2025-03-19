@@ -225,8 +225,7 @@ const failedToast = 'Erro ao completar pedido!';
   standalone: true,
   imports: [
     NgIf,
-    OrderCardComponent,
-    NgClass
+    OrderCardComponent
 ],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss'
