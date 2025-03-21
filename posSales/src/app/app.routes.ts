@@ -8,7 +8,7 @@ import { DailyStockComponent } from './pages/daily-stock/daily-stock.component';
 
 export const routes: Routes = [
     {
-        path: 'pos',
+        path: 'cadastroPedidos',
         title: 'POS',
         component: CreateOrderComponent
     },
@@ -18,13 +18,13 @@ export const routes: Routes = [
         component: CreateOrderComponent
     },
     {
-        path: 'orders',
-        title: 'Orders',
+        path: 'pedidos',
+        title: 'Pedidos',
         component: OrdersComponent
     },
     {
-        path: 'dailyStock',
-        title: 'DailyStock',
+        path: 'configEstoque',
+        title: 'Configuração de Estoque',
         component: DailyStockComponent
     },
     {

@@ -12,3 +12,19 @@
 .collapse-btn{
     color: white;
 }
+
+.prod-card{
+    background-color: #FDCB58;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px !important;
+    gap: 10px; /* Espaçamento entre nome e botão */
+    width: max-content; /* Apenas o necessário para o conteúdo */
+}
+
+.prod-card-name{
+    white-space: nowrap; /* Impede quebra de linha */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adiciona "..." se o texto for muito longo */
+}
