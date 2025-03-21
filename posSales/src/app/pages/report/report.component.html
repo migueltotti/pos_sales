@@ -1,0 +1,80 @@
+<div class="container-fluid full-screen-container">
+    <div class="row w-100 mx-2 mt-1 mb-2 rounded-4" style="background-color: #5E5E5E; height: 200px;">
+
+        <div class="col-2 my-2 title">
+            <h1>Relatório Diário:</h1>
+            <hr class="border border-1 opacity-100 w-100" style="margin-left: 10px; margin-top: -10px; border-color: white;">
+        </div>
+
+        <div class="col-7 my-2">
+            <div class="row">
+                <div class="col-6 d-flex" style="align-items: flex-end;">
+                    <div class="">
+                        <label for="reportDate" class="form-label mx-1 my-0" style="color: white;">Data:</label>
+                        <input type="text" class="form-control mx-1" id="reportDate" placeholder="01/01/2025" [(ngModel)]="date">
+                    </div>
+            
+                    <button type="button" class="btn btn-search fw-bold text-black mx-2" (click)="searchReportByDate()">
+                        BUSCAR
+                    </button>
+                </div>
+                <div class="col-6">
+                    <label for="reportOrdersCanceled" class="form-label mx-1 my-0" style="color: white;">Pedidos cancelados:</label>
+                    <input type="text" class="form-control mx-1" id="reportOrdersCanceled" placeholder="0" [value]="ordersCanceled">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label for="reportEmployee" class="form-label mx-1 my-0" style="color: white;">Funcionario:</label>
+                    <input type="text" class="form-control mx-1" id="reportEmployee" placeholder="" [value]="employee">
+                </div>
+                <div class="col-3">
+                    <label for="reportEstimatedRevenue" class="form-label mx-1 my-0" style="color: white;">Receita Estimada:</label>
+                    <input type="text" class="form-control mx-1" id="reportEstimatedRevenue" placeholder="R$ 0,00" [value]="'R$ ' + estimatedRevenue">
+                </div>
+                <div class="col-3">
+                    <label for="reportOrderAmount" class="form-label mx-1 my-0" style="color: white;">Quantidade de Pedidos:</label>
+                    <input type="text" class="form-control mx-1" id="reportOrderAmount" placeholder="0" [value]="orderAmount">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3 d-flex flex-column my-2">
+            <label for="reportOrderAmount" class="form-label mx-1 my-0" style="color: white;">Exportar Relatório:</label>
+            <input type="text" class="form-control mx-1" id="reportOrderAmount" placeholder="" [(ngModel)]="exportType">
+
+            <button type="button" class="btn btn-export fw-bold text-black mx-2 mt-1" (click)="exportReport()">
+                EXPORTAR
+            </button>
+        </div>
+
+    </div>
+
+    <div class="row" style="height: 60vh;">
+        <a class="btn fw-bold fs-3 collapse-btn" (click)="toggleCollapse('orders')">
+            Pedidos <i [ngClass]="isCollapseOpen('orders') ? 'bi-caret-up-fill' : 'bi-caret-down-fill'"></i>
+        </a>
+
+        <hr class="border border-1 opacity-100 w-25" style="margin-left: 10px; margin-top: -10px; border-color: white;">
+
+        <div class="collapse row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-1 m-3 prod-list" 
+            id="orders" style="overflow-y: auto; overflow-x: hidden; max-height: 50vh;">
+            @for (ord of orders; track $index) {
+                <app-order-card
+                    class="col mb-3"
+                    (click)="selectProduct(ord)"
+                    style="cursor: pointer"
+                    [order]="ord"
+                    [orderId]="orderId"
+                ></app-order-card>
+            }
+        </div>
+
+        <div class="row d-flex" style="flex-direction: row-reverse;">
+            <button type="button" class="btn btn-return-order fw-bold text-black mx-2 mt-1" (click)="returnOrder()">
+                RETORNAR PEDIDO
+            </button>
+        </div>
+
+    </div>
+</div>

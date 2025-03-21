@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Ropa+Sans:ital@0;1&display=swap');
+
+.full-screen-container {
+    height: calc(100vh - 56px); /* 100% da tela menos a altura da navbar */
+    display: flex;
+    flex-direction: column;
+    background-color: #1E1E1E;
+}
+
+.title{
+    font-family: "Roboto", "Ropa Sans", sans-serif;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.btn-search{
+    background-color: #43AEF0;
+    border-width: 1px;
+    border-color: black;
+}
+
+.btn-export{
+    background-color: #C136C3;
+    border-width: 1px;
+    border-color: black;
+}
+
+.btn-return-order{
+    background-color: #7BD5F3;
+    border-width: 1px;
+    border-color: black;
+}
