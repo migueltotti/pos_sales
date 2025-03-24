@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, NgModule } from '@angular/core';
+import { AfterViewInit, Component, NgModule, OnInit } from '@angular/core';
 import { Product } from '../../../entities/product';
 import { OrderInput } from '../../../entities/orderInput';
 import { OrderOutput } from '../../../entities/orderOutput';
@@ -6,33 +6,167 @@ import { FormsModule, NgModel } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import Collapse from 'bootstrap/js/dist/collapse';
 import { OrderCardComponent } from "../../components/orderCard/order-card/order-card.component";
+import { LineItemOutput } from '../../../entities/lineItemOutput';
+import Toast from 'bootstrap/js/dist/toast';
+import { OrderService } from '../../../services/order.service';
+import { ModalComponent } from "../../components/modal/modal.component";
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+
+const testOrders: OrderOutput[] = [
+  new OrderOutput(
+      1,
+      150.00,
+      "2024-03-17T10:30:00Z",
+      1,
+      "Miguel Totti",
+      "Entrega urgente",
+      101,
+      [
+          new LineItemOutput(
+              1,
+              1,
+              201,
+              2,
+              50.00,
+              new Product(201, "Mouse Gamer", "Mouse óptico RGB", 50.00, 1, 10, "mouse.jpg", 1)
+          ),
+          new LineItemOutput(
+              2,
+              1,
+              202,
+              1,
+              50.00,
+              new Product(202, "Teclado Mecânico", "Teclado mecânico RGB", 50.00, 1, 5, "teclado.jpg", 1)
+          )
+      ]
+  ),
+  new OrderOutput(
+      2,
+      300.00,
+      "2024-03-16T15:45:00Z",
+      2,
+      "Ana Souza",
+      "Presente de aniversário",
+      102,
+      [
+          new LineItemOutput(
+              3,
+              2,
+              203,
+              1,
+              300.00,
+              new Product(203, "Monitor 27'", "Monitor 144Hz Full HD", 300.00, 1, 3, "monitor.jpg", 2)
+          )
+      ]
+  ),
+  new OrderOutput(
+      3,
+      90.00,
+      "2024-03-15T12:00:00Z",
+      3,
+      "Carlos Lima",
+      "Retirar na loja",
+      103,
+      [
+          new LineItemOutput(
+              4,
+              3,
+              204,
+              3,
+              30.00,
+              new Product(204, "Cabo HDMI", "Cabo HDMI 2 metros", 30.00, 1, 20, "cabo_hdmi.jpg", 3)
+          )
+      ]
+  ),
+  new OrderOutput(
+      4,
+      500.00,
+      "2024-03-14T09:15:00Z",
+      1,
+      "Mariana Ferreira",
+      "Entrega programada para sexta-feira",
+      104,
+      [
+          new LineItemOutput(
+              5,
+              4,
+              205,
+              1,
+              500.00,
+              new Product(205, "Placa de Vídeo", "RTX 3060 12GB", 500.00, 1, 2, "placa_video.jpg", 4)
+          )
+      ]
+  ),
+  new OrderOutput(
+      5,
+      200.00,
+      "2024-03-13T18:20:00Z",
+      2,
+      "Lucas Almeida",
+      "Pagamento via boleto",
+      105,
+      [
+          new LineItemOutput(
+              6,
+              5,
+              206,
+              4,
+              50.00,
+              new Product(206, "Fonte 600W", "Fonte 80 Plus Bronze", 50.00, 1, 8, "fonte.jpg", 5)
+          )
+      ]
+  )
+];
+
+const successToast = 'Pedido completo com sucesso!';
+const failedToast = 'Erro ao completar pedido!';
 
 @Component({
   selector: 'app-report',
   standalone: true,
   imports: [
     FormsModule,
-    NgClass,
-    OrderCardComponent
+    NgxMaskDirective,
+    OrderCardComponent,
+    ModalComponent
 ],
+  providers: [provideNgxMask()],
   templateUrl: './report.component.html',
   styleUrl: './report.component.scss'
 })
-export class ReportComponent implements AfterViewInit{
+export class ReportComponent implements OnInit{
   collapses: { id: string; collapse: Collapse; isOpen: boolean }[] = [];
+
+  orders: OrderOutput[] = [];
 
   isLoading = false;
   orderId = 0;
 
-  date!: string
-  employee!: string
-  estimatedRevenue!: number
-  orderAmount!: number
-  ordersCanceled!: number
-  exportType!: string;
+  date = '';
+  employee = '';
+  estimatedRevenue = 0;
+  orderAmount = 0;
+  ordersCanceled = 0;
+  exportType = '';
 
-  orders: OrderOutput[] = [];
+  toastMessage = '';
 
+  modalBody = '';
+  modalTitle = '';
+
+  constructor(private orderService: OrderService) {}
+
+  ngOnInit(): void {
+    this.orders = testOrders;
+    this.getEstimatedRevenue();
+    this.orderAmount = this.orders.length;
+  }
+
+  getEstimatedRevenue(){
+    this.orders.forEach(o => 
+        this.estimatedRevenue += o.totalValue
+    )
+  }
 
   searchReportByDate(){
     // get orders report by date
@@ -42,8 +176,23 @@ export class ReportComponent implements AfterViewInit{
     // export report
   }
 
-  returnOrder(){
+  returnOrder(orderId: number){
     // update order status to "Preparing" and get report again
+    var ord = this.orders.find(o => o.orderId == orderId)!;
+
+    ord.orderStatus = 1;
+
+    /*this.orderService.updateOrder(ord.orderId, ord)
+    .subscribe({
+      next: (data) => {
+        this.showToast(successToast);
+        console.log(data);
+      },
+      error: (err) => {
+        this.showToast(failedToast);
+        console.error(err);
+      }
+    });*/
   }
 
   selectProduct(ord: OrderOutput){
@@ -51,23 +200,31 @@ export class ReportComponent implements AfterViewInit{
     console.log(ord.orderId);
   }
 
-  ngAfterViewInit(): void {
-      const elements = document.querySelectorAll('.collapse');
-      elements.forEach((element) => {
-        const id = element.id;
-        this.collapses.push({ id, collapse: new Collapse(element, { toggle: false }), isOpen: false });
-      });
+  triggerModal(){
+    var ord = this.orders.find(o => o.orderId == this.orderId)!;
+    console.log(ord);
+
+    this.modalTitle = 'Retornar Produto';
+
+    this.modalBody = ord.orderStatus != 1 ? 
+        'Tem certeza que deseja retornar esse pedido?' :
+        'Não é possivel retornar o pedido. Status do pedido: Preparando';
+  }
+
+  catchEvent(actionType: number){
+    if(actionType == 1){
+      this.returnOrder(this.orderId);
     }
-  
-    toggleCollapse(id: string): void {
-      const collapseItem = this.collapses.find(c => c.id === id);
-      if (collapseItem) {
-        collapseItem.isOpen = !collapseItem.isOpen;
-        collapseItem.collapse.toggle();
-      }
+  }
+
+  showToast(text: string){
+    this.toastMessage = text
+
+    const toastElement = document.getElementById('toast');
+    console.log(toastElement);
+    if(toastElement){
+        const toast = new Toast(toastElement);
+        toast.show();
     }
-  
-    isCollapseOpen(id: string): boolean {
-      return this.collapses.find(c => c.id === id)?.isOpen ?? false;
-    }
+  }
 }

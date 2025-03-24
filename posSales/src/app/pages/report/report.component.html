@@ -1,80 +1,111 @@
 <div class="container-fluid full-screen-container">
-    <div class="row w-100 mx-2 mt-1 mb-2 rounded-4" style="background-color: #5E5E5E; height: 200px;">
+    <div class="row mx-2 mt-3 mb-2 rounded-4" style="background-color: #5E5E5E; height: 180px;">
 
         <div class="col-2 my-2 title">
             <h1>Relatório Diário:</h1>
-            <hr class="border border-1 opacity-100 w-100" style="margin-left: 10px; margin-top: -10px; border-color: white;">
+            <hr class="border border-1 opacity-100 w-100" style="margin-top: -10px; border-color: white;">
         </div>
 
         <div class="col-7 my-2">
             <div class="row">
-                <div class="col-6 d-flex" style="align-items: flex-end;">
-                    <div class="">
+                <div class="col-5 d-flex" style="align-items: flex-end;">
+                    <div class="me-3">
                         <label for="reportDate" class="form-label mx-1 my-0" style="color: white;">Data:</label>
-                        <input type="text" class="form-control mx-1" id="reportDate" placeholder="01/01/2025" [(ngModel)]="date">
+                        <input type="text" class="form-control input-fields mx-1" id="reportDate" placeholder="01/01/2025" [(ngModel)]="date">
                     </div>
             
                     <button type="button" class="btn btn-search fw-bold text-black mx-2" (click)="searchReportByDate()">
                         BUSCAR
                     </button>
                 </div>
-                <div class="col-6">
+                <div class="col-3">
                     <label for="reportOrdersCanceled" class="form-label mx-1 my-0" style="color: white;">Pedidos cancelados:</label>
-                    <input type="text" class="form-control mx-1" id="reportOrdersCanceled" placeholder="0" [value]="ordersCanceled">
+                    <input type="text" class="form-control input-fields mx-1" id="reportOrdersCanceled" placeholder="0" [value]="ordersCanceled">
                 </div>
             </div>
-            <div class="row">
-                <div class="col-6">
+            <div class="row mt-3">
+                <div class="col-5">
                     <label for="reportEmployee" class="form-label mx-1 my-0" style="color: white;">Funcionario:</label>
-                    <input type="text" class="form-control mx-1" id="reportEmployee" placeholder="" [value]="employee">
+                    <input type="text" class="form-control input-fields mx-1" id="reportEmployee" placeholder="" [value]="employee">
                 </div>
                 <div class="col-3">
                     <label for="reportEstimatedRevenue" class="form-label mx-1 my-0" style="color: white;">Receita Estimada:</label>
-                    <input type="text" class="form-control mx-1" id="reportEstimatedRevenue" placeholder="R$ 0,00" [value]="'R$ ' + estimatedRevenue">
+                    <input type="text" class="form-control input-fieldsmx-1" id="reportEstimatedRevenue" placeholder="R$ 0,00" [(ngModel)]="estimatedRevenue" prefix="R$ " mask="separator.2">
                 </div>
-                <div class="col-3">
-                    <label for="reportOrderAmount" class="form-label mx-1 my-0" style="color: white;">Quantidade de Pedidos:</label>
-                    <input type="text" class="form-control mx-1" id="reportOrderAmount" placeholder="0" [value]="orderAmount">
+                <div class="col-4">
+                    <label for="reportOrderAmount" class="form-label mx-1 my-0" style="color: white;">Numero de Pedidos:</label>
+                    <input type="text" class="form-control input-fields mx-1 w-75" id="reportOrderAmount" placeholder="0" [value]="orderAmount">
                 </div>
             </div>
         </div>
 
         <div class="col-3 d-flex flex-column my-2">
             <label for="reportOrderAmount" class="form-label mx-1 my-0" style="color: white;">Exportar Relatório:</label>
-            <input type="text" class="form-control mx-1" id="reportOrderAmount" placeholder="" [(ngModel)]="exportType">
+            <select class="form-select input-fields w-75" aria-label="Default select example">
+                <option value="1" selected>Excel</option>
+                <option value="2">PDF</option>
+                <option value="3">WORD</option>
+              </select>
 
-            <button type="button" class="btn btn-export fw-bold text-black mx-2 mt-1" (click)="exportReport()">
+            <button type="button" class="btn btn-export fw-bold text-black mx-0 mt-1 w-50" (click)="exportReport()">
                 EXPORTAR
             </button>
         </div>
 
     </div>
 
-    <div class="row" style="height: 60vh;">
-        <a class="btn fw-bold fs-3 collapse-btn" (click)="toggleCollapse('orders')">
-            Pedidos <i [ngClass]="isCollapseOpen('orders') ? 'bi-caret-up-fill' : 'bi-caret-down-fill'"></i>
-        </a>
+    <div class="row">
+        <div class="col-9 d-flex flex-column w-100" style="justify-content: space-between;">
+            <div class="" style="overflow-y: auto; overflow-x: hidden; max-height: 65vh;">
 
-        <hr class="border border-1 opacity-100 w-25" style="margin-left: 10px; margin-top: -10px; border-color: white;">
+                <div class="d-flex" style="justify-content: space-between;">
+                    <h3 class="fw-bold fs-2 collapse-btn ms-3 mt-1" style="color: white;">
+                        Pedidos <i class="bi-caret-down-fill"></i>
+                    </h3>
 
-        <div class="collapse row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-1 m-3 prod-list" 
-            id="orders" style="overflow-y: auto; overflow-x: hidden; max-height: 50vh;">
-            @for (ord of orders; track $index) {
-                <app-order-card
-                    class="col mb-3"
-                    (click)="selectProduct(ord)"
-                    style="cursor: pointer"
-                    [order]="ord"
-                    [orderId]="orderId"
-                ></app-order-card>
-            }
+                    <button type="button" class="btn btn-return-order fw-bold text-black mx-3 mt-1" 
+                        [disabled]="orderId == 0"
+                        (click)="triggerModal()" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#modal"
+                    >
+                        RETORNAR PEDIDO
+                    </button>
+                </div>
+                
+                <hr class="border border-1 opacity-100 w-25" 
+                    style="margin-left: 10px; margin-top: -10px; border-color: white;">
+
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-1 m-3 prod-list">
+                    @for (ord of orders; track $index) {
+                        <app-order-card
+                            class="col mb-3"
+                            (click)="selectProduct(ord)"
+                            style="cursor: pointer"
+                            [order]="ord"
+                            [orderId]="orderId"
+                        ></app-order-card>
+                    }
+                </div>
+            </div>
         </div>
 
-        <div class="row d-flex" style="flex-direction: row-reverse;">
-            <button type="button" class="btn btn-return-order fw-bold text-black mx-2 mt-1" (click)="returnOrder()">
-                RETORNAR PEDIDO
-            </button>
-        </div>
+        <app-modal
+            [Title]="modalTitle"
+            [Body]="modalBody"
+            (actionConfirmed)="catchEvent($event)"
+        ></app-modal>
+    </div>
 
+    <!-- TOAST -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toast" class="toast align-items-center text-bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+            <div class="toast-body">
+                {{ toastMessage }}
+            </div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
     </div>
 </div>

@@ -238,11 +238,6 @@ export class OrdersComponent implements OnInit{
 
   toastMessage = ''
 
-  selectProduct(ord: OrderOutput){
-    this.orderId = this.orderId === ord.orderId ? 0 : ord.orderId;
-    console.log(ord.orderId);
-  }
-
   constructor(private orderService: OrderService){}
 
   ngOnInit(): void {
@@ -277,6 +272,11 @@ export class OrdersComponent implements OnInit{
     ).subscribe({
         next: (data) => this.orders = data
     });*/
+  }
+
+  selectProduct(ord: OrderOutput){
+    this.orderId = this.orderId === ord.orderId ? 0 : ord.orderId;
+    console.log(ord.orderId);
   }
 
   showToast(text: string){
