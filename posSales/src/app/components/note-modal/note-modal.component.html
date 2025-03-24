@@ -1,0 +1,20 @@
+<div class="modal fade" #noteElement tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Descrição do Pedido</h1>
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <label for="exampleFormControlInput1" class="form-label">
+                Deseja inserir alguma observação?
+            </label>
+            <input type="text" class="form-control" id="exampleFormControlInput1" [(ngModel)]="orderNote">
+        </div>
+        <div class="modal-footer">
+        <button type="button" (click)="closeModal()" class="btn btn-secondary">Cancelar</button>
+        <button type="button" (click)="setOrderDescription()" class="btn btn-primary">Confirmar</button>
+        </div>
+    </div>
+    </div>
+</div>
