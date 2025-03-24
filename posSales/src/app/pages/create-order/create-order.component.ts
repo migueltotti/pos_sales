@@ -12,6 +12,7 @@ import { ModalComponent } from "../../components/modal/modal.component";
 import { HolderModalComponent } from '../../components/holder-modal/holder-modal.component';
 import { NgClass, NgIf } from '@angular/common';
 import Toast from 'bootstrap/js/dist/toast';
+import { NoteModalComponent } from '../../components/note-modal/note-modal.component';
 
 const testProducts: Product[] = [
   new Product(1, "Arroz Integral", "Pacote de 5kg de arroz integral", 25, 2, 100, "arroz.jpg", 10),
@@ -45,13 +46,15 @@ const failedToast = 'Erro ao criar pedido!';
     ModalComponent,
     HolderModalComponent,
     NgClass,
-    NgIf
-  ],
+    NgIf,
+    NoteModalComponent
+],
   templateUrl: './create-order.component.html',
   styleUrl: './create-order.component.scss'
 })
 export class CreateOrderComponent implements OnInit{
   @ViewChild('textModal') textModal!: HolderModalComponent;
+  @ViewChild('noteModal') noteModal!: NoteModalComponent;
   isLoading = false;
 
   title = 'posSales';
@@ -65,6 +68,7 @@ export class CreateOrderComponent implements OnInit{
   orderNumber = 1;
   orderHolder = "";
   orderPhone = "";
+  orderNote = "";
 
   prodId = 0;
   prodAmount = 1;
@@ -204,7 +208,7 @@ export class CreateOrderComponent implements OnInit{
     this.order.orderDate = (new Date()).toISOString();
     this.order.orderStatus = 1;
     this.order.holder = this.orderHolder;
-    this.order.note = this.orderPhone;
+    this.order.note = this.orderPhone + ' : ' + this.orderNote;
 
     /*this.orderService.postOrder(this.order)
     .pipe(
@@ -221,6 +225,8 @@ export class CreateOrderComponent implements OnInit{
         this.showToast(failedToast);
       }
     });*/
+
+    console.log(this.order);
 
     this.orderNumber++;
     this.prodAmount = 1;
@@ -259,19 +265,37 @@ export class CreateOrderComponent implements OnInit{
 
   catchEvent(actionType: number){
     if(actionType == 1){
-      if(this.modalType == 1)
-        this.createOrder();
+      if(this.modalType == 1){
+        this.openNoteModel();
+        // after anwser note modal the order is created
+        // note modal event is catched by 'catchNoteDescripitonEvent()' method and 
+        // 'createOrder()' method is called
+      }
       else
         this.cancelOrder();
     }
+  }
+
+  catchNoteDescripitonEvent(note: string){
+    this.setNote(note);
+    this.createOrder();
   }
 
   openHolderModel(){
     this.textModal.openModal();
   }
 
+  openNoteModel(){
+    this.noteModal.orderNote = '';
+    this.noteModal.openModal();
+  }
+
   setHolder(name: string){
     this.orderHolder = name;
+  }
+
+  setNote(note: string){
+    this.orderNote = note;
   }
 
   showToast(text: string){

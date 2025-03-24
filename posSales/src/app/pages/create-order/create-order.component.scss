@@ -58,6 +58,16 @@
     width: 98%;
 }
 
+.h-custom {
+    height: 80%;
+}
+
+@media (max-width: 1300px) {
+    .h-custom {
+        height: 75%;
+    }
+}
+
 .d-qtde-itens {
     display: flex;
     justify-content: flex-end;

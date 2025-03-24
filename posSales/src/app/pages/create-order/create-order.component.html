@@ -54,6 +54,11 @@
                 (holderName)="setHolder($event)"
             ></app-holder-modal>
         
+            <app-note-modal
+                #noteModal
+                (orderDescription)="catchNoteDescripitonEvent($event)"
+            ></app-note-modal>
+
         </div>
 
         <!-- Segunda coluna ocupando o restante -->
@@ -85,7 +90,7 @@
             
 
             <!-- Lista de Itens -->
-            <div class="d-flex mx-3 gap-3 flex-column" style="height: 80%;">
+            <div class="d-flex mx-3 gap-3 flex-column h-custom">
 
                 <div *ngIf="isLoading" class="d-flex justify-content-center mt-4">
                     <div class="spinner-border text-primary" role="status">
