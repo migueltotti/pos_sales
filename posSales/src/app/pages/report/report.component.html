@@ -2,7 +2,7 @@
     <div class="row mx-2 mt-3 mb-2 rounded-4" style="background-color: #5E5E5E; height: 180px;">
 
         <div class="col-2 my-2 title">
-            <h1>Relatório Diário:</h1>
+            <h1 style="color: white;">Relatório Diário:</h1>
             <hr class="border border-1 opacity-100 w-100" style="margin-top: -10px; border-color: white;">
         </div>
 
@@ -14,7 +14,7 @@
                         <input type="text" class="form-control input-fields mx-1" id="reportDate" placeholder="01/01/2025" [(ngModel)]="date">
                     </div>
             
-                    <button type="button" class="btn btn-search fw-bold text-black mx-2" (click)="searchReportByDate()">
+                    <button type="button" class="btn btn-search fw-bold text-black mx-2" (click)="searchReportByDate(date)">
                         BUSCAR
                     </button>
                 </div>

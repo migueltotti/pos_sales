@@ -11,6 +11,7 @@ import Toast from 'bootstrap/js/dist/toast';
 import { OrderService } from '../../../services/order.service';
 import { ModalComponent } from "../../components/modal/modal.component";
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { HttpStatusCode } from '@angular/common/http';
 
 const testOrders: OrderOutput[] = [
   new OrderOutput(
@@ -142,7 +143,7 @@ export class ReportComponent implements OnInit{
   isLoading = false;
   orderId = 0;
 
-  date = '';
+  date = (new Date()).toLocaleDateString();
   employee = '';
   estimatedRevenue = 0;
   orderAmount = 0;
@@ -158,6 +159,9 @@ export class ReportComponent implements OnInit{
 
   ngOnInit(): void {
     this.orders = testOrders;
+    // get today orders
+    this.searchReportByDate(this.date);
+
     this.getEstimatedRevenue();
     this.orderAmount = this.orders.length;
   }
@@ -168,8 +172,15 @@ export class ReportComponent implements OnInit{
     )
   }
 
-  searchReportByDate(){
-    // get orders report by date
+  searchReportByDate(date: string){
+    this.orderService.getOrdersByDate(50, date)
+    .subscribe({
+      next: (res) => {
+        this.orders = res.body || [];
+        console.log(res.statusText)
+      },
+      error: (err) => console.error(err)
+    });
   }
 
   exportReport(){
@@ -182,17 +193,19 @@ export class ReportComponent implements OnInit{
 
     ord.orderStatus = 1;
 
-    /*this.orderService.updateOrder(ord.orderId, ord)
+    this.orderService.updateOrder(ord.orderId, ord)
     .subscribe({
-      next: (data) => {
-        this.showToast(successToast);
-        console.log(data);
+      next: (res) => {
+        if(res.status == HttpStatusCode.Ok)
+          this.showToast(successToast);
+        else 
+          this.showToast(failedToast);
+        console.log(res.statusText);
       },
       error: (err) => {
-        this.showToast(failedToast);
         console.error(err);
       }
-    });*/
+    });
   }
 
   selectProduct(ord: OrderOutput){

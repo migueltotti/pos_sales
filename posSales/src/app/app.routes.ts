@@ -6,6 +6,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { CreateOrderComponent } from './pages/create-order/create-order.component';
 import { DailyStockComponent } from './pages/daily-stock/daily-stock.component';
 import { ReportComponent } from './pages/report/report.component';
+import { HomeComponent } from './pages/home/home.component';
 
 export const routes: Routes = [
     {
@@ -14,9 +15,9 @@ export const routes: Routes = [
         component: CreateOrderComponent
     },
     {
-        path: '',
-        title: 'POS',
-        component: CreateOrderComponent
+        path: 'home',
+        title: 'Home',
+        component: HomeComponent
     },
     {
         path: 'pedidos',
@@ -34,7 +35,7 @@ export const routes: Routes = [
         component: ReportComponent
     },
     {
-        path: 'login',
+        path: '',
         title: 'LogIn',
         component: LoginComponent
     }

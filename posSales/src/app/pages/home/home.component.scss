@@ -1,0 +1,28 @@
+.full-screen-container {
+    height:  calc(100vh - 56px); /* 100% da tela menos a altura da navbar */
+    background-color: #1E1E1E;;
+}
+
+.prod-card{
+    background-color: #FDCB58;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px !important;
+    gap: 10px; /* Espaçamento entre nome e botão */
+    width: max-content; /* Apenas o necessário para o conteúdo */
+}
+
+.ord-chart{
+    background-color: #5E5E5E;
+    height: 300px;
+    width: 500px;
+}
+
+.prod-chart{
+    background-color: #5e5e5e;
+    height: 300px;
+    width: 500px;
+    align-items: center;
+    justify-content: center;
+}

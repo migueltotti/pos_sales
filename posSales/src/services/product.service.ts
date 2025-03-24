@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, of, tap, throwError } from 'rxjs';
 import { Product } from '../entities/product';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { NumberOfProduct } from '../entities/numberOfProduct ';
 
 const apiUrl = 'https://localhost:44373/api/Products';
 var httpOptions = {headers: new HttpHeaders({
@@ -55,6 +56,19 @@ export class ProductService {
     ).pipe(
       tap(() => console.log('products by name received successfully')),
       catchError(this.handleError<Product[]>('getProductByName  name=' + productName))
+    );
+  }
+
+  get5BestSellingProducts(): Observable<NumberOfProduct[]>{
+
+    var url = apiUrl + '/ProductsBestSellingCount?Months_Count=2'
+
+    return this.http.get<NumberOfProduct[]>(
+      url,
+      httpOptions
+    ).pipe(
+      tap(Products => console.log('number of best selling products received successfully')),
+      catchError(this.handleError('get5BestSellingProducts', []))
     );
   }
 

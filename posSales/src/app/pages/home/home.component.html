@@ -1,0 +1,66 @@
+<div class="container-fluid full-screen-container">
+    <div class="row justify-content-between">
+
+        <div class="col-5 mt-4 ms-3">
+            <div class="">
+                <h1 class="fw-bold" style="color: white; font-style: italic;">
+                    Bem vindo {{userName}}!
+                </h1>
+                <hr class="border border-1 opacity-100 w-100 mb-0" style="margin-top: -10px; border-color: white;">
+                <p class="fw-bold" style="color: white; font-style: italic;">
+                    Data: {{todayDate}}
+                </p>
+            </div>
+
+            <div class="d-flex flex-column rounded-4 p-3 mt-5" style="background-color: #5E5E5E;">
+                <p class="fw-bold fs-4" style="color: white;">
+                    Paginas:
+                </p>
+                <hr class="border border-1 opacity-100 w-100" style="margin-top: -10px; border-color: white;">
+                
+                <div class="card card-body d-flex text-black fw-bold rounded-4 mb-2 p-2 shadow-lg prod-card">
+                    Cadastro de Pedidos
+                    <a class="btn" routerLink="/cadastroPedidos">
+                        <i class="bi bi-box-arrow-up-right" style="color: #7D0009"></i>
+                    </a>
+                </div>
+
+                <div class="card card-body d-flex text-black fw-bold rounded-4 mb-2 p-2 shadow-lg prod-card">
+                    Visualisar Pedidos
+                    <a class="btn" routerLink="/pedidos">
+                        <i class="bi bi-box-arrow-up-right" style="color: #7D0009"></i>
+                    </a>
+                </div>
+
+                <div class="card card-body d-flex text-black fw-bold rounded-4 mb-2 p-2 shadow-lg prod-card">
+                    Cadastrar Produtos Diários
+                    <a class="btn" routerLink="/configEstoque">
+                        <i class="bi bi-box-arrow-up-right" style="color: #7D0009"></i>
+                    </a>
+                </div>
+
+                <div class="card card-body d-flex text-black fw-bold rounded-4 mb-2 p-2 shadow-lg prod-card">
+                    Relatório Diário
+                    <a class="btn" routerLink="/relatorio">
+                        <i class="bi bi-box-arrow-up-right" style="color: #7D0009"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        
+        <div class="col-5 mt-4 me-3">
+            <div class="d-flex p-3 rounded-4 ord-chart">
+                <canvas id="OrdersChart"> {{ordersChart}} </canvas>
+            </div>
+
+            <div class="d-flex p-3 mt-5 rounded-4 prod-chart">
+                <canvas id="ProductsChart"> 
+                    {{productsChart}} 
+                </canvas>
+            </div>
+            
+        </div>
+
+    </div>
+</div>
