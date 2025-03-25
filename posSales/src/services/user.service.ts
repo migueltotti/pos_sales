@@ -23,25 +23,29 @@ export class UserService {
     httpOptions = {headers: new HttpHeaders({"Authorization" : "Bearer " + token, "Content-Type": "application/json"})}
   }
 
-  getUserByEmail(email: string): Observable<User> {
+  getUserByEmail(email: string): Observable<HttpResponse<User>> {
     const url = apiUrl + '/email/' + email;
     this.montarHeaderToken();
-    return this.http.get<User>(
-      url, httpOptions
+    
+    return this.http.get<HttpResponse<User>>(
+      url,
+      { headers: httpOptions.headers, observe: 'response' }
     ).pipe(
-      tap((Product: User) => console.log('user received successfully')),
-      catchError(this.handleError<User>('getUser'))
+      tap((user: any) => console.log('user received successfully')),
+      catchError(this.handleError<HttpResponse<User>>('getUser'))
     );
   }
 
-  getUserById(id: number): Observable<User> {
+  getUserById(id: number): Observable<HttpResponse<User>> {
     const url = `${apiUrl}/${id}`;
     this.montarHeaderToken();
-    return this.http.get<User>(
-      url, httpOptions
+
+    return this.http.get<HttpResponse<User>>(
+      url,
+      { headers: httpOptions.headers, observe: 'response' }
     ).pipe(
-      tap((User: User) => console.log('user received successfully')),
-      catchError(this.handleError<User>('getUser'))
+      tap((User: any) => console.log('user received successfully')),
+      catchError(this.handleError<HttpResponse<User>>('getUser'))
     );
   }
 

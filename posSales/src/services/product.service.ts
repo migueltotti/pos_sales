@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { catchError, Observable, of, tap, throwError } from 'rxjs';
 import { Product } from '../entities/product';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { NumberOfProduct } from '../entities/numberOfProduct ';
 
 const apiUrl = 'https://localhost:44373/api/Products';
@@ -19,56 +19,55 @@ export class ProductService {
 
   getProducts(
     httpOp: {headers: HttpHeaders} = httpOptions,
-    apiPagUrl: string | null = null) : Observable<Product[]> 
+    apiPagUrl: string | null = null) : Observable<HttpResponse<Product[]>> 
   {
 
     if(apiPagUrl == null){
       apiPagUrl = apiUrl;
     }
 
-    return this.http.get<Product[]>(
+    return this.http.get<HttpResponse<Product[]>>(
       apiPagUrl,
-      httpOp
+      { headers: httpOptions.headers, observe: 'response' }
     ).pipe(
-      tap(Products => console.log('products received successfully')),
-      catchError(err => {
-        console.log(err);
-        return throwError(err);
-      })
+      tap((Products: any) => console.log('products received successfully')),
+      catchError(this.handleError<HttpResponse<Product[]>>('getProducts'))
     );
   }
 
-  getProduct(id: number): Observable<Product> {
+  getProduct(id: number): Observable<HttpResponse<Product[]>> {
     const url = apiUrl + '/' + id;
-    return this.http.get<Product>(
-      url, httpOptions
+    return this.http.get<HttpResponse<Product[]>>(
+      url, 
+      { headers: httpOptions.headers, observe: 'response' }
     ).pipe(
-      tap((Product: Product) => console.log('product received successfully')),
-      catchError(this.handleError<Product>('getProduct id=' + id))
+      tap((Product: any) => console.log('product received successfully')),
+      catchError(this.handleError<HttpResponse<Product[]>>('getProduct id=' + id))
     );
   }
 
-  getProductsByName(productName: string) : Observable<Product[]>{
+  getProductsByName(productName: string) : Observable<HttpResponse<Product[]>>{
     const url = apiUrl + '/name' + '?Name=' + productName;
 
-    return this.http.get<Product[]>(
-      url, httpOptions
+    return this.http.get<HttpResponse<Product[]>>(
+      url, 
+      { headers: httpOptions.headers, observe: 'response' }
     ).pipe(
-      tap(() => console.log('products by name received successfully')),
-      catchError(this.handleError<Product[]>('getProductByName  name=' + productName))
+      tap((data: any) => console.log('products by name received successfully')),
+      catchError(this.handleError<HttpResponse<Product[]>>('getProductByName  name=' + productName))
     );
   }
 
-  get5BestSellingProducts(): Observable<NumberOfProduct[]>{
+  get5BestSellingProducts(): Observable<HttpResponse<NumberOfProduct[]>>{
 
     var url = apiUrl + '/ProductsBestSellingCount?Months_Count=2'
 
-    return this.http.get<NumberOfProduct[]>(
-      url,
-      httpOptions
+    return this.http.get<HttpResponse<NumberOfProduct[]>>(
+      url, 
+      { headers: httpOptions.headers, observe: 'response' }
     ).pipe(
-      tap(Products => console.log('number of best selling products received successfully')),
-      catchError(this.handleError('get5BestSellingProducts', []))
+      tap((data: any) => console.log('number of best selling products received successfully')),
+      catchError(this.handleError<HttpResponse<NumberOfProduct[]>>('get5BestSellingProducts'))
     );
   }
 

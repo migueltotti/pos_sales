@@ -1,10 +1,16 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, of, tap } from 'rxjs';
 import { LoginModel } from '../entities/loginModel';
 
 const apiLoginUrl = 'https://localhost:44373/api/Auth/Login';
+var httpOptions = {
+  headers: new HttpHeaders({
+  'Content-Type': 'application/json'
+  }),
+  observe: 'response'
+};
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +21,14 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login (loginModel: any) : Observable<LoginModel>{
-    return this.http.post<LoginModel>(apiLoginUrl, loginModel).pipe(
-      tap(() => console.log('Login usuario com email =' + loginModel.email)),
-      catchError(this.handleError<LoginModel>('Login'))
+  login (loginModel: any) : Observable<HttpResponse<LoginModel>>{
+    return this.http.post<HttpResponse<LoginModel>>(
+      apiLoginUrl,
+      httpOptions,
+      loginModel,
+    ).pipe(
+      tap((data: any) => console.log('Login usuario com email =' + loginModel.email)),
+      catchError(this.handleError<HttpResponse<LoginModel>>('Login'))
     );
   }
 
