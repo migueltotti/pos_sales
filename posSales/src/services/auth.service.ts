@@ -3,13 +3,14 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, of, tap } from 'rxjs';
 import { LoginModel } from '../entities/loginModel';
+import { LoginResponse } from '../entities/loginResponse';
+import { LoginRefreshToken } from '../entities/loginRefreshToken';
 
 const apiLoginUrl = 'https://localhost:44373/api/Auth/Login';
 var httpOptions = {
   headers: new HttpHeaders({
   'Content-Type': 'application/json'
-  }),
-  observe: 'response'
+  })
 };
 
 @Injectable({
@@ -21,14 +22,43 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login (loginModel: any) : Observable<HttpResponse<LoginModel>>{
-    return this.http.post<HttpResponse<LoginModel>>(
+  login (loginModel: any) : Observable<HttpResponse<LoginResponse>>{
+    return this.http.post<LoginResponse>(
       apiLoginUrl,
-      httpOptions,
       loginModel,
+      { headers: httpOptions.headers, observe: 'response' }
     ).pipe(
-      tap((data: any) => console.log('Login usuario com email =' + loginModel.email)),
-      catchError(this.handleError<HttpResponse<LoginModel>>('Login'))
+      tap((data: HttpResponse<LoginResponse>) => {
+        console.log('Login usuario com email =' + loginModel.email)
+        if(data.ok){
+          this.setJwtTokenToStorage(data.body?.token!);
+          this.setRefreshToken(data.body?.refreshToken!);
+          this.setJwtRefreshTokenExpirationTimeToStorage(data.body?.expiration!);
+        }
+        else
+          console.error(data.body);
+      }),
+      catchError(this.handleError<HttpResponse<LoginResponse>>('Login'))
+    );
+  }
+
+  loginWithRefreshToken (loginRefreshToken: LoginRefreshToken) : Observable<HttpResponse<LoginResponse>>{
+    return this.http.post<LoginResponse>(
+      apiLoginUrl,
+      loginRefreshToken,
+      { headers: httpOptions.headers, observe: 'response' }
+    ).pipe(
+      tap((data: HttpResponse<LoginResponse>) => {
+        console.log('Login usuario com refreshToken')
+        if(data.ok){
+          this.setJwtTokenToStorage(data.body?.token!);
+          this.setRefreshToken(data.body?.refreshToken!);
+          this.setJwtRefreshTokenExpirationTimeToStorage(data.body?.expiration!);
+        }
+        else
+          console.error(data.body);
+      }),
+      catchError(this.handleError<HttpResponse<LoginResponse>>('Login'))
     );
   }
 
@@ -40,13 +70,43 @@ export class AuthService {
     return null;
   }
 
+  getRefreshTokenExpirationTime(): string | null {
+    if(typeof sessionStorage !== "undefined"){
+      return sessionStorage.getItem('rtExpiration');
+    }
+    
+    return null;
+  }
+
   setJwtTokenToStorage(token: string) {
     sessionStorage.setItem('jwt', token);
+  }
+
+  setRefreshToken(refreshToken: string) {
+    sessionStorage.setItem('rToken', refreshToken);
+  }
+
+  setJwtRefreshTokenExpirationTimeToStorage(refreshTokenExpiration: string) {
+    sessionStorage.setItem('rtExpiration', refreshTokenExpiration);
   }
 
   isAuthenticated(): boolean {
     const token = this.getToken();
     return token ? !this.jwtHelper.isTokenExpired(token) : false;
+    // se nao estiver autenticado devemos tentar fazer o login pelo refreshToken
+  }
+
+  isRefreshTokenExpirired(): boolean {
+    const expirationTime = this.getRefreshTokenExpirationTime();
+    var expirationTimeToDateTime;
+    var isExpired = true;
+
+    if(expirationTime != null){
+      expirationTimeToDateTime = new Date(expirationTime);
+      isExpired = expirationTimeToDateTime >= new Date()
+    }
+    
+    return isExpired;
   }
 
   isEmployeeOrAdmin(): boolean {
@@ -89,6 +149,8 @@ export class AuthService {
   logoutUser(){
     sessionStorage.removeItem('userId');
     sessionStorage.removeItem('jwt');
+    sessionStorage.removeItem('rtExpiration');
+    sessionStorage.removeItem('rToken');
     sessionStorage.removeItem('email');
   }
 
