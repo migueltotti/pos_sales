@@ -160,7 +160,7 @@ export class ReportComponent implements OnInit{
   ngOnInit(): void {
     this.orders = testOrders;
     // get today orders
-    this.searchReportByDate(this.date);
+    //this.searchReportByDate(this.date);
 
     this.getEstimatedRevenue();
     this.orderAmount = this.orders.length;

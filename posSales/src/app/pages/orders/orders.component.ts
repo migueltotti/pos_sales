@@ -253,7 +253,7 @@ export class OrdersComponent implements OnInit{
     this.orderService.getAllOrdersByDateTimeNow(50, 'Preparing')
     .subscribe({
       next: (data) => {
-        this.orders = data;
+        this.orders = data.body || [];
         this.isLoading = false;
       }
     })

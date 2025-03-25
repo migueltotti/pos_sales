@@ -121,7 +121,7 @@ export class HomeComponent implements OnInit{
     this.orderService.getNumberOfOrdersFromTodayToLast8Weeks().
     subscribe({
       next: (res) => {
-        res.forEach(day => {
+        res.body?.forEach(day => {
           this.ordersDataValues.push(day.numberOfOrders)
         });
       }
@@ -132,7 +132,7 @@ export class HomeComponent implements OnInit{
     this.productService.get5BestSellingProducts().
     subscribe({
       next: (res) => {
-        res.forEach(prod => {
+        res.body?.forEach(prod => {
           this.productsBestSelling.set(prod.prodName, prod.productCount)
         });
       }

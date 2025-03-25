@@ -7,35 +7,41 @@ import { CreateOrderComponent } from './pages/create-order/create-order.componen
 import { DailyStockComponent } from './pages/daily-stock/daily-stock.component';
 import { ReportComponent } from './pages/report/report.component';
 import { HomeComponent } from './pages/home/home.component';
+import { AuthGuard } from '../services/auth.guard';
 
 export const routes: Routes = [
     {
         path: 'cadastroPedidos',
         title: 'POS',
-        component: CreateOrderComponent
+        component: CreateOrderComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'home',
         title: 'Home',
-        component: HomeComponent
+        component: HomeComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'pedidos',
         title: 'Pedidos',
-        component: OrdersComponent
+        component: OrdersComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'configEstoque',
         title: 'Configuração de Estoque',
-        component: DailyStockComponent
+        component: DailyStockComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'relatorio',
         title: 'Relatório Diário',
-        component: ReportComponent
+        component: ReportComponent,
+        canActivate: [AuthGuard]
     },
     {
-        path: '',
+        path: 'login',
         title: 'LogIn',
         component: LoginComponent
     }

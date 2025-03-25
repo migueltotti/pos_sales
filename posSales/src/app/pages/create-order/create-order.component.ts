@@ -159,7 +159,7 @@ export class CreateOrderComponent implements OnInit{
     this.productService.getProducts()
     .subscribe({
       next: (data) => {
-        this.products = data
+        this.products = data.body || []
         this.isLoading = false;
       }
     });
@@ -171,7 +171,7 @@ export class CreateOrderComponent implements OnInit{
     this.categoryService.getProductsByCategoryId(cat.categoryId)
     .subscribe({
       next: (data) => {
-        this.products = data
+        this.products = data.body || []
         this.isLoading = false;
       }
     });
@@ -183,7 +183,7 @@ export class CreateOrderComponent implements OnInit{
     this.productService.getProductsByName(this.prodName)
     .subscribe({
       next: (data) => {
-        this.products = data
+        this.products = data.body || []
         this.isLoading = false;
       }
     });
@@ -195,7 +195,7 @@ export class CreateOrderComponent implements OnInit{
     this.categoryService.getCategories()
     .subscribe({
       next: (data) => {
-        this.categories = data
+        this.categories = data.body || []
         this.isLoading = false;
       }
     });

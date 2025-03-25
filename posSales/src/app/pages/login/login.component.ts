@@ -42,9 +42,10 @@ export class LoginComponent{
       password: this.password
     }).subscribe({
       next: (res) => {
-        this.authService.setJwtTokenToStorage(res.token);
-        this.authService.setUserEmailToStorage();
-        this.router.navigate(['/pos']);
+        if(res.ok)
+          this.router.navigate(['/pos']);
+        else
+        console.error(res.body);
       }
     })
 

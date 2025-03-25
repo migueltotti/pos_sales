@@ -10,7 +10,7 @@
                 <label for="emailInput" class="form-label" style="margin-bottom: -5px;">Email:</label>
                 <input type="email" class="form-control" id="emailInput" placeholder="nome@exemplo.com" [(ngModel)]="email" required>
                 <div class="invalid-feedback" [ngClass]="{'d-block': isEmailInvalid, 'd-none': !isEmailInvalid}">
-                    Please enter your email.
+                    Insira seu email por favor.
                 </div>
             </div>
             <div class="position-relative">
@@ -29,7 +29,7 @@
                     Esqueceu sua senha?
                 </a>
                 <div class="invalid-feedback" style="max-width: 170px;" [ngClass]="{'d-block': isPasswordInvalid, 'd-none': !isPasswordInvalid}">
-                    Please enter your password.
+                    Insira sua senha por favor.
                 </div>
             </div>
         </div>
