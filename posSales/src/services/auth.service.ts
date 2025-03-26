@@ -2,9 +2,9 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, of, tap } from 'rxjs';
-import { LoginModel } from '../entities/loginModel';
 import { LoginResponse } from '../entities/loginResponse';
 import { LoginRefreshToken } from '../entities/loginRefreshToken';
+import { Router } from '@angular/router';
 
 const apiLoginUrl = 'https://localhost:44373/api/Auth/Login';
 var httpOptions = {
@@ -20,7 +20,10 @@ export class AuthService {
 
   private jwtHelper = new JwtHelperService();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
   login (loginModel: any) : Observable<HttpResponse<LoginResponse>>{
     return this.http.post<LoginResponse>(
@@ -70,9 +73,17 @@ export class AuthService {
     return null;
   }
 
+  getRefreshToken(): string | null {
+    if(typeof sessionStorage !== "undefined"){
+      return sessionStorage.getItem('jwt');
+    }
+    
+    return null;
+  }
+
   getRefreshTokenExpirationTime(): string | null {
     if(typeof sessionStorage !== "undefined"){
-      return sessionStorage.getItem('rtExpiration');
+      return sessionStorage.getItem('rToken');
     }
     
     return null;
@@ -153,7 +164,6 @@ export class AuthService {
     sessionStorage.removeItem('rToken');
     sessionStorage.removeItem('email');
   }
-
 
   private handleError<T> (operation = 'operation', result?: T){
     return (error: any): Observable<T> => {
