@@ -18,11 +18,25 @@
           </a>
           <ul class="dropdown-menu" style="margin-top: 19px;">
               <li><a class="dropdown-item" href="#">Configurações</a></li>
-              <li><a class="dropdown-item" routerLink="/login">Log In</a></li>
-              <li><a class="d-none dropdown-item" href="#">Log Out</a></li>
+              <li><a class="dropdown-item" routerLink="/login"
+                [ngClass]="{'d-block': !isLoggedIn, 'd-none': isLoggedIn}">
+                  Log In
+                </a>
+              </li>
+              <li><a class="d-none dropdown-item" data-bs-toggle="modal" data-bs-target="#modal"
+                  [ngClass]="{'d-block': isLoggedIn, 'd-none': !isLoggedIn}">
+                  Log Out
+                </a>
+              </li>
           </ul>
         </div>
     </div>
+
+    <app-modal
+      [Title]="modalTitle"
+      [Body]="modalBody"
+      (actionConfirmed)="logout($event)"
+    ></app-modal>
 </nav>
   
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">

@@ -4,6 +4,7 @@ import { Chart, registerables } from 'chart.js';
 import { color } from 'chart.js/helpers';
 import { OrderService } from '../../../services/order.service';
 import { ProductService } from '../../../services/product.service';
+import { AuthService } from '../../../services/auth.service';
 
 Chart.register(...registerables);
 Chart.defaults.color = 'rgba(255, 255, 255, 1)'
@@ -105,7 +106,8 @@ export class HomeComponent implements OnInit{
   
   constructor(
     private orderService: OrderService,
-    private productService: ProductService
+    private productService: ProductService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -115,6 +117,10 @@ export class HomeComponent implements OnInit{
     this.todayDate = (new Date()).toLocaleDateString('pt-BR');
     this.ordersChart = new Chart('OrdersChart', this.ordersChartConfig);
     this.productsChart = new Chart('ProductsChart', this.prodsChartConfig);
+
+    this.userName = this.authService.getUserNameFromStorage()!;
+    var indexHifen = this.userName.indexOf('-')
+    this.userName = this.userName.substring(0, indexHifen);
   }
 
   getOrders(){

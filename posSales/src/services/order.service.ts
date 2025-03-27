@@ -25,7 +25,7 @@ export class OrderService {
 
   montarHeaderToken() {
     token = sessionStorage.getItem("jwt");
-    console.log('jwt header token ' + token)
+    //console.log('jwt header token ' + token)
     httpOptions = {headers: new HttpHeaders({"Authorization" : "Bearer " + token, "Content-Type": "application/json"})}
   }
 
@@ -59,7 +59,7 @@ export class OrderService {
   getNumberOfOrdersFromTodayToLast8Weeks(): Observable<HttpResponse<NumberOfOrderByDate[]>> {
     this.montarHeaderToken();
 
-    var url = apiUrl + '/NumberOfOrdersByDate?Since=8'
+    var url = apiUrl + '/NumberOfOrdersBySundays?Since=8'
 
     return this.http.get<NumberOfOrderByDate[]>(
       url,

@@ -8,6 +8,7 @@ const apiUrl = 'https://localhost:44373/api/Products';
 var httpOptions = {headers: new HttpHeaders({
   "Content-Type": "application/json"
 })};
+var token: string | null;
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,12 @@ var httpOptions = {headers: new HttpHeaders({
 export class ProductService {
 
   constructor(private http: HttpClient) { }
+
+  montarHeaderToken() {
+    token = sessionStorage.getItem("jwt");
+    console.log('jwt header token ' + token)
+    httpOptions = {headers: new HttpHeaders({"Authorization" : "Bearer " + token, "Content-Type": "application/json"})}
+  }
 
   getProducts(
     httpOp: {headers: HttpHeaders} = httpOptions,
@@ -68,6 +75,23 @@ export class ProductService {
     ).pipe(
       tap((data: any) => console.log('number of best selling products received successfully')),
       catchError(this.handleError<HttpResponse<NumberOfProduct[]>>('get5BestSellingProducts'))
+    );
+  }
+
+  updateProduct(id: number, product: Product): Observable<HttpResponse<any>> {
+    const url = apiUrl + '/' + id;
+
+    this.montarHeaderToken();
+    console.log(url);
+    console.log(httpOptions);
+
+    return this.http.put(
+      url, 
+      product, 
+      { headers: httpOptions.headers, observe: 'response' }
+    ).pipe(
+      tap((data: HttpResponse<any>) => console.log('product edited successfully with id=' + product.productId)),
+      catchError(this.handleError<HttpResponse<any>>('updateProduct'))
     );
   }
 

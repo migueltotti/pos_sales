@@ -8,6 +8,7 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ProductService } from '../../../services/product.service';
 import { CategoryService } from '../../../services/category.service';
 import { ModalComponent } from '../../components/modal/modal.component';
+import { switchMap } from 'rxjs';
 
 const testCategories = [
   new Category(1, 'Bovinos', 'bovinos.jpg'),
@@ -79,10 +80,28 @@ export class DailyStockComponent implements AfterViewInit, OnInit{
   ){}
 
   ngOnInit(): void {
-    this.categories = testCategories;
-    this.products = testProducts;
+    //this.categories = testCategories;
+    //this.products = testProducts;
 
-    this.filterProducts();
+    this.getCategoryAndProducts();
+  }
+
+  getCategoryAndProducts(){
+    this.categoryService.getCategories()
+    .pipe(
+      switchMap((catData) => {
+        this.categories = catData.body || []
+        return this.productService.getProducts();
+      })
+    ).subscribe({
+      next: (ProdData) => {
+        this.products = ProdData.body || []
+        this.filterProducts();
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
   }
 
   selectProduct(prod: Product){
@@ -116,14 +135,18 @@ export class DailyStockComponent implements AfterViewInit, OnInit{
     this.prod.name = this.prodName;
     this.prod.stockQuantity = this.prodAmount;
     this.prod.value = this.prodPrice;
+
+    this.saveProduct(this.prodId, this.prod);
   }
 
   excludeProduct(prodId: number){
-    var prod = this.products.find(p => p.productId == prodId);
+    var prod = this.products.find(p => p.productId == prodId)!;
 
-    this.products = this.products.filter(p => p.productId != prod?.productId);
-    this.productsByCategory.set(prod?.categoryId!, this.productsByCategory.get(prod?.categoryId!)?.filter(p => p.productId != prod?.productId)!);
+    //this.products = this.products.filter(p => p.productId != prod?.productId);
+    //this.productsByCategory.set(prod?.categoryId!, this.productsByCategory.get(prod?.categoryId!)?.filter(p => p.productId != prod?.productId)!);
   
+    this.saveProduct(prodId, prod);
+
     // depois clicar no botao de salvar alteraçoes no estoque
 
     // ouuuu eu excluo diretamente do back e busco novamente os produtos -> vou implementar
@@ -136,6 +159,23 @@ export class DailyStockComponent implements AfterViewInit, OnInit{
 
     this.products.forEach(p => {
       this.productsByCategory.get(p.categoryId)?.push(p)
+    });
+  }
+
+  saveProduct(prodId: number, product: Product){
+    this.productService.updateProduct(prodId, product)
+    .pipe(
+      switchMap((data) => {
+        return this.productService.getProducts();
+      })
+    )
+    .subscribe({
+      next: (data) => {
+        this.products = data.body || []
+      },
+      error: (err) => {
+        console.log(err);
+      }
     });
   }
 

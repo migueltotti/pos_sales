@@ -13,7 +13,7 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   canActivate(): boolean {
-    const isRefreshTokenExpirired = true//= this.authService.isRefreshTokenExpirired()
+    const isRefreshTokenExpirired = this.authService.isRefreshTokenExpirired()
 
     if (isRefreshTokenExpirired) {
       this.router.navigate(['/login']); // Redireciona para login se não estiver autenticado

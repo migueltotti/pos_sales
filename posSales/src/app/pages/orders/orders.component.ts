@@ -242,9 +242,9 @@ export class OrdersComponent implements OnInit{
 
   ngOnInit(): void {
     //this.isLoading = true;
-    this.orders = testOrders;
+    //this.orders = testOrders;
 
-    //this.getTodayOrders();
+    this.getTodayOrders();
   }
 
   getTodayOrders(){
@@ -264,14 +264,14 @@ export class OrdersComponent implements OnInit{
         return;
 
     this.showToast(successToast);
-    /*this.orderService.completeOrder(this.orderId)
+    this.orderService.completeOrder(this.orderId)
     .pipe(
         switchMap((res) => {
             return this.orderService.getAllOrdersByDateTimeNow(50, 'Preparing')
         })
     ).subscribe({
-        next: (data) => this.orders = data
-    });*/
+        next: (data) => this.orders = data.body || []
+    });
   }
 
   selectProduct(ord: OrderOutput){

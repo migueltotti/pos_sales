@@ -24,13 +24,22 @@
                 </button>
             </div>
 
-            <div class="d-flex mb-3 mt-1" style="width: 100%; flex-direction: row-reverse; justify-content: space-between;">
+            <div class="d-flex mt-1" style="width: 100%; flex-direction: row-reverse; justify-content: space-between;"
+                [ngClass]="{'mb-1': userNotFound, 'mb-3': !userNotFound}"
+            >
                 <a routerLink="#" class="fw-bold" style="color: #7D0009; font-size: smaller;">
                     Esqueceu sua senha?
                 </a>
                 <div class="invalid-feedback" style="max-width: 170px;" [ngClass]="{'d-block': isPasswordInvalid, 'd-none': !isPasswordInvalid}">
                     Insira sua senha por favor.
                 </div>
+            </div>
+
+            <div class="d-flex fw-bold mt-1 mb-3" 
+                style="color: #7D0009; font-size: medium; justify-content: center;"
+                [ngClass]="{'d-block': userNotFound, 'd-none': !userNotFound}"    
+            >
+                Email ou Senha estão incorretos. Tente novamente
             </div>
         </div>
 

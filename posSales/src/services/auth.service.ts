@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, tap, throwError } from 'rxjs';
 import { LoginResponse } from '../entities/loginResponse';
 import { LoginRefreshToken } from '../entities/loginRefreshToken';
 import { Router } from '@angular/router';
@@ -18,6 +18,9 @@ var httpOptions = {
 })
 export class AuthService {
 
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.isRefreshTokenExpirired());
+  isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
+  
   private jwtHelper = new JwtHelperService();
 
   constructor(
@@ -37,11 +40,18 @@ export class AuthService {
           this.setJwtTokenToStorage(data.body?.token!);
           this.setRefreshToken(data.body?.refreshToken!);
           this.setJwtRefreshTokenExpirationTimeToStorage(data.body?.expiration!);
+          this.setUserEmailToStorage();
+          this.setUserNameToStorage();
+
+          this.isAuthenticatedSubject.next(true); // comunica que o usuario esta logado
         }
         else
           console.error(data.body);
       }),
-      catchError(this.handleError<HttpResponse<LoginResponse>>('Login'))
+      catchError((error) => {
+        console.error('Erro na requisição de login:', error);
+        return throwError(() => error); // 🔥 Certifique-se de propagar o erro corretamente
+      })
     );
   }
 
@@ -57,11 +67,16 @@ export class AuthService {
           this.setJwtTokenToStorage(data.body?.token!);
           this.setRefreshToken(data.body?.refreshToken!);
           this.setJwtRefreshTokenExpirationTimeToStorage(data.body?.expiration!);
+          this.setUserEmailToStorage();
+          this.setUserNameToStorage();
         }
         else
           console.error(data.body);
       }),
-      catchError(this.handleError<HttpResponse<LoginResponse>>('Login'))
+      catchError((error) => {
+        console.error('Erro na requisição de login:', error);
+        return throwError(() => error); // 🔥 Certifique-se de propagar o erro corretamente
+      })
     );
   }
 
@@ -75,7 +90,7 @@ export class AuthService {
 
   getRefreshToken(): string | null {
     if(typeof sessionStorage !== "undefined"){
-      return sessionStorage.getItem('jwt');
+      return sessionStorage.getItem('rToken');
     }
     
     return null;
@@ -83,7 +98,7 @@ export class AuthService {
 
   getRefreshTokenExpirationTime(): string | null {
     if(typeof sessionStorage !== "undefined"){
-      return sessionStorage.getItem('rToken');
+      return sessionStorage.getItem('rtExpiration');
     }
     
     return null;
@@ -114,7 +129,7 @@ export class AuthService {
 
     if(expirationTime != null){
       expirationTimeToDateTime = new Date(expirationTime);
-      isExpired = expirationTimeToDateTime >= new Date()
+      isExpired = expirationTimeToDateTime < new Date()
     }
     
     return isExpired;
@@ -138,6 +153,16 @@ export class AuthService {
     return true;
   }
 
+  setUserNameToStorage(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+
+    const decodedToken = this.jwtHelper.decodeToken(token);
+    sessionStorage.setItem('unique_name', decodedToken?.unique_name);
+    
+    return true;
+  }
+
   setUserIdToStorage(userId: number): boolean {
     const token = this.getToken();
     if (!token) return false;
@@ -146,6 +171,15 @@ export class AuthService {
     sessionStorage.setItem('userId', userIdString);
     
     return true;
+  }
+
+  getUserNameFromStorage(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const userId = sessionStorage.getItem('unique_name')!;
+    
+    return userId;
   }
 
   getUserIdFromStorage(): number | null {
@@ -163,6 +197,9 @@ export class AuthService {
     sessionStorage.removeItem('rtExpiration');
     sessionStorage.removeItem('rToken');
     sessionStorage.removeItem('email');
+    sessionStorage.removeItem('unique_name');
+
+    this.isAuthenticatedSubject.next(false); // comunica que o usuario deslogou
   }
 
   private handleError<T> (operation = 'operation', result?: T){

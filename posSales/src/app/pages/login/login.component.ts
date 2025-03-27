@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { FormControl, FormGroup, FormsModule, NgForm } from '@angular/forms';
 import { LoginModel } from '../../../entities/loginModel';
+import { HttpStatusCode } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -24,6 +25,7 @@ export class LoginComponent{
   password = ''
   isEmailInvalid = false;
   isPasswordInvalid = false;
+  userNotFound = false;
 
   constructor(
     private authService: AuthService,
@@ -42,10 +44,14 @@ export class LoginComponent{
       password: this.password
     }).subscribe({
       next: (res) => {
-        if(res.ok)
-          this.router.navigate(['/pos']);
-        else
-        console.error(res.body);
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        setTimeout(() => {
+          this.userNotFound = true;
+        });
+        console.log('User Not Found? = ' + this.userNotFound)
+        console.error(err);
       }
     })
 
