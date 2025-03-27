@@ -14,10 +14,14 @@ export class ModalComponent {
   @Output() actionConfirmed = new EventEmitter<number>();
   
   triggerConfirmEvent(){
+    this.Title = '';
+    this.Body = '';
     this.actionConfirmed.emit(1);
   }
 
   triggerCancelEvent(){
+    this.Title = '';
+    this.Body = '';
     this.actionConfirmed.emit(0);
   }
 }

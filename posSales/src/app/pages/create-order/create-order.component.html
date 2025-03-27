@@ -11,7 +11,7 @@
             <div class="row g-2 mt-1">
                 <div class="col-sm-7">
                   <div class="form-floating">
-                    <input type="email" class="form-control fw-medium shadow-lg" id="floatingInputGrid" placeholder="name@example.com" [value]="orderPhone">
+                    <input type="email" class="form-control fw-medium shadow-lg" id="floatingInputGrid" placeholder="name@example.com" [(ngModel)]="orderPhone">
                     <label for="floatingInputGrid" style="color: black;">Telefone:</label>
                   </div>
                 </div>
@@ -72,7 +72,7 @@
                             (click)="getAllProductsByName()"
                         ><i class="bi bi-search"></i>
                     </button>
-                    <input type="text" class="form-control search-input" style="color: black; border-radius: 0 0.75rem 0.75rem 0;" [value]="prodName" placeholder="" aria-label="" aria-describedby="addon-wrapping">
+                    <input type="text" class="form-control search-input" style="color: black; border-radius: 0 0.75rem 0.75rem 0;" [(ngModel)]="prodName" placeholder="" aria-label="" aria-describedby="addon-wrapping">
                 </div>
                 @for (cat of categories; track $index) {
                     <button type="button" 
@@ -90,7 +90,7 @@
             
 
             <!-- Lista de Itens -->
-            <div class="d-flex mx-3 gap-3 flex-column h-custom">
+            <div class="d-flex mx-3 mb-2 gap-3 flex-column h-custom">
 
                 <div *ngIf="isLoading" class="d-flex justify-content-center mt-4">
                     <div class="spinner-border text-primary" role="status">
@@ -100,7 +100,7 @@
 
                 <ng-container *ngIf="!isLoading">
                     @for (prod of products; track $index) {
-                        <div class="row w-custom fs-5 fw-bold rounded-4 shadow-lg prod" 
+                        <div class="row w-custom ms-1 fs-5 fw-bold rounded-4 shadow-lg prod" 
                             [ngClass]="{ 'border border-primary border-3': prodId === prod.productId }"
                             (click)="selectProduct(prod)"
                             style="cursor: pointer">

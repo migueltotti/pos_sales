@@ -45,7 +45,7 @@ export class OrderService {
 
   getOrdersByDate(pageSize: number, date: string): Observable<HttpResponse<OrderOutput[]>> {
     this.montarHeaderToken();
-    var url = apiUrl + '/Date?From=' + date + '&To=' + date + '&PageSize=' + pageSize;
+    var url = `${apiUrl}/Date?From=${date}&To=${date}&PageSize=${pageSize}`;
 
     return this.http.get<OrderOutput[]>(
       url,
@@ -59,7 +59,7 @@ export class OrderService {
   getNumberOfOrdersFromTodayToLast8Weeks(): Observable<HttpResponse<NumberOfOrderByDate[]>> {
     this.montarHeaderToken();
 
-    var url = apiUrl + '/NumberOfOrdersBySundays?Since=8'
+    var url = `${apiUrl}/NumberOfOrdersBySundays?Since=${8}`
 
     return this.http.get<NumberOfOrderByDate[]>(
       url,
@@ -70,17 +70,17 @@ export class OrderService {
     );
   }
 
-  getOrdersReportByDate(): Observable<HttpResponse<OrderReport[]>> {
+  getOrdersReportByDate(date: string): Observable<HttpResponse<OrderReport>> {
     this.montarHeaderToken();
 
-    var url = apiUrl + '/ReportByDate?Date=25/05/2025'
+    var url = `${apiUrl}/ReportByDate?Date=${date}&PageSize=50`
 
-    return this.http.get<OrderReport[]>(
+    return this.http.get<OrderReport>(
       url,
       {headers: httpOptions.headers, observe: 'response'}
     ).pipe(
       tap((res) => console.log('order report received successfully')),
-      catchError(this.handleError<HttpResponse<OrderReport[]>>('getOrdersReportByDate'))
+      catchError(this.handleError<HttpResponse<OrderReport>>('getOrdersReportByDate'))
     );
   }
 

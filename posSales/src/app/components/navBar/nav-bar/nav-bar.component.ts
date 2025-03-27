@@ -4,22 +4,20 @@ import { AuthService } from '../../../../services/auth.service';
 import { ModalComponent } from '../../modal/modal.component';
 import { NgClass } from '@angular/common';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { LogoutModalComponent } from '../../logout-modal/logout-modal.component';
 
 @Component({
   selector: 'app-nav-bar',
   standalone: true,
   imports: [
     RouterLink,
-    ModalComponent,
+    LogoutModalComponent,
     NgClass
   ],
   templateUrl: './nav-bar.component.html',
   styleUrl: './nav-bar.component.scss'
 })
 export class NavBarComponent {
-  modalTitle = "LogOut"
-  modalBody = "Tem certeza que deseja fazer logout?"
-
   isLoggedIn: boolean = false;
   private authSubscription!: Subscription;
 
@@ -29,13 +27,16 @@ export class NavBarComponent {
     this.authSubscription = this.authService.isAuthenticated$.subscribe(
       (isAuthenticated) => {
         this.isLoggedIn = isAuthenticated;
+        console.log(isAuthenticated);
       }
     );
   }
 
-  logout(event: any) {
-    this.authService.logoutUser();
-    this.router.navigate(['/home']);
+  logout(event: number) {
+    if(event == 1){
+      this.authService.logoutUser();
+      this.router.navigate(['/login']);
+    }
   }
 
   ngOnDestroy() {

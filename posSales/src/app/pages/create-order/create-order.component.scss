@@ -55,16 +55,18 @@
 }
 
 .w-custom{
-    width: 98%;
+    width: 90%;
 }
 
 .h-custom {
-    height: 80%;
+    height: 75vh;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 @media (max-width: 1300px) {
     .h-custom {
-        height: 75%;
+        height: 70vh;
     }
 }
 

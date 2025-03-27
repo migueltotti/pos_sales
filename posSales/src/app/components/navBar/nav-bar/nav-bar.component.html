@@ -23,7 +23,7 @@
                   Log In
                 </a>
               </li>
-              <li><a class="d-none dropdown-item" data-bs-toggle="modal" data-bs-target="#modal"
+              <li><a class="d-none dropdown-item" data-bs-toggle="modal" data-bs-target="#logoutModal"
                   [ngClass]="{'d-block': isLoggedIn, 'd-none': !isLoggedIn}">
                   Log Out
                 </a>
@@ -32,11 +32,9 @@
         </div>
     </div>
 
-    <app-modal
-      [Title]="modalTitle"
-      [Body]="modalBody"
+    <app-logout-modal
       (actionConfirmed)="logout($event)"
-    ></app-modal>
+    ></app-logout-modal>
 </nav>
   
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">

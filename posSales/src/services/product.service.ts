@@ -30,7 +30,7 @@ export class ProductService {
   {
 
     if(apiPagUrl == null){
-      apiPagUrl = apiUrl;
+      apiPagUrl = `${apiUrl}?PageSize=50`;
     }
 
     return this.http.get<HttpResponse<Product[]>>(
@@ -54,7 +54,8 @@ export class ProductService {
   }
 
   getProductsByName(productName: string) : Observable<HttpResponse<Product[]>>{
-    const url = apiUrl + '/name' + '?Name=' + productName;
+    const url = `${apiUrl}/name?Name=${productName}&PageSize=50`;
+    console.log(url);
 
     return this.http.get<HttpResponse<Product[]>>(
       url, 
@@ -65,9 +66,9 @@ export class ProductService {
     );
   }
 
-  get5BestSellingProducts(): Observable<HttpResponse<NumberOfProduct[]>>{
+  get5BestSellingProducts(months_count: number): Observable<HttpResponse<NumberOfProduct[]>>{
 
-    var url = apiUrl + '/ProductsBestSellingCount?Months_Count=2'
+    var url = `${apiUrl}/ProductsBestSellingCount?Months_Count=${months_count}`
 
     return this.http.get<HttpResponse<NumberOfProduct[]>>(
       url, 

@@ -13,8 +13,15 @@ import { HolderModalComponent } from '../../components/holder-modal/holder-modal
 import { NgClass, NgIf } from '@angular/common';
 import Toast from 'bootstrap/js/dist/toast';
 import { NoteModalComponent } from '../../components/note-modal/note-modal.component';
+import { switchMap } from 'rxjs/internal/operators/switchMap';
+import { FormsModule, NgModel } from '@angular/forms';
 
 const testProducts: Product[] = [
+  new Product(1, "Arroz Integral", "Pacote de 5kg de arroz integral", 25, 2, 100, "arroz.jpg", 10),
+  new Product(2, "Feijão Preto", "Pacote de 1kg de feijão preto", 8, 1, 80, "feijao.jpg", 10),
+  new Product(3, "Leite Desnatado", "Caixa de leite desnatado 1L", 6, 2, 50, "leite.jpg", 11),
+  new Product(4, "Chocolate Meio Amargo", "Barra de chocolate 70% cacau", 12, 2, 40, "chocolate.jpg", 12),
+  new Product(5, "Cereal Matinal", "Cereal matinal rico em fibras 300g", 15, 2, 60, "cereal.jpg", 13),
   new Product(1, "Arroz Integral", "Pacote de 5kg de arroz integral", 25, 2, 100, "arroz.jpg", 10),
   new Product(2, "Feijão Preto", "Pacote de 1kg de feijão preto", 8, 1, 80, "feijao.jpg", 10),
   new Product(3, "Leite Desnatado", "Caixa de leite desnatado 1L", 6, 2, 50, "leite.jpg", 11),
@@ -46,6 +53,7 @@ const failedToast = 'Erro ao criar pedido!';
     ModalComponent,
     HolderModalComponent,
     NgClass,
+    FormsModule,
     NgIf,
     NoteModalComponent
 ],
@@ -88,15 +96,14 @@ export class CreateOrderComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    //this.isLoading = true;
-    this.products = testProducts;
-    this.categories = testCategories;
+    //this.products = testProducts;
+    //this.categories = testCategories;
 
-    this.orderHolder = "Miguel Totti";
-    this.orderPhone = "(18) 99787-2005"
+    this.orderHolder = "";
+    this.orderPhone = "";
 
-    //this.getAllProducts();
-    //this.getAllCategories();
+    this.getAllProducts();
+   this.getAllCategories();
   }
 
   increaseAmount(){
@@ -141,7 +148,8 @@ export class CreateOrderComponent implements OnInit{
     );
 
     this.order.products.push(this.lineItem);
-    this.order.products.forEach(p => this.order.totalValue += p.amount * p.price);
+    //this.order.products.forEach(p => this.order.totalValue += p.amount * p.price);
+    this.order.totalValue += this.lineItem.amount * this.lineItem.price;
     this.orderProducts.push(
       new OrderProducts(this.findProduct(this.prodId), this.lineItem)
     )
@@ -210,21 +218,21 @@ export class CreateOrderComponent implements OnInit{
     this.order.holder = this.orderHolder;
     this.order.note = this.orderPhone + ' : ' + this.orderNote;
 
-    /*this.orderService.postOrder(this.order)
+    this.orderService.postOrder(this.order)
     .pipe(
       switchMap(() => {
         return this.productService.getProducts()
       })
     ).subscribe({
       next: (data) => {
-        this.products = data;
+        this.products = data.body || [];
         this.showToast(successToast);
       },
       error: (err) => {
         console.log(err);
         this.showToast(failedToast);
       }
-    });*/
+    });
 
     console.log(this.order);
 
@@ -299,13 +307,12 @@ export class CreateOrderComponent implements OnInit{
   }
 
   showToast(text: string){
-      this.toastMessage = text
-  
-      const toastElement = document.getElementById('toast');
-      console.log(toastElement);
-      if(toastElement){
-          const toast = new Toast(toastElement);
-          toast.show();
-      }
+    this.toastMessage = text
+
+    const toastElement = document.getElementById('toast');
+    if(toastElement){
+        const toast = new Toast(toastElement);
+        toast.show();
+    }
   }
 }

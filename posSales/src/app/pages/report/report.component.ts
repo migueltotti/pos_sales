@@ -12,6 +12,7 @@ import { OrderService } from '../../../services/order.service';
 import { ModalComponent } from "../../components/modal/modal.component";
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { HttpStatusCode } from '@angular/common/http';
+import { OrderReport } from '../../../entities/orderReport';
 
 const testOrders: OrderOutput[] = [
   new OrderOutput(
@@ -138,7 +139,7 @@ const failedToast = 'Erro ao completar pedido!';
 export class ReportComponent implements OnInit{
   collapses: { id: string; collapse: Collapse; isOpen: boolean }[] = [];
 
-  orders: OrderOutput[] = [];
+  ordersReport!: OrderReport | null;
 
   isLoading = false;
   orderId = 0;
@@ -158,25 +159,19 @@ export class ReportComponent implements OnInit{
   constructor(private orderService: OrderService) {}
 
   ngOnInit(): void {
-    this.orders = testOrders;
+    //this.orders = testOrders;
     // get today orders
     this.searchReportByDate(this.date);
 
-    this.getEstimatedRevenue();
-    this.orderAmount = this.orders.length;
-  }
-
-  getEstimatedRevenue(){
-    this.orders.forEach(o => 
-        this.estimatedRevenue += o.totalValue
-    )
+    this.estimatedRevenue = this.ordersReport?.totalValue!;
+    this.orderAmount = this.ordersReport?.orders.length!;
   }
 
   searchReportByDate(date: string){
-    this.orderService.getOrdersByDate(50, date)
+    this.orderService.getOrdersReportByDate(date)
     .subscribe({
       next: (res) => {
-        this.orders = res.body || [];
+        this.ordersReport = res.body;
         console.log(res.statusText)
       },
       error: (err) => console.error(err)
@@ -189,7 +184,7 @@ export class ReportComponent implements OnInit{
 
   returnOrder(orderId: number){
     // update order status to "Preparing" and get report again
-    var ord = this.orders.find(o => o.orderId == orderId)!;
+    var ord = this.ordersReport?.orders.find(o => o.orderId == orderId)!;
 
     ord.orderStatus = 1;
 
@@ -214,7 +209,7 @@ export class ReportComponent implements OnInit{
   }
 
   triggerModal(){
-    var ord = this.orders.find(o => o.orderId == this.orderId)!;
+    var ord = this.ordersReport?.orders.find(o => o.orderId == this.orderId)!;
     console.log(ord);
 
     this.modalTitle = 'Retornar Produto';

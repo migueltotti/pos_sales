@@ -137,7 +137,7 @@ export class HomeComponent implements OnInit{
   }
 
   getProducts(){
-    this.productService.get5BestSellingProducts().
+    this.productService.get5BestSellingProducts(2).
     subscribe({
       next: (res) => {
         res.body?.forEach(prod => {
