@@ -29,7 +29,6 @@ export class NavBarComponent {
     this.authSubscription = this.authService.isAuthenticated$.subscribe(
       (isAuthenticated) => {
         this.isLoggedIn = isAuthenticated;
-        console.log(this.isLoggedIn);
       }
     );
   }

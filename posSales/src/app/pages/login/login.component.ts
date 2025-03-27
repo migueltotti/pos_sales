@@ -20,9 +20,10 @@ import { HttpStatusCode } from '@angular/common/http';
 export class LoginComponent{
   isPasswordVisible = false;
   passwordVisibilityType = 'password'
+  isLoading = false;
 
   email = '';
-  password = ''
+  password = '';
   isEmailInvalid = false;
   isPasswordInvalid = false;
   userNotFound = false;
@@ -39,14 +40,19 @@ export class LoginComponent{
       return;
     }
 
+    this.userNotFound = false;
+    this.isLoading = true;
+
     this.authService.login({ 
       email: this.email,
       password: this.password
     }).subscribe({
       next: (res) => {
+        this.isLoading = false;
         this.router.navigate(['/home']);
       },
       error: (err) => {
+        this.isLoading = false;
         setTimeout(() => {
           this.userNotFound = true;
         });
@@ -57,12 +63,15 @@ export class LoginComponent{
 
     this.isEmailInvalid = false;
     this.isPasswordInvalid = false;
+    this.email = '';
+    this.password = '';
   }
 
   cancel(){
     this.email = this.password = '';
     this.isEmailInvalid = false;
     this.isPasswordInvalid = false;
+    this.userNotFound = false;
   }
 
   togglePasswordVisibility() {

@@ -119,8 +119,10 @@ export class HomeComponent implements OnInit{
     this.productsChart = new Chart('ProductsChart', this.prodsChartConfig);
 
     this.userName = this.authService.getUserNameFromStorage()!;
-    var indexHifen = this.userName.indexOf('-')
-    this.userName = this.userName.substring(0, indexHifen);
+    if(this.userName.includes('-')){
+      var indexHifen = this.userName.indexOf('-')
+      this.userName = this.userName.substring(0, indexHifen);
+    }
   }
 
   getOrders(){

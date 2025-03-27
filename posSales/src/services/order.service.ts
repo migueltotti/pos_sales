@@ -45,7 +45,7 @@ export class OrderService {
 
   getOrdersByDate(pageSize: number, date: string): Observable<HttpResponse<OrderOutput[]>> {
     this.montarHeaderToken();
-    var url = apiUrl + '/Date?Date=' + date + '&PageSize=' + pageSize;
+    var url = apiUrl + '/Date?From=' + date + '&To=' + date + '&PageSize=' + pageSize;
 
     return this.http.get<OrderOutput[]>(
       url,

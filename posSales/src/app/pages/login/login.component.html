@@ -35,10 +35,15 @@
                 </div>
             </div>
 
-            <div class="d-flex fw-bold mt-1 mb-3" 
-                style="color: #7D0009; font-size: medium; justify-content: center;"
-                [ngClass]="{'d-block': userNotFound, 'd-none': !userNotFound}"    
-            >
+            <div class="d-flex fw-bold mt-1 mb-3" style="justify-content: center;"
+                [ngClass]="{'d-block': isLoading, 'd-none': !isLoading}">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+
+            <div class="d-flex fw-bold mt-1 mb-3" style="color: #7D0009; font-size: medium; justify-content: center;"
+                [ngClass]="{'d-block': userNotFound, 'd-none': !userNotFound}">
                 Email ou Senha estão incorretos. Tente novamente
             </div>
         </div>
