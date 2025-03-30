@@ -87,27 +87,35 @@ export class OrderService {
   postOrder(order: OrderInput): Observable<HttpResponse<OrderOutput>> {
     this.montarHeaderToken();
 
-    return this.http.post<OrderOutput>(
-      apiUrl, order, {headers: httpOptions.headers, observe: 'response'}
+    var urlSentOrder = apiUrl + '/sent/';
+
+    return this.http.post(
+      apiUrl,
+      order,
+      {headers: httpOptions.headers, observe: 'response'}
     ).pipe(
-      tap((Order: any) => console.log('order added successfully')),
-      catchError(this.handleError<HttpResponse<OrderOutput>>('addOrder'))
+      tap((order: any) => console.log('Order created successfully')),
+        switchMap((order: HttpResponse<OrderOutput>) => this.http.post(
+          urlSentOrder + order.body?.orderId,
+          {},
+          httpOptions
+        )), // Chama o segundo endpoint após o primeiro completar
+        tap((any: any) => console.log('Order sent successfully')),
+      catchError(this.handleError<HttpResponse<OrderOutput>>('createOrder'))
     );
   }
 
   completeOrder(orderId: number): Observable<HttpResponse<any>> {
     this.montarHeaderToken();
 
-    var urlSentOrder = apiUrl + '/sent/' + orderId;
     var urlFinishOrder = apiUrl + '/finish/' + orderId;
 
     return this.http.post(
-      urlSentOrder,
+      urlFinishOrder,
+      {},
       {headers: httpOptions.headers, observe: 'response'}
     ).pipe(
-      tap(() => console.log('Order sent successfully')),
-        switchMap(() => this.http.post(urlFinishOrder, httpOptions)), // Chama o segundo endpoint após o primeiro completar
-        tap((any: any) => console.log('Order finished successfully')),
+      tap((res) => console.log('Order finished successfully', res)),
       catchError(this.handleError<HttpResponse<OrderOutput>>('completeOrder'))
     );
   }

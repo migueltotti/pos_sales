@@ -9,7 +9,7 @@
 
         <div class="lista-container">
 
-            @for (item of order.products; track $index) {
+            @for (item of order.lineItems; track $index) {
                 <div class="row fs-p">
                     <div class="col-9 text-start prod-name pe-0">{{ getProdName(item.product.name) }}</div>
                     <div class="col-3 text-start ps-0">

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { OrderOutput } from '../../../../entities/orderOutput';
 import { NgClass } from '@angular/common';
 
@@ -9,7 +9,7 @@ import { NgClass } from '@angular/common';
   templateUrl: './order-card.component.html',
   styleUrl: './order-card.component.scss'
 })
-export class OrderCardComponent {
+export class OrderCardComponent{
   @Input() order!: OrderOutput;
   @Input() orderId = 0;
 

@@ -7,8 +7,9 @@ import { LineItemOutput } from '../../../entities/lineItemOutput';
 import { Product } from '../../../entities/product';
 import { switchMap } from 'rxjs';
 import { Toast } from 'bootstrap';
+import { CancelOrderModalComponent } from "../../components/cancel-order-modal/cancel-order-modal.component";
 
-const testOrders: OrderOutput[] = [
+/*const testOrders: OrderOutput[] = [
   new OrderOutput(
       1,
       150.00,
@@ -215,17 +216,21 @@ new OrderOutput(
         )
     ]
 )
-];
+];*/
 
 const successToast = 'Pedido completo com sucesso!';
 const failedToast = 'Erro ao completar pedido!';
+
+const successCancelToast = 'Pedido cancelado com sucesso!';
+const failedCancelToast = 'Erro ao cancelar pedido!';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
   imports: [
     NgIf,
-    OrderCardComponent
+    OrderCardComponent,
+    CancelOrderModalComponent
 ],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss'
@@ -235,6 +240,7 @@ export class OrdersComponent implements OnInit{
   orders!: OrderOutput[];
 
   orderId = 0;
+  ordersCount = '';
 
   toastMessage = ''
 
@@ -250,10 +256,11 @@ export class OrdersComponent implements OnInit{
   getTodayOrders(){
     this.isLoading = true;
 
-    this.orderService.getAllOrdersByDateTimeNow(50, 'Preparing')
+    this.orderService.getAllOrdersByDateTimeNow(50, 'Sent')
     .subscribe({
       next: (data) => {
         this.orders = data.body || [];
+        this.ordersCount = this.orders.length.toString().padStart(4, '0');
         this.isLoading = false;
       }
     })
@@ -263,27 +270,52 @@ export class OrdersComponent implements OnInit{
     if(this.orderId == 0)
         return;
 
-    this.showToast(successToast);
+    this.isLoading = true;
+
     this.orderService.completeOrder(this.orderId)
     .pipe(
         switchMap((res) => {
-            return this.orderService.getAllOrdersByDateTimeNow(50, 'Preparing')
-        })
-    ).subscribe({
-        next: (data) => this.orders = data.body || []
+            this.showToast(successToast);
+            return this.orderService.getAllOrdersByDateTimeNow(50, 'Sent')
+        }
+    )).subscribe({
+        next: (data) => {
+            this.orders = data.body || [];
+            this.ordersCount = this.orders.length.toString().padStart(4, '0');
+            this.isLoading = false;
+        }
+    });
+  }
+
+  cancelOrder(event: number){
+    if(this.orderId == 0 || event == 0)
+        return;
+
+    this.isLoading = true;
+
+    this.orderService.deleteOrder(this.orderId)
+    .pipe(
+        switchMap((res) => {
+            this.showToast(successCancelToast);
+            return this.orderService.getAllOrdersByDateTimeNow(50, 'Sent')
+        }
+    )).subscribe({
+        next: (data) => {
+            this.orders = data.body || [];
+            this.ordersCount = this.orders.length.toString().padStart(4, '0');
+            this.isLoading = false;
+        }
     });
   }
 
   selectProduct(ord: OrderOutput){
     this.orderId = this.orderId === ord.orderId ? 0 : ord.orderId;
-    console.log(ord.orderId);
   }
 
   showToast(text: string){
     this.toastMessage = text
 
     const toastElement = document.getElementById('toast');
-    console.log(toastElement);
     if(toastElement){
         const toast = new Toast(toastElement);
         toast.show();

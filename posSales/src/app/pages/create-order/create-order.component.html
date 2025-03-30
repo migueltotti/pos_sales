@@ -101,7 +101,10 @@
                 <ng-container *ngIf="!isLoading">
                     @for (prod of products; track $index) {
                         <div class="row w-custom ms-1 fs-5 fw-bold rounded-4 shadow-lg prod" 
-                            [ngClass]="{ 'border border-primary border-3': prodId === prod.productId }"
+                            [ngClass]="{ 
+                                'border border-primary border-3': prodId === prod.productId,
+                                'disabled-product': prod.stockQuantity === 0
+                            }"
                             (click)="selectProduct(prod)"
                             style="cursor: pointer">
                             <div class="col-9 text-start">

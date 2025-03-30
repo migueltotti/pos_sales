@@ -63,7 +63,7 @@
                         Pedidos <i class="bi-caret-down-fill"></i>
                     </h3>
 
-                    <button type="button" class="btn btn-return-order fw-bold text-black mx-3 mt-1" 
+                    <button *ngIf="todayDate" type="button" class="btn btn-return-order fw-bold text-black mx-3 mt-1" 
                         [disabled]="orderId == 0"
                         (click)="triggerModal()" 
                         data-bs-toggle="modal" 

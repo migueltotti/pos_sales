@@ -5,28 +5,28 @@ export class OrderOutput{
     totalValue!: number;
     orderDate!: string;
     orderStatus!: number;
+    userId!: number;
     holder!: string;
     note!: string;
-    userId!: number;
-    products!: LineItemOutput[]; 
+    lineItems!: LineItemOutput[]; 
 
     constructor(
         orderId: number,
         totalValue: number,
         orderDate: string,
         orderStatus: number,
+        userId: number,
         holder: string,
         note: string,
-        userId: number,
-        products: LineItemOutput[]
+        lineItems: LineItemOutput[]
     ){
         this.orderId = orderId;
         this.totalValue = totalValue;
         this.orderDate = orderDate;
         this.orderStatus = orderStatus;
+        this.userId = userId;
         this.holder = holder;
         this.note = note;
-        this.userId = userId;
-        this.products = products;
+        this.lineItems = lineItems;
     }
 }

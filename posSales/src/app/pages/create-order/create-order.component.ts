@@ -103,7 +103,7 @@ export class CreateOrderComponent implements OnInit{
     this.orderPhone = "";
 
     this.getAllProducts();
-   this.getAllCategories();
+    this.getAllCategories();
   }
 
   increaseAmount(){
@@ -204,6 +204,7 @@ export class CreateOrderComponent implements OnInit{
     .subscribe({
       next: (data) => {
         this.categories = data.body || []
+        console.log(this.categories);
         this.isLoading = false;
       }
     });
@@ -213,7 +214,10 @@ export class CreateOrderComponent implements OnInit{
     if(this.order.products.length == 0)
       return;
 
-    this.order.orderDate = (new Date()).toISOString();
+    const localDate = new Date();
+    const localISOString = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000).toISOString();
+
+    this.order.orderDate = localISOString;
     this.order.orderStatus = 1;
     this.order.holder = this.orderHolder;
     this.order.note = this.orderPhone + ' : ' + this.orderNote;

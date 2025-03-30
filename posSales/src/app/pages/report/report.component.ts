@@ -3,7 +3,7 @@ import { Product } from '../../../entities/product';
 import { OrderInput } from '../../../entities/orderInput';
 import { OrderOutput } from '../../../entities/orderOutput';
 import { FormsModule, NgModel } from '@angular/forms';
-import { NgClass } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import Collapse from 'bootstrap/js/dist/collapse';
 import { OrderCardComponent } from "../../components/orderCard/order-card/order-card.component";
 import { LineItemOutput } from '../../../entities/lineItemOutput';
@@ -14,7 +14,7 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { HttpStatusCode } from '@angular/common/http';
 import { OrderReport } from '../../../entities/orderReport';
 
-const testOrders: OrderOutput[] = [
+/*const testOrders: OrderOutput[] = [
   new OrderOutput(
       1,
       150.00,
@@ -118,7 +118,7 @@ const testOrders: OrderOutput[] = [
           )
       ]
   )
-];
+];*/
 
 const successToast = 'Pedido completo com sucesso!';
 const failedToast = 'Erro ao completar pedido!';
@@ -130,8 +130,9 @@ const failedToast = 'Erro ao completar pedido!';
     FormsModule,
     NgxMaskDirective,
     OrderCardComponent,
-    ModalComponent
-],
+    ModalComponent,
+    CommonModule
+  ],
   providers: [provideNgxMask()],
   templateUrl: './report.component.html',
   styleUrl: './report.component.scss'
@@ -145,6 +146,7 @@ export class ReportComponent implements OnInit{
   orderId = 0;
 
   date = (new Date()).toLocaleDateString();
+  todayDate = this.date == (new Date()).toLocaleDateString();
   employee = '';
   estimatedRevenue = 0;
   orderAmount = 0;
@@ -186,9 +188,13 @@ export class ReportComponent implements OnInit{
     // update order status to "Preparing" and get report again
     var ord = this.ordersReport?.orders.find(o => o.orderId == orderId)!;
 
+    var updateOrder = new OrderInput(
+      ord.totalValue, ord.orderDate, ord.orderStatus, ord.holder, ord.note, ord.lineItems
+    )
+
     ord.orderStatus = 1;
 
-    this.orderService.updateOrder(ord.orderId, ord)
+    this.orderService.updateOrder(ord.orderId, updateOrder)
     .subscribe({
       next: (res) => {
         if(res.status == HttpStatusCode.Ok)

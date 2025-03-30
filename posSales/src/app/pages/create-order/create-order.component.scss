@@ -80,3 +80,10 @@
     background-color: #D9D9D9;
     min-height: 90px;
 }
+
+.disabled-product {
+    background-color: #d3d3d3 !important; /* Cinza claro */
+    opacity: 0.6;
+    pointer-events: none; /* Impede cliques */
+    user-select: none; /* Impede seleção */
+}
