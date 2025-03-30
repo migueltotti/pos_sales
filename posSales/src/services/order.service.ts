@@ -72,6 +72,10 @@ export class OrderService {
 
   getOrdersReportByDate(date: string): Observable<HttpResponse<OrderReport>> {
     this.montarHeaderToken();
+    const [day, month, year] = date.split('-').map(Number);
+    const localDate = new Date(year, month - 1, day); // Mês no Date começa do 0 (Janeiro = 0)
+    //const isoDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000).toISOString();
+
 
     var url = `${apiUrl}/ReportByDate?Date=${date}&PageSize=50`
 

@@ -13,6 +13,11 @@ import { ModalComponent } from "../../components/modal/modal.component";
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { HttpStatusCode } from '@angular/common/http';
 import { OrderReport } from '../../../entities/orderReport';
+import { WorkDay } from '../../../entities/workDay';
+import { WorkDayService } from '../../../services/work-day.service';
+import { OrderUpdate } from '../../../entities/orderUpdate';
+import { switchMap } from 'rxjs/internal/operators/switchMap';
+import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 
 /*const testOrders: OrderOutput[] = [
   new OrderOutput(
@@ -141,12 +146,13 @@ export class ReportComponent implements OnInit{
   collapses: { id: string; collapse: Collapse; isOpen: boolean }[] = [];
 
   ordersReport!: OrderReport | null;
+  workDay!: WorkDay | null;
 
   isLoading = false;
   orderId = 0;
 
-  date = (new Date()).toLocaleDateString();
-  todayDate = this.date == (new Date()).toLocaleDateString();
+  date = (new Date()).toLocaleDateString("pt-BR");
+  todayDate = (new Date()).toLocaleDateString("pt-BR");
   employee = '';
   estimatedRevenue = 0;
   orderAmount = 0;
@@ -158,15 +164,27 @@ export class ReportComponent implements OnInit{
   modalBody = '';
   modalTitle = '';
 
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService, private workDayService: WorkDayService) {}
 
   ngOnInit(): void {
     //this.orders = testOrders;
     // get today orders
-    this.searchReportByDate(this.date);
+    //this.searchByDate(this.date);
 
-    this.estimatedRevenue = this.ordersReport?.totalValue!;
-    this.orderAmount = this.ordersReport?.orders.length!;
+    //this.employee = this.workDay?.employeeName!;
+    //this.estimatedRevenue = this.ordersReport?.totalValue!;
+    //this.orderAmount = this.workDay?.numberOfOrders!;
+    //this.ordersCanceled = this.workDay?.numberOfCanceledOrders!;
+
+    const today = new Date();
+    this.todayDate = today.toISOString().split("T")[0]; // "2025-03-29"
+  }
+
+  searchByDate(date: string){
+    console.log(date);
+
+    this.searchReportByDate(date);
+    this.getWorkDayByDate(date);
   }
 
   searchReportByDate(date: string){
@@ -174,7 +192,21 @@ export class ReportComponent implements OnInit{
     .subscribe({
       next: (res) => {
         this.ordersReport = res.body;
-        console.log(res.statusText)
+        this.estimatedRevenue = this.ordersReport?.totalValue!;
+        console.log(this.ordersReport)
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  getWorkDayByDate(date: string){
+    this.workDayService.getWorkDayByDate(date)
+    .subscribe({
+      next: (res) => {
+        this.workDay = res.body;
+        this.employee = res.body?.employeeName!;
+        this.orderAmount = res.body?.numberOfOrders!;
+        this.ordersCanceled = res.body?.numberOfCanceledOrders!;
       },
       error: (err) => console.error(err)
     });
@@ -185,23 +217,39 @@ export class ReportComponent implements OnInit{
   }
 
   returnOrder(orderId: number){
-    // update order status to "Preparing" and get report again
+    // update order status to "Sent" and get report again
     var ord = this.ordersReport?.orders.find(o => o.orderId == orderId)!;
 
-    var updateOrder = new OrderInput(
-      ord.totalValue, ord.orderDate, ord.orderStatus, ord.holder, ord.note, ord.lineItems
+    var updateOrder = new OrderUpdate(
+      ord.orderId, ord.totalValue, ord.orderDate, ord.orderStatus, ord.holder, ord.note, ord.lineItems
     )
 
-    ord.orderStatus = 1;
+    updateOrder.orderStatus = 2;
 
-    this.orderService.updateOrder(ord.orderId, updateOrder)
-    .subscribe({
-      next: (res) => {
-        if(res.status == HttpStatusCode.Ok)
+    this.orderService.updateOrder(ord.orderId, updateOrder).pipe(
+      switchMap((res) => {
+        if (res.status === HttpStatusCode.Ok) {
           this.showToast(successToast);
-        else 
+          console.log(res.statusText);
+          return forkJoin([
+            this.orderService.getOrdersReportByDate(ord.orderDate),
+            this.workDayService.getWorkDayByDate(ord.orderDate)
+          ]);
+        } else {
           this.showToast(failedToast);
-        console.log(res.statusText);
+          throw new Error('Falha ao atualizar pedido');
+        }
+      })
+    ).subscribe({
+      next: ([ordersReportRes, workDayRes]) => {
+        // Atualiza os relatórios
+        this.ordersReport = ordersReportRes.body;
+        this.estimatedRevenue = this.ordersReport?.totalValue!;
+  
+        this.workDay = workDayRes.body;
+        this.employee = workDayRes.body?.employeeName!;
+        this.orderAmount = workDayRes.body?.numberOfOrders!;
+        this.ordersCanceled = workDayRes.body?.numberOfCanceledOrders!;
       },
       error: (err) => {
         console.error(err);

@@ -2,7 +2,7 @@
     <div class="card-body">
         <div class="d-flex g-4" style="justify-content: space-between;">
             <h4 class="fw-bold fs-5">{{order.holder.toUpperCase()}}</h4>
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled" [checked]="order.orderStatus == 3" disabled>
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled" [checked]="order.orderStatus === 3" disabled>
         </div>
 
         <hr class="border border-black border-1 my-1 mx-0.5 opacity-100">
