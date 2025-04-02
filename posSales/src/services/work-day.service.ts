@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
 import { WorkDay } from '../entities/workDay';
 
 const apiUrl = 'https://localhost:44373/api/WorkDays';
@@ -15,6 +15,8 @@ var token: string | null;
   providedIn: 'root'
 })
 export class WorkDayService {
+  isWorkDayInProgressSubject = new BehaviorSubject<boolean>(false);
+  isWorkDayInProgress$: Observable<boolean> = this.isWorkDayInProgressSubject.asObservable();
 
   constructor(private http: HttpClient) { }
   
@@ -56,7 +58,7 @@ export class WorkDayService {
     )
   }
 
-  startWokDay(employeeId: string): Observable<HttpResponse<WorkDay>>{
+  startWokDay(employeeId: number): Observable<HttpResponse<WorkDay>>{
     this.montarHeaderToken();
 
     const url = `${apiUrl}/StartWorkDay?employeeId=${employeeId}`;
@@ -76,7 +78,7 @@ export class WorkDayService {
     )
   }
 
-  finishWokDay(workDayId: string): Observable<HttpResponse<WorkDay>>{
+  finishWokDay(workDayId: number): Observable<HttpResponse<WorkDay>>{
     this.montarHeaderToken();
 
     const url = `${apiUrl}/FinishWorkDay/${workDayId}`;
@@ -90,7 +92,7 @@ export class WorkDayService {
     )
   }
   
-  getWorkDayIdIFromStorage(workDayId: number) : number{
+  getWorkDayIdFromStorage() : number{
     return parseInt(sessionStorage.getItem('workDayId')!, 10)
   }
 

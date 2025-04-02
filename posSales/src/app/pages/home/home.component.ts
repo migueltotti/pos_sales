@@ -1,26 +1,47 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Chart, registerables } from 'chart.js';
 import { color } from 'chart.js/helpers';
 import { OrderService } from '../../../services/order.service';
 import { ProductService } from '../../../services/product.service';
 import { AuthService } from '../../../services/auth.service';
+import { WorkDayService } from '../../../services/work-day.service';
+import Toast from 'bootstrap/js/dist/toast';
+import { CommonModule } from '@angular/common';
+import { WorkDay } from '../../../entities/workDay';
+import { Observable } from 'rxjs/internal/Observable';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 Chart.register(...registerables);
 Chart.defaults.color = 'rgba(255, 255, 255, 1)'
+
+const successStartWorkDayToast = 'Dia de trabalho iniciado com sucesso';
+const failedStartWorkDayToast = 'Erro ao iniciar dia de trabalho!';
+
+const successFinishWorkDayToast = 'Dia de trabalho finalizado com sucesso';
+const failedFinishWorkDayToast = 'Erro ao finalizar dia de trabalho!';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
-    RouterLink
+    RouterLink,
+    CommonModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit{
+
+  isStartingLoading = false;
+  isFinishingLoading = false;
+  isWorkDayDone = false;
   userName = '';
+  userId = 0;
   todayDate!: string;
+  toastMessage = '';
+
+  workDay!: WorkDay | null;
 
   ordersDataValues: number[] = [];
   firstOrdersDataValues: number[] = [];
@@ -181,18 +202,22 @@ export class HomeComponent implements OnInit{
   constructor(
     private orderService: OrderService,
     private productService: ProductService,
-    private authService: AuthService
+    private authService: AuthService,
+    private workDayService: WorkDayService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.getOrders();
     this.getProducts();
+    this.getTodayWorkDay();
 
     this.todayDate = (new Date()).toLocaleDateString('pt-BR');
     //this.ordersChart = new Chart('OrdersChart', this.ordersChartConfig);
     //this.productsChart = new Chart('ProductsChart', this.prodsChartConfig);
 
     this.userName = this.authService.getUserNameFromStorage()!;
+    this.userId = this.authService.getUserIdFromStorage()!;
     if(this.userName.includes('-')){
       var indexHifen = this.userName.indexOf('-')
       this.userName = this.userName.substring(0, indexHifen);
@@ -265,5 +290,90 @@ export class HomeComponent implements OnInit{
     }
   
     return sundays;
+  }
+
+  getTodayWorkDay(){
+    const todayDate = (new Date()).toISOString().split("T")[0]
+
+    this.workDayService.getWorkDayByDate(todayDate)
+    .subscribe({
+      next: (res) => {
+        if(res.body?.startDayTime != null && res.body?.finishDayTime != null){
+          this.isWorkDayDone = true;
+        }
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
+  }
+
+  startWorkDay(){
+    if(this.userId == 0)
+      return;
+
+    this.isStartingLoading = true;
+    this.showFailToast(failedStartWorkDayToast);
+
+    this.workDayService.startWokDay(this.userId)
+    .subscribe({
+      next: (res) => {
+        this.workDay = res.body;
+        this.workDayService.isWorkDayInProgressSubject.next(true);
+        this.showSuccessToast(successStartWorkDayToast);
+        this.isStartingLoading = false;
+        this.router.navigate(['/cadastroPedidos']);
+      },
+      error: (err) => {
+        console.log(err);
+        this.showFailToast(failedStartWorkDayToast);
+        this.isStartingLoading = false;
+      }
+    })
+  }
+
+  finishWorkDay(){
+    if(this.userId == 0)
+      return;
+
+    this.isFinishingLoading = true;
+
+    const workDayId = this.workDayService.getWorkDayIdFromStorage();
+
+    this.workDayService.finishWokDay(workDayId)
+    .subscribe({
+      next: (res) => {
+        this.workDay = res.body;
+        this.isWorkDayDone = true;
+        this.workDayService.isWorkDayInProgressSubject.next(false);
+        this.showSuccessToast(successFinishWorkDayToast);
+        this.isFinishingLoading = false;
+      },
+      error: (err) => {
+        console.log(err);
+        this.showFailToast(failedFinishWorkDayToast);
+        this.isFinishingLoading = false;
+      }
+    })
+  }
+
+  showSuccessToast(text: string){
+    this.toastMessage = text
+
+    const toastElement = document.getElementById('successToast');
+    if(toastElement){
+        const toast = new Toast(toastElement);
+        toast.show();
+    }
+  }
+
+  showFailToast(text: string){
+    this.toastMessage = text
+
+    const toastElement = document.getElementById('failedToast');
+    if(toastElement){
+        const toast = new Toast(toastElement);
+        toast.show();
+    }
   }
 }

@@ -4,9 +4,9 @@ export class WorkDay{
     workDayId!: number;
     employeeId!: number;
     employeeName!: string;
-    employee!: User;
+    employee!: User | null;
     startDayTime!: string;
-    finishDayTime!: string;
+    finishDayTime!: string | null;
     numberOfOrders!: number;
     numberOfCanceledOrders!: number;
 

@@ -1,0 +1,34 @@
+.worday-started{
+    background-color: rgba(0, 128, 0, 0.3);
+    width: 25px;
+    height: 100%;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    font-size: x-small;
+    color: rgba(0, 0, 0, 0.3);
+    padding-left: 6px;
+    padding-top: 1px;
+}
+
+.worday-started-true {
+    background-color: rgba(0, 228, 0) !important;
+    color: rgba(0, 0, 0) !important;
+}
+
+.worday-finished{
+    background-color: rgba(255, 0, 0, 0.3);
+    width: 25px;
+    height: 100%;
+    margin-left: 1px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    font-size: x-small;
+    color: rgba(0, 0, 0, 0.3);
+    padding-left: 4px;
+    padding-top: 1px;
+}
+
+.worday-finished-true {
+    background-color: rgba(255, 0, 0) !important;
+    color: rgba(0, 0, 0) !important;
+}

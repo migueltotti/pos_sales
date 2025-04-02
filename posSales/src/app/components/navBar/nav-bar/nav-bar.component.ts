@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../services/auth.service';
-import { ModalComponent } from '../../modal/modal.component';
 import { NgClass } from '@angular/common';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { LogoutModalComponent } from '../../logout-modal/logout-modal.component';
+import { WorkDayService } from '../../../../services/work-day.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -19,15 +19,27 @@ import { LogoutModalComponent } from '../../logout-modal/logout-modal.component'
 })
 export class NavBarComponent {
   isLoggedIn: boolean = false;
+  isWorkDayInProgress = false;
   private authSubscription!: Subscription;
+  private workDaySubscription!: Subscription;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, 
+    private router: Router, 
+    private workDayService: WorkDayService
+  ) {}
 
   ngOnInit() {
     this.authSubscription = this.authService.isAuthenticated$.subscribe(
       (isAuthenticated) => {
         this.isLoggedIn = isAuthenticated;
         console.log(isAuthenticated);
+      }
+    );
+
+    this.workDaySubscription = this.workDayService.isWorkDayInProgress$.subscribe(
+      (isInProgress) => {
+        this.isWorkDayInProgress = isInProgress
+        console.log(isInProgress)
       }
     );
   }
