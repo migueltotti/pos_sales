@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { OrderOutput } from '../../../entities/orderOutput';
 import { OrderService } from '../../../services/order.service';
 import { NgClass, NgIf } from '@angular/common';
 import { OrderCardComponent } from "../../components/orderCard/order-card/order-card.component";
 import { LineItemOutput } from '../../../entities/lineItemOutput';
 import { Product } from '../../../entities/product';
-import { switchMap } from 'rxjs';
+import { interval, Subscription, switchMap } from 'rxjs';
 import { Toast } from 'bootstrap';
 import { CancelOrderModalComponent } from "../../components/cancel-order-modal/cancel-order-modal.component";
 
@@ -235,7 +235,8 @@ const failedCancelToast = 'Erro ao cancelar pedido!';
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss'
 })
-export class OrdersComponent implements OnInit{
+export class OrdersComponent implements OnInit, OnDestroy{
+  private subscription!: Subscription;
   isLoading = false;
   orders!: OrderOutput[];
 
@@ -247,10 +248,15 @@ export class OrdersComponent implements OnInit{
   constructor(private orderService: OrderService){}
 
   ngOnInit(): void {
-    //this.isLoading = true;
-    //this.orders = testOrders;
-
     this.getTodayOrders();
+
+    this.subscription = interval(300000).subscribe(() => {
+        this.getTodayOrders();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   getTodayOrders(){

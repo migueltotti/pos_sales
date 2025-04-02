@@ -20,7 +20,7 @@ export class ProductService {
 
   montarHeaderToken() {
     token = sessionStorage.getItem("jwt");
-    console.log('jwt header token ' + token)
+    //console.log('jwt header token ' + token)
     httpOptions = {headers: new HttpHeaders({"Authorization" : "Bearer " + token, "Content-Type": "application/json"})}
   }
 
@@ -79,20 +79,47 @@ export class ProductService {
     );
   }
 
+  createProduct(product: Product): Observable<HttpResponse<Product>> {
+    const url = apiUrl;
+
+    this.montarHeaderToken();
+
+    return this.http.post(
+      url, 
+      product, 
+      { headers: httpOptions.headers, observe: 'response' }
+    ).pipe(
+      tap((data: HttpResponse<any>) => console.log('product edited successfully with id=' + product.productId)),
+      catchError(this.handleError<HttpResponse<Product>>('updateProduct'))
+    );
+  }
+
   updateProduct(id: number, product: Product): Observable<HttpResponse<any>> {
     const url = apiUrl + '/' + id;
 
     this.montarHeaderToken();
-    console.log(url);
-    console.log(httpOptions);
 
     return this.http.put(
       url, 
       product, 
       { headers: httpOptions.headers, observe: 'response' }
     ).pipe(
-      tap((data: HttpResponse<any>) => console.log('product edited successfully with id=' + product.productId)),
+      tap((data) => console.log('product edited successfully with id=' + product.productId)),
       catchError(this.handleError<HttpResponse<any>>('updateProduct'))
+    );
+  }
+
+  deleteProduct(id: number): Observable<HttpResponse<any>> {
+    const url = apiUrl + '/' + id;
+
+    this.montarHeaderToken();
+
+    return this.http.delete(
+      url,
+      { headers: httpOptions.headers, observe: 'response' }
+    ).pipe(
+      tap((data) => console.log('product deleted successfully with id=' + id)),
+      catchError(this.handleError<HttpResponse<any>>('deleteProdutc'))
     );
   }
 

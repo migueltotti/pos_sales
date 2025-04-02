@@ -1,10 +1,9 @@
 <div class="container-fluid full-screen-container">
-    <div class="row justify-content-between h-100">
+    <div class="row d-flex flex-wrap justify-content-between h-100">
 
         <!-- Products colapase list -->
-        <div class="col-9 d-flex flex-column my-4 ms-5" 
-            style="width: 100vh; justify-content: space-between;">
-            <div class="" style="overflow-y: auto; overflow-x: hidden; max-height: 75vh;">
+        <div class="col-lg-6 col-md-5 col-sm-10 col-10 d-flex flex-column my-4 ms-5 div-prod-list">
+            <div class="" style="overflow-y: auto; overflow-x: hidden; max-height: 85vh;">
 
                 @for (cat of categories; track $index) {
                     <a class="btn fw-bold fs-2 collapse-btn" (click)="toggleCollapse(cat.name)">
@@ -48,57 +47,81 @@
                 ></app-modal>
 
             </div>
-
-            <button type="button" class="btn btn-primary btn-lg w-25">
-                Salvar Dados do Estoque
-            </button>
-
         </div>
 
         <!-- Product data -->
-        <div class="col-3 me-5 mt-5 mb-4">
-            <div class="d-flex flex-column h-100" style="justify-content: space-between;">
-                <div class="card rounded-4" style="background-color: #3C3434; height: 400px; max-width: 388px;">
-                    <div class="card-body">
+        <div class="col-lg-4 col-md-4 col-sm-10 col-10 me-5 mt-5 mb-4">
+            <div class="d-flex flex-column h-100 w-100" style="justify-content: space-between;">
 
-                        <h5 class="card-title fs-3 fw-bold p-2 rounded-2 shadow-lg" style="background-color: #302E2E; border-color: #000000; color: white;">
-                            Produto:
-                        </h5>
-
-                        <div class="mb-3 mt-4 shadow-lg">
-                            <label for="productName" class="form-label m-0" style="color: white;">Nome:</label>
-                            <input type="text" class="form-control prod-input" id="productName" placeholder="nome" [(ngModel)]="prodName">
-                        </div>
-                        <div class="mb-3 shadow-lg">
-                            <label for="productPrice" class="form-label m-0" style="color: white;">Preço:</label>
-                            <input type="text" class="form-control prod-input" id="productPrice" placeholder="R$ 0,00" [(ngModel)]="prodPrice" prefix="R$ " mask="separator.2">
-                        </div>
-                        <div class="mb-3 shadow-lg">
-                            <label for="productQtde" class="form-label m-0" style="color: white;">Quantidade:</label>
-                            <input type="text" class="form-control prod-input" id="productQtde" placeholder="1" [(ngModel)]="prodAmount">
-                        </div>
-
-                        <div class="d-flex" style="justify-content: space-between; margin-top: 35px;">
-                            <button class="btn shadow-lg" style="background-color: #1C771F; color: white;" (click)="updateProdValues()">
-                                Aplicar Valores
-                            </button>
-                            <div class="spinner-border text-primary" role="status" *ngIf="isLoadind">
-                                <span class="visually-hidden">Loading...</span>
+                <div class="d-flex div-prod-card">
+                    <div class="card rounded-4" style="background-color: #3C3434; height: 400px; width: 388px;">
+                        <div class="card-body">
+    
+                            <h5 class="card-title fs-3 fw-bold p-2 rounded-2 shadow-lg" style="background-color: #302E2E; border-color: #000000; color: white;">
+                                Produto:
+                            </h5>
+    
+                            <div class="mb-3 mt-4 shadow-lg">
+                                <label for="productName" class="form-label m-0" style="color: white;">Nome:</label>
+                                <input type="text" class="form-control prod-input" id="productName" placeholder="nome" [(ngModel)]="prodName">
                             </div>
-                            <div class="" *ngIf="savedProduct">
-                                <i class="bi bi-check-all" style="color: #4CFF3F;"></i>
+                            <div class="mb-3 shadow-lg">
+                                <label for="productPrice" class="form-label m-0" style="color: white;">Preço:</label>
+                                <input type="text" class="form-control prod-input" id="productPrice" placeholder="R$ 0,00" [(ngModel)]="prodPrice" prefix="R$ " mask="separator.2">
                             </div>
+                            <div class="mb-3 shadow-lg">
+                                <label for="productQtde" class="form-label m-0" style="color: white;">Quantidade:</label>
+                                <input type="text" class="form-control prod-input" id="productQtde" placeholder="1" [(ngModel)]="prodAmount">
+                            </div>
+    
+                            <div class="d-flex" style="justify-content: space-between; margin-top: 35px;">
+                                <button class="btn shadow-lg" style="background-color: #1C771F; color: white;" (click)="updateProdValues()">
+                                    Aplicar Valores
+                                </button>
+                                <div class="spinner-border text-primary" role="status" *ngIf="isLoadind">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <div class="" *ngIf="savedProduct">
+                                    <i class="bi bi-check-all" style="color: #4CFF3F;"></i>
+                                </div>
+                            </div>
+    
                         </div>
-
                     </div>
                 </div>
+                
 
-                <div class="d-flex" style="flex-direction: row-reverse;">
+                <div class="d-flex div-number">
                     <div class="rounded-4 fw-bold shadow-lg" style="background-color: #D9D9D9;  width: 67%;">
                         <p class="text-black mt-1 mb-0 mx-3">Numero de Produtos:</p>
-                        <p class="fs-4 mx-3 mb-1" style="color: #7D0009;">0012</p>
+                        <p class="fs-4 mx-3 mb-1" style="color: #7D0009;">
+                            {{products.length.toString().padStart(4, '0')}}
+                        </p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="successToast" class="toast align-items-center text-bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+            <div class="toast-body">
+                {{ toastMessage }}
+            </div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="failedToast" class="toast align-items-center text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+            <div class="toast-body">
+                {{ toastMessage }}
+            </div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
         </div>
     </div>

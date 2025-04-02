@@ -13,6 +13,18 @@
     color: white;
 }
 
+.div-prod-list{
+    justify-content: space-between;
+}
+
+.div-prod-card{
+    flex-direction: row-reverse;
+}
+
+.div-number{
+    flex-direction: row-reverse;
+}
+
 .prod-card{
     background-color: #FDCB58;
     display: flex;
@@ -27,4 +39,27 @@
     white-space: nowrap; /* Impede quebra de linha */
     overflow: hidden;
     text-overflow: ellipsis; /* Adiciona "..." se o texto for muito longo */
+}
+
+@media (max-width: 770px) {
+    .full-screen-container {
+        height: 100%;
+    }
+
+    .div-prod-card{
+        flex-direction: row;
+        margin-left: 15px;
+    }
+
+    .div-number{
+        flex-direction: row;
+        width: 62%;
+        margin-top: 15px;
+        margin-left: 15px;
+    }
+
+    .div-prod-list{
+        justify-content: space-between;
+        margin-left: 15px !important;
+    }
 }

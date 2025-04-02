@@ -262,6 +262,13 @@ export class ReportComponent implements OnInit{
     console.log(ord.orderId);
   }
 
+  returnButtomValidation(){
+    return this.orderId == 0 || 
+            this.date !== this.todayDate || 
+            this.workDay?.finishDayTime !== null || 
+            this.workDay?.finishDayTime !== undefined
+  }
+
   triggerModal(){
     var ord = this.ordersReport?.orders.find(o => o.orderId == this.orderId)!;
     console.log(ord);

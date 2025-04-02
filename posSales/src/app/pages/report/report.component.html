@@ -64,7 +64,7 @@
                     </h3>
 
                     <button *ngIf="todayDate" type="button" class="btn btn-return-order fw-bold text-black mx-3 mt-1" 
-                        [disabled]="orderId == 0 || date !== todayDate"
+                        [disabled]="returnButtomValidation()"
                         (click)="triggerModal()" 
                         data-bs-toggle="modal" 
                         data-bs-target="#modal"

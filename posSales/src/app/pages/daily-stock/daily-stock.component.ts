@@ -9,6 +9,7 @@ import { ProductService } from '../../../services/product.service';
 import { CategoryService } from '../../../services/category.service';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { switchMap } from 'rxjs';
+import Toast from 'bootstrap/js/dist/toast';
 
 const testCategories = [
   new Category(1, 'Bovinos', 'bovinos.jpg'),
@@ -39,6 +40,15 @@ const testProducts: Product[] = [
   new Product(12, "Hambúrguer Artesanal", "Hambúrguer de carne 100% bovina", 19.99, 1, 28, "hamburguer.jpg", 4),
   new Product(13, "Kafta", "Espetinho de carne temperada", 14.99, 1, 20, "kafta.jpg", 4)
 ];
+
+const successCreateToast = 'Produto criado com sucesso';
+const failedCreateToast = 'Erro ao criar produto!';
+
+const successUpdateToast = 'Produto alterado com sucesso';
+const faileUpdateToast = 'Erro ao alterar produto!';
+
+const successDeleteToast = 'Produto removido com sucesso';
+const failedDeleteToast = 'Erro ao remover produto!';
 
 @Component({
   selector: 'app-daily-stock',
@@ -74,6 +84,8 @@ export class DailyStockComponent implements AfterViewInit, OnInit{
   modalBody = '';
   modalTitle = '';
 
+  toastMessage = ''
+
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService
@@ -97,6 +109,7 @@ export class DailyStockComponent implements AfterViewInit, OnInit{
       next: (ProdData) => {
         this.products = ProdData.body || []
         this.filterProducts();
+        this.setCollapses();
       },
       error: (err) => {
         console.log(err);
@@ -113,19 +126,21 @@ export class DailyStockComponent implements AfterViewInit, OnInit{
   }
 
   addProduct(catId: number){
-    var copyProducts = this.products;
-    var lastId = copyProducts.sort().splice(this.products.length - 1, 1).shift()?.productId;
+    //var copyProducts = this.products;
+    //var lastId = copyProducts.sort().splice(this.products.length - 1, 1).shift()?.productId;
 
-    if(lastId != undefined){
-      var newProd = new Product(lastId! + 1, 'Novo Produto', '', 0.00, 2, 0, '', catId);
-      this.productsByCategory.get(catId)?.push(newProd);
-      this.products.push(newProd);
+    //if(lastId != undefined){
+    var newProd = new Product(0, 'Novo Produto', '', 0.00, 2, 0, '', catId);
+    this.productsByCategory.get(catId)?.push(newProd);
+    this.products.push(newProd);
 
-      this.prodName = '';
-      this.prodPrice = undefined;
-      this.prodAmount = undefined;
-      this.prodId = 0;
-    }
+    this.prodName = '';
+    this.prodPrice = undefined;
+    this.prodAmount = undefined;
+    this.prodId = 0;
+
+    //this.createProduct(this.prod)
+    //}
   }
 
   updateProdValues(){
@@ -133,10 +148,17 @@ export class DailyStockComponent implements AfterViewInit, OnInit{
       return;
 
     this.prod.name = this.prodName;
+    this.prod.description = this.prodName + this.prodPrice;
+    this.prod.imageUrl = this.prodName + '.jpg';
     this.prod.stockQuantity = this.prodAmount;
     this.prod.value = this.prodPrice;
 
-    this.saveProduct(this.prodId, this.prod);
+    if(this.prod.productId == 0){
+      this.createProduct(this.prod);
+    }
+    else{
+      this.saveProduct(this.prodId, this.prod);
+    }
   }
 
   excludeProduct(prodId: number){
@@ -145,7 +167,7 @@ export class DailyStockComponent implements AfterViewInit, OnInit{
     //this.products = this.products.filter(p => p.productId != prod?.productId);
     //this.productsByCategory.set(prod?.categoryId!, this.productsByCategory.get(prod?.categoryId!)?.filter(p => p.productId != prod?.productId)!);
   
-    this.saveProduct(prodId, prod);
+    this.removeProduct(prodId);
 
     // depois clicar no botao de salvar alteraçoes no estoque
 
@@ -153,17 +175,23 @@ export class DailyStockComponent implements AfterViewInit, OnInit{
   }
 
   filterProducts(){
-    this.categories.forEach(c => {
-      this.productsByCategory.set(c.categoryId, []);
-    })
-
+    if(this.productsByCategory.size == 0){
+      this.categories.forEach(c => {
+        this.productsByCategory.set(c.categoryId, []);
+      })
+    }
+    else{
+      this.productsByCategory.forEach((v, k) => 
+        this.productsByCategory.set(k, []))
+    }
+    
     this.products.forEach(p => {
       this.productsByCategory.get(p.categoryId)?.push(p)
     });
   }
 
-  saveProduct(prodId: number, product: Product){
-    this.productService.updateProduct(prodId, product)
+  createProduct(prod: Product){
+    this.productService.createProduct(prod)
     .pipe(
       switchMap((data) => {
         return this.productService.getProducts();
@@ -171,9 +199,59 @@ export class DailyStockComponent implements AfterViewInit, OnInit{
     )
     .subscribe({
       next: (data) => {
-        this.products = data.body || []
+        if(data.ok){
+          this.products = data.body || [];
+          this.filterProducts();
+          this.showSuccessToast(successCreateToast);
+        }
       },
       error: (err) => {
+        this.showFailToast(failedCreateToast);
+        console.log(err);
+      }
+    });
+  }
+
+  saveProduct(prodId: number, product: Product){
+    this.productService.updateProduct(prodId, product)
+    .pipe(
+      switchMap((data) => {
+        console.log(data.statusText);
+        return this.productService.getProducts();
+      })
+    )
+    .subscribe({
+      next: (data) => {
+        if(data.ok){
+          this.products = data.body || [];
+          this.filterProducts();
+          this.showSuccessToast(successUpdateToast);
+        }
+      },
+      error: (err) => {
+        this.showFailToast(faileUpdateToast);
+        console.log(err);
+      }
+    });
+  }
+
+  removeProduct(prodId: number){
+    this.productService.deleteProduct(prodId)
+    .pipe(
+      switchMap((data) => {
+        return this.productService.getProducts();
+      })
+    )
+    .subscribe({
+      next: (data) => {
+        if(data.ok){
+          this.products = data.body || [];
+          this.filterProducts();
+          this.showSuccessToast(successDeleteToast);
+        }
+      },
+      error: (err) => {
+        this.showFailToast(failedDeleteToast);
         console.log(err);
       }
     });
@@ -192,6 +270,10 @@ export class DailyStockComponent implements AfterViewInit, OnInit{
   }
 
   ngAfterViewInit(): void {
+    this.setCollapses();
+  }
+
+  setCollapses(){
     const elements = document.querySelectorAll('.collapse');
     elements.forEach((element) => {
       const id = element.id;
@@ -209,5 +291,25 @@ export class DailyStockComponent implements AfterViewInit, OnInit{
 
   isCollapseOpen(id: string): boolean {
     return this.collapses.find(c => c.id === id)?.isOpen ?? false;
+  }
+
+  showSuccessToast(text: string){
+    this.toastMessage = text
+
+    const toastElement = document.getElementById('successToast');
+    if(toastElement){
+        const toast = new Toast(toastElement);
+        toast.show();
+    }
+  }
+
+  showFailToast(text: string){
+    this.toastMessage = text
+
+    const toastElement = document.getElementById('failedToast');
+    if(toastElement){
+        const toast = new Toast(toastElement);
+        toast.show();
+    }
   }
 }
