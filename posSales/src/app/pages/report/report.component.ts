@@ -188,14 +188,20 @@ export class ReportComponent implements OnInit{
   }
 
   searchReportByDate(date: string){
+    this.isLoading = true;
+
     this.orderService.getOrdersReportByDate(date)
     .subscribe({
       next: (res) => {
         this.ordersReport = res.body;
         this.estimatedRevenue = this.ordersReport?.totalValue!;
         console.log(this.ordersReport)
+        this.isLoading = false;
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error(err)
+        this.isLoading = false;
+      }
     });
   }
 
@@ -226,6 +232,8 @@ export class ReportComponent implements OnInit{
 
     updateOrder.orderStatus = 2;
 
+    this.isLoading = true;
+
     this.orderService.updateOrder(ord.orderId, updateOrder).pipe(
       switchMap((res) => {
         if (res.status === HttpStatusCode.Ok) {
@@ -250,9 +258,12 @@ export class ReportComponent implements OnInit{
         this.employee = workDayRes.body?.employeeName!;
         this.orderAmount = workDayRes.body?.numberOfOrders!;
         this.ordersCanceled = workDayRes.body?.numberOfCanceledOrders!;
+
+        this.isLoading = false;
       },
       error: (err) => {
         console.error(err);
+        this.isLoading = false
       }
     });
   }

@@ -77,15 +77,25 @@
                     style="margin-left: 10px; margin-top: -10px; border-color: white;">
 
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-1 m-3 prod-list">
-                    @for (ord of ordersReport?.orders; track $index) {
-                        <app-order-card
-                            class="col mb-3"
-                            (click)="selectProduct(ord)"
-                            style="cursor: pointer"
-                            [order]="ord"
-                            [orderId]="orderId"
-                        ></app-order-card>
-                    }
+
+                    <div *ngIf="isLoading" class="d-flex justify-content-center mt-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+                    <ng-container *ngIf="!isLoading">
+                        @for (ord of ordersReport?.orders; track $index) {
+                            <app-order-card
+                                class="col mb-3"
+                                (click)="selectProduct(ord)"
+                                style="cursor: pointer"
+                                [order]="ord"
+                                [orderId]="orderId"
+                            ></app-order-card>
+                        }
+                    </ng-container>
+                    
                 </div>
             </div>
         </div>

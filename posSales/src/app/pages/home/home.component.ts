@@ -23,7 +23,11 @@ export class HomeComponent implements OnInit{
   todayDate!: string;
 
   ordersDataValues: number[] = [];
-  productsBestSelling: Map<string, number> = new Map<string, number>();
+  firstOrdersDataValues: number[] = [];
+  secondOrdersDataValues: number[] = [];
+
+  products: string[] = [];
+  values: number[] = [];
 
   ordersChart: any;
   ordersData = {
@@ -62,13 +66,83 @@ export class HomeComponent implements OnInit{
     },
   };
 
+  firtsOrdersChart: any;
+  firstordersData = {
+    labels: this.getLast8Sundays().reverse().slice(0, 4),
+    datasets: [
+      {
+        label: 'Pedidos',
+        data: this.ordersDataValues.slice(0, 4),
+        backgroundColor: [
+          'rgba(125, 0, 9, 0.7)'
+        ],
+        borderColor: [
+          'rgb(125, 0, 9, 1)'
+        ],
+        borderWidth: 3
+      }
+    ]
+  };
+  firstordersChartConfig: any = {
+    type: 'bar',
+    data: this.firstordersData,
+    options: {
+      y: {
+        beginAtZero: true
+      },
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Numero de Pedidos por Domingo'
+        }
+      }
+    },
+  };
+
+  secondOrdersChart: any;
+  secondOrdersData = {
+    labels: this.getLast8Sundays().reverse().slice(4, 8),
+    datasets: [
+      {
+        label: 'Pedidos',
+        data: this.secondOrdersDataValues,
+        backgroundColor: [
+          'rgba(125, 0, 9, 0.7)'
+        ],
+        borderColor: [
+          'rgb(125, 0, 9, 1)'
+        ],
+        borderWidth: 3
+      }
+    ]
+  };
+  secondOrdersChartConfig: any = {
+    type: 'bar',
+    data: this.secondOrdersData,
+    options: {
+      y: {
+        beginAtZero: true
+      },
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top'
+        }
+      }
+    }
+  };
+
   productsChart: any;
   prodsData = {
-    labels: this.productsBestSelling.keys(),
+    labels: this.products,
     datasets: [
       {
         label: 'Produtos',
-        data: this.productsBestSelling.values(),
+        data: this.values,
         backgroundColor: [
           'rgba(125, 0, 9, 0.7)',
           'rgba(253, 203, 88, 0.7)',
@@ -115,8 +189,8 @@ export class HomeComponent implements OnInit{
     this.getProducts();
 
     this.todayDate = (new Date()).toLocaleDateString('pt-BR');
-    this.ordersChart = new Chart('OrdersChart', this.ordersChartConfig);
-    this.productsChart = new Chart('ProductsChart', this.prodsChartConfig);
+    //this.ordersChart = new Chart('OrdersChart', this.ordersChartConfig);
+    //this.productsChart = new Chart('ProductsChart', this.prodsChartConfig);
 
     this.userName = this.authService.getUserNameFromStorage()!;
     if(this.userName.includes('-')){
@@ -132,6 +206,27 @@ export class HomeComponent implements OnInit{
         res.body?.forEach(day => {
           this.ordersDataValues.push(day.numberOfOrders)
         });
+
+        if(this.ordersDataValues.length < 8){
+          for (let i = this.ordersDataValues.length; i < 8; i++) {
+            this.ordersDataValues.push(0);
+          }
+        }
+
+        this.ordersDataValues = this.ordersDataValues.reverse();
+
+        // Data First Chart
+        for (let i = 0; i < 4; i++) {
+          this.firstOrdersDataValues.push(this.ordersDataValues[i]);
+        }
+        // Data Second Chart
+        for (let i = 4; i < 8; i++) {
+          this.secondOrdersDataValues.push(this.ordersDataValues[i]);
+        }
+
+        this.ordersChart = new Chart('OrdersChart', this.ordersChartConfig);
+        this.firtsOrdersChart = new Chart('FirstOrdersChart', this.firstordersChartConfig);
+        this.secondOrdersChart = new Chart('SecondOrdersChart', this.secondOrdersChartConfig);
       }
     })
   }
@@ -141,8 +236,11 @@ export class HomeComponent implements OnInit{
     subscribe({
       next: (res) => {
         res.body?.forEach(prod => {
-          this.productsBestSelling.set(prod.prodName, prod.productCount)
+          this.products.push(prod.prodName);
+          this.values.push(prod.productCount);
         });
+
+        this.productsChart = new Chart('ProductsChart', this.prodsChartConfig);
       }
     })
   }
