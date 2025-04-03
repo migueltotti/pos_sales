@@ -125,8 +125,11 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
   )
 ];*/
 
-const successToast = 'Pedido completo com sucesso!';
-const failedToast = 'Erro ao completar pedido!';
+const successCompleteToast = 'Pedido completo com sucesso!';
+const failedCompleteToast = 'Erro ao completar pedido!';
+
+const successExportToast = 'Relatório exportado com sucesso!';
+const failedExportToast = 'Erro ao exportar relatório!';
 
 @Component({
   selector: 'app-report',
@@ -151,8 +154,9 @@ export class ReportComponent implements OnInit{
   isLoading = false;
   orderId = 0;
 
-  date = (new Date()).toLocaleDateString("pt-BR");
-  todayDate = (new Date()).toLocaleDateString("pt-BR");
+  date = ''; 
+  todayDate = '';
+
   employee = '';
   estimatedRevenue = 0;
   orderAmount = 0;
@@ -176,8 +180,7 @@ export class ReportComponent implements OnInit{
     //this.orderAmount = this.workDay?.numberOfOrders!;
     //this.ordersCanceled = this.workDay?.numberOfCanceledOrders!;
 
-    const today = new Date();
-    this.todayDate = today.toISOString().split("T")[0]; // "2025-03-29"
+    this.todayDate = new Date().toLocaleDateString('pt-BR').split('/').reverse().join('-');
   }
 
   searchByDate(date: string){
@@ -223,7 +226,7 @@ export class ReportComponent implements OnInit{
   }
 
   returnOrder(orderId: number){
-    // update order status to "Sent" and get report again
+    // update order status to "Sent : 2" and get report again
     var ord = this.ordersReport?.orders.find(o => o.orderId == orderId)!;
 
     var updateOrder = new OrderUpdate(
@@ -236,20 +239,15 @@ export class ReportComponent implements OnInit{
 
     this.orderService.updateOrder(ord.orderId, updateOrder).pipe(
       switchMap((res) => {
-        if (res.status === HttpStatusCode.Ok) {
-          this.showToast(successToast);
-          console.log(res.statusText);
           return forkJoin([
             this.orderService.getOrdersReportByDate(ord.orderDate),
             this.workDayService.getWorkDayByDate(ord.orderDate)
           ]);
-        } else {
-          this.showToast(failedToast);
-          throw new Error('Falha ao atualizar pedido');
-        }
       })
     ).subscribe({
       next: ([ordersReportRes, workDayRes]) => {
+        this.showSuccessToast(successCompleteToast);
+
         // Atualiza os relatórios
         this.ordersReport = ordersReportRes.body;
         this.estimatedRevenue = this.ordersReport?.totalValue!;
@@ -262,6 +260,7 @@ export class ReportComponent implements OnInit{
         this.isLoading = false;
       },
       error: (err) => {
+        this.showFailToast(failedCompleteToast);
         console.error(err);
         this.isLoading = false
       }
@@ -270,14 +269,12 @@ export class ReportComponent implements OnInit{
 
   selectProduct(ord: OrderOutput){
     this.orderId = this.orderId === ord.orderId ? 0 : ord.orderId;
-    console.log(ord.orderId);
   }
 
-  returnButtomValidation(){
+  returnDisableButtomValidation(){
     return this.orderId == 0 || 
             this.date !== this.todayDate || 
-            this.workDay?.finishDayTime !== null || 
-            this.workDay?.finishDayTime !== undefined
+            (this.workDay?.finishDayTime !== null && this.workDay?.finishDayTime !== undefined)
   }
 
   triggerModal(){
@@ -297,11 +294,20 @@ export class ReportComponent implements OnInit{
     }
   }
 
-  showToast(text: string){
+  showSuccessToast(text: string){
     this.toastMessage = text
 
-    const toastElement = document.getElementById('toast');
-    console.log(toastElement);
+    const toastElement = document.getElementById('successToast');
+    if(toastElement){
+        const toast = new Toast(toastElement);
+        toast.show();
+    }
+  }
+
+  showFailToast(text: string){
+    this.toastMessage = text
+
+    const toastElement = document.getElementById('failedToast');
     if(toastElement){
         const toast = new Toast(toastElement);
         toast.show();

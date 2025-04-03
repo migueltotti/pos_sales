@@ -35,3 +35,36 @@
     border-color: black;
     border-width: 1px;
 }
+
+.nowrap-label {
+    white-space: nowrap;
+    overflow: visible;
+    min-width: max-content;
+}
+
+.h-custom{
+    background-color: #5E5E5E;
+    height: 180px;
+}
+
+@media (max-width: 1200px) {
+    .full-screen-container{
+        height: 100%;
+    }
+
+    .h-custom{
+        height: 210px;
+    }
+}
+
+@media (max-width: 769px) {
+    .h-custom{
+        height: 270px;
+    }
+}
+
+@media (max-width: 576px) {
+    .h-custom{
+        height: 325px;
+    }
+}

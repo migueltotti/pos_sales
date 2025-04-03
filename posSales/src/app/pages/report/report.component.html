@@ -1,16 +1,18 @@
 <div class="container-fluid full-screen-container">
-    <div class="row mx-2 mt-3 mb-2 rounded-4" style="background-color: #5E5E5E; height: 180px;">
 
-        <div class="col-2 my-2 title">
+    <!-- Report Info -->
+    <div class="row h-custom mx-2 mt-3 mb-2 rounded-4">
+
+        <div class="col-12 col-sm-2 mt-2 my-sm-2 title">
             <h1 style="color: white;">Relatório Diário:</h1>
             <hr class="border border-1 opacity-100 w-100" style="margin-top: -10px; border-color: white;">
         </div>
 
-        <div class="col-7 my-2">
+        <div class="col-8 col-sm-7 my-sm-2">
             <div class="row">
-                <div class="col-5 d-flex" style="align-items: flex-end;">
+                <div class="col-xl-5 col-lg-12 order-first d-flex align-items-end">
                     <div class="me-3">
-                        <label for="reportDate" class="form-label mx-1 my-0" style="color: white;">Data:</label>
+                        <label for="reportDate" class="form-label mx-1 my-0 text-white nowrap-label">Data:</label>
                         <input type="date" class="form-control input-fields mx-1" id="reportDate" placeholder="01/01/2025" [(ngModel)]="date">
                     </div>
             
@@ -18,28 +20,26 @@
                         BUSCAR
                     </button>
                 </div>
-                <div class="col-3">
-                    <label for="reportOrdersCanceled" class="form-label mx-1 my-0" style="color: white;">Pedidos cancelados:</label>
-                    <input type="text" class="form-control input-fields mx-1" id="reportOrdersCanceled" placeholder="0" [value]="ordersCanceled" readonly>
+                <div class="col order-xl-2 order-lg-5 order-md-5 order-sm-5 order-5">
+                    <label for="reportOrdersCanceled" class="form-label mx-1 my-0 text-white nowrap-label">Pedidos cancelados:</label>
+                    <input type="text" class="form-control input-fields mx-1" id="reportOrdersCanceled" placeholder="0" [value]="ordersCanceled" readonly style="max-width: 153px;">
                 </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-5">
-                    <label for="reportEmployee" class="form-label mx-1 my-0" style="color: white;">Funcionario:</label>
-                    <input type="text" class="form-control input-fields mx-1" id="reportEmployee" placeholder="" [value]="employee" readonly>
+                <div class="col-lg-5 col-md-6 order-xl-3 order-lg-2 order-md-2 order-sm-2 order-2">
+                    <label for="reportEmployee" class="form-label mx-1 my-0 text-white nowrap-label">Funcionario:</label>
+                    <input type="text" class="form-control input-fields mx-1" id="reportEmployee" placeholder="" [value]="employee" readonly style="max-width: 300px;">
                 </div>
-                <div class="col-3">
-                    <label for="reportEstimatedRevenue" class="form-label mx-1 my-0" style="color: white;">Receita Estimada:</label>
-                    <input type="text" class="form-control input-fieldsmx-1" id="reportEstimatedRevenue" placeholder="R$ 0,00" [(ngModel)]="estimatedRevenue" prefix="R$ " mask="separator.2" readonly>
+                <div class="col-5 col-md-6 col-lg-3 order-xl-4 order-lg-3 order-md-3 order-sm-3 order-3">
+                    <label for="reportEstimatedRevenue" class="form-label mx-1 my-0 text-white nowrap-label">Receita Estimada:</label>
+                    <input type="text" class="form-control input-fields mx-1" id="reportEstimatedRevenue" placeholder="R$ 0,00" [(ngModel)]="estimatedRevenue" prefix="R$ " mask="separator.2" readonly style="max-width: 153px;">
                 </div>
-                <div class="col-4">
-                    <label for="reportOrderAmount" class="form-label mx-1 my-0" style="color: white;">Numero de Pedidos:</label>
+                <div class="col-5 col-md-5 col-lg-4 order-xl-5 order-lg-4 order-md-4 order-sm-4 order-4">
+                    <label for="reportOrderAmount" class="form-label mx-1 my-0 nowrap-label" style="color: white;">Numero de Pedidos:</label>
                     <input type="text" class="form-control input-fields mx-1 w-75" id="reportOrderAmount" placeholder="0" [value]="orderAmount" readonly>
                 </div>
             </div>
         </div>
 
-        <div class="col-3 d-flex flex-column my-2">
+        <div class="col-4 col-sm-3 d-flex flex-column my-2">
             <label for="reportOrderAmount" class="form-label mx-1 my-0" style="color: white;">Exportar Relatório:</label>
             <select class="form-select input-fields w-75" aria-label="Default select example">
                 <option value="1" selected>Excel</option>
@@ -54,6 +54,7 @@
 
     </div>
 
+    <!-- Orders List -->
     <div class="row">
         <div class="col-9 d-flex flex-column w-100" style="justify-content: space-between;">
             <div class="" style="overflow-y: auto; overflow-x: hidden; max-height: 65vh;">
@@ -64,7 +65,7 @@
                     </h3>
 
                     <button *ngIf="todayDate" type="button" class="btn btn-return-order fw-bold text-black mx-3 mt-1" 
-                        [disabled]="returnButtomValidation()"
+                        [disabled]="returnDisableButtomValidation()"
                         (click)="triggerModal()" 
                         data-bs-toggle="modal" 
                         data-bs-target="#modal"
@@ -109,7 +110,18 @@
 
     <!-- TOAST -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="toast" class="toast align-items-center text-bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="successToast" class="toast align-items-center text-bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+            <div class="toast-body">
+                {{ toastMessage }}
+            </div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="failedToast" class="toast align-items-center text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
             <div class="toast-body">
                 {{ toastMessage }}
