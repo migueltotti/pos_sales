@@ -9,7 +9,7 @@
             <label for="exampleFormControlInput1" class="form-label">
                 Deseja inserir alguma observação?
             </label>
-            <input type="text" class="form-control" id="exampleFormControlInput1" [(ngModel)]="orderNote">
+            <input type="text" #noteInput class="form-control" id="exampleFormControlInput1" [(ngModel)]="orderNote">
         </div>
         <div class="modal-footer">
         <button type="button" (click)="closeModal()" class="btn btn-secondary">Cancelar</button>

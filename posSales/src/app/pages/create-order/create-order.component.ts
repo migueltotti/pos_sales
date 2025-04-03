@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { BucketCardComponent } from "../../components/bucketCard/bucket-card/bucket-card.component";
 import { Category } from '../../../entities/category';
 import { OrderInput } from '../../../entities/orderInput';
@@ -15,6 +15,8 @@ import Toast from 'bootstrap/js/dist/toast';
 import { NoteModalComponent } from '../../components/note-modal/note-modal.component';
 import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { FormsModule, NgModel } from '@angular/forms';
+import { WorkDayService } from '../../../services/work-day.service';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 const testProducts: Product[] = [
   new Product(1, "Arroz Integral", "Pacote de 5kg de arroz integral", 25, 2, 100, "arroz.jpg", 10),
@@ -53,16 +55,19 @@ const failedToast = 'Erro ao criar pedido!';
     ModalComponent,
     HolderModalComponent,
     NgClass,
+    NgxMaskDirective,
     FormsModule,
     NgIf,
     NoteModalComponent
-],
+  ],
+  providers: [provideNgxMask()],
   templateUrl: './create-order.component.html',
   styleUrl: './create-order.component.scss'
 })
 export class CreateOrderComponent implements OnInit{
   @ViewChild('textModal') textModal!: HolderModalComponent;
   @ViewChild('noteModal') noteModal!: NoteModalComponent;
+  isSmallScreen: boolean = window.innerWidth <= 1020;
   isLoading = false;
 
   title = 'posSales';
@@ -92,7 +97,8 @@ export class CreateOrderComponent implements OnInit{
   constructor(
     private productService: ProductService,
     private orderService: OrderService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private workDayService: WorkDayService
   ) {}
 
   ngOnInit(): void {
@@ -104,6 +110,7 @@ export class CreateOrderComponent implements OnInit{
 
     this.getAllProducts();
     this.getAllCategories();
+    this.getTodayWorkDay();
   }
 
   increaseAmount(){
@@ -258,6 +265,20 @@ export class CreateOrderComponent implements OnInit{
     this.orderProducts = [];
   }
 
+  getTodayWorkDay(){
+    const todayDate = new Date().toLocaleDateString('pt-BR').split('/').reverse().join('-');
+
+    this.workDayService.getWorkDayByDate(todayDate)
+    .subscribe({
+      next: (res) => {
+        this.orderNumber = res.body?.numberOfCanceledOrders! + res.body?.numberOfOrders!
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
+  }
+
   findProduct(prodId: number) : Product{
     return this.products.find(p => p.productId == prodId)!
   }
@@ -273,6 +294,12 @@ export class CreateOrderComponent implements OnInit{
       this.modalBody = cancelModalBody;
       this.modalType = 0;
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.isSmallScreen = window.innerWidth <= 1020;
+    //console.log(this.isSmallScreen);
   }
 
   catchEvent(actionType: number){

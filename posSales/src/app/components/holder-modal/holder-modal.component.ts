@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, NgModule, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, NgModule, OnInit, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Modal } from 'bootstrap';
 
@@ -12,6 +12,7 @@ import { Modal } from 'bootstrap';
 export class HolderModalComponent{
   @ViewChild('textElement', { static: false }) textElement!: ElementRef;
   private textInstance!: Modal;
+  @ViewChild('nameInput') nameInput!: ElementRef<HTMLInputElement>;
 
   @Output() holderName = new EventEmitter<string>();
   name: string = '';
@@ -19,11 +20,14 @@ export class HolderModalComponent{
   setHolderName(){
     this.holderName.emit(this.name);
     this.closeModal();
-    this.name = '';
   }
 
   ngAfterViewInit() {
     this.textInstance = new Modal(this.textElement.nativeElement);
+
+    this.textElement.nativeElement.addEventListener('shown.bs.modal', () => {
+      this.nameInput.nativeElement.focus();
+    });
   }
 
   openModal() {
@@ -32,5 +36,6 @@ export class HolderModalComponent{
 
   closeModal() {
     this.textInstance.hide(); // Fecha o modal
+    this.name = '';
   }
 }

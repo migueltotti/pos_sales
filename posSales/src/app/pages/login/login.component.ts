@@ -5,6 +5,8 @@ import { AuthService } from '../../../services/auth.service';
 import { FormControl, FormGroup, FormsModule, NgForm } from '@angular/forms';
 import { LoginModel } from '../../../entities/loginModel';
 import { HttpStatusCode } from '@angular/common/http';
+import { switchMap } from 'rxjs';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -30,7 +32,8 @@ export class LoginComponent{
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ){}
 
   login(){
@@ -46,9 +49,17 @@ export class LoginComponent{
     this.authService.login({ 
       email: this.email,
       password: this.password
-    }).subscribe({
+    }).pipe(
+      switchMap((data) => {
+        console.log(this.email)
+        return this.userService.getUserByEmail(this.email);
+      })
+    ).subscribe({
       next: (res) => {
         this.isLoading = false;
+        this.email = '';
+        this.password = '';
+        this.authService.setUserIdToStorage(res.body?.userId!);
         this.router.navigate(['/home']);
       },
       error: (err) => {
@@ -63,8 +74,6 @@ export class LoginComponent{
 
     this.isEmailInvalid = false;
     this.isPasswordInvalid = false;
-    this.email = '';
-    this.password = '';
   }
 
   cancel(){

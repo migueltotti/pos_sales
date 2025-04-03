@@ -15,21 +15,20 @@
             </div>
         </div>
 
-        <div class="d-flex me-3 mt-1" style="width: 50px; height: 18px;">
-          <div class="worday-started" [ngClass]="{'worday-started-true': isWorkDayInProgress}"
-          >
-            On
+        <div class="dropdown dropstart d-flex flex-row">
+          <div class="d-flex me-3 mt-2 shadow p-1" style="width: 60px; height: 28px; border-radius: 15px;">
+            <div class="worday-started" [ngClass]="{'worday-started-true': isWorkDayInProgress}">
+              On
+            </div>
+            <div class="worday-finished" [ngClass]="{'worday-finished-true': !isWorkDayInProgress}">
+              Off
+            </div>
           </div>
-          <div class="worday-finished" [ngClass]="{'worday-finished-true': !isWorkDayInProgress}">
-            Off
-          </div>
-        </div>
 
-        <div class="dropdown dropstart">
-          <a class="nav-link d-flex" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link d-flex mt-1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-person-circle fs-5"></i>
           </a>
-          <ul class="dropdown-menu" style="margin-top: 19px;">
+          <ul class="dropdown-menu" style="margin-top: 25px; margin-right: -70px;">
               <li>
                 <a class="dropdown-item" href="#">Configurações</a>
               </li>

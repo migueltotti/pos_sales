@@ -8,13 +8,14 @@ import { DailyStockComponent } from './pages/daily-stock/daily-stock.component';
 import { ReportComponent } from './pages/report/report.component';
 import { HomeComponent } from './pages/home/home.component';
 import { AuthGuard } from '../services/auth.guard';
+import { WorkDayGuard } from '../services/work-day.guard';
 
 export const routes: Routes = [
     {
         path: 'cadastroPedidos',
         title: 'POS',
         component: CreateOrderComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard, WorkDayGuard]
     },
     {
         path: 'home',
@@ -38,7 +39,7 @@ export const routes: Routes = [
         path: 'configEstoque',
         title: 'Configuração de Estoque',
         component: DailyStockComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard, WorkDayGuard]
     },
     {
         path: 'relatorio',

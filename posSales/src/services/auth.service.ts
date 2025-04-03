@@ -164,9 +164,6 @@ export class AuthService {
   }
 
   setUserIdToStorage(userId: number): boolean {
-    const token = this.getToken();
-    if (!token) return false;
-
     const userIdString = userId.toString();
     sessionStorage.setItem('userId', userIdString);
     
@@ -183,10 +180,8 @@ export class AuthService {
   }
 
   getUserIdFromStorage(): number | null {
-    const token = this.getToken();
-    if (!token) return null;
-
     const userId = parseInt(sessionStorage.getItem('userId')!, 10);
+    console.log(userId)
     
     return userId;
   }

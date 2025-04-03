@@ -24,14 +24,16 @@ export class UserService {
   }
 
   getUserByEmail(email: string): Observable<HttpResponse<User>> {
-    const url = apiUrl + '/email/' + email;
+    const url = `${apiUrl}/email/${email}`;
     this.montarHeaderToken();
     
     return this.http.get<HttpResponse<User>>(
       url,
       { headers: httpOptions.headers, observe: 'response' }
     ).pipe(
-      tap((user: any) => console.log('user received successfully')),
+      tap((user: any) => {
+        console.log('user received successfully')
+      }),
       catchError(this.handleError<HttpResponse<User>>('getUser'))
     );
   }

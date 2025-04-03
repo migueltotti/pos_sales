@@ -6,7 +6,6 @@
 
 /* Define a largura máxima da primeira coluna */
 .col-fixed {
-    max-width: 430px;
     flex: 1 1 430px; /* Permite que ocupe até 400px, mas se adapte em telas menores */
     display: flex;
     flex-direction: column;
@@ -15,8 +14,41 @@
 
 /* A segunda coluna ocupa o restante */
 .col-fluid {
-    flex: 1;
+    //flex: 1;
     flex-direction: column;
+}
+
+.btn-custom{}
+
+@media (min-width: 1020px) {
+    .col-fluid {
+        flex: 1;
+    }
+
+    .col-fixed {
+        max-width: 430px;
+    }
+}
+
+@media (max-width: 1020px) {
+    .full-screen-container {
+        height: 100%;
+    }
+
+    .col-fluid{
+        padding-bottom: 20px;
+    }
+}
+
+@media (max-width: 600px){
+    .col-fluid{
+        height: max-content;
+    }
+
+    .btn-custom{
+        margin-top: 10px !important;
+        margin-left: 10px !important
+    }
 }
 
 .form-control{

@@ -14,8 +14,7 @@ import Modal from 'bootstrap/js/dist/modal';
 export class NoteModalComponent {
   @ViewChild('noteElement', { static: false }) noteElement!: ElementRef;
   private noteInstance!: Modal;
-
-  
+  @ViewChild('noteInput') noteInput!: ElementRef<HTMLInputElement>;
 
   @Output() orderDescription = new EventEmitter<string>()
   orderNote: string = '';
@@ -27,6 +26,10 @@ export class NoteModalComponent {
 
   ngAfterViewInit() {
     this.noteInstance = new Modal(this.noteElement.nativeElement);
+
+    this.noteElement.nativeElement.addEventListener('shown.bs.modal', () => {
+      this.noteInput.nativeElement.focus();
+    });
   }
 
   openModal() {

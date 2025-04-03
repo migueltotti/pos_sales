@@ -1,4 +1,4 @@
-<div class="modal fade" #textElement tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+<div class="modal fade" #textElement tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
         <div class="modal-header">
@@ -6,8 +6,8 @@
         <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <label for="exampleFormControlInput1" class="form-label">Insira um nome:</label>
-            <input type="text" class="form-control" id="exampleFormControlInput1" [(ngModel)]="name">
+            <label for="nameInput" class="form-label">Insira um nome:</label>
+            <input type="text" #nameInput class="form-control" id="nameInput" [(ngModel)]="name">
         </div>
         <div class="modal-footer">
         <button type="button" (click)="closeModal()" class="btn btn-secondary">Cancelar</button>

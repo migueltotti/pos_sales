@@ -250,7 +250,7 @@ export class OrdersComponent implements OnInit, OnDestroy{
   ngOnInit(): void {
     this.getTodayOrders();
 
-    this.subscription = interval(300000).subscribe(() => {
+    this.subscription = interval(60000).subscribe(() => {
         this.getTodayOrders();
     });
   }

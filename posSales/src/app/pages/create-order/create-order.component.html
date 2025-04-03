@@ -1,7 +1,9 @@
 <div class="container-fluid full-screen-container">
     <div class="row h-100">
         <!-- Primeira coluna com largura máxima de 400px -->
-        <div class="col-fixed p-2 text-white d-flex" style="background-color: #2C2C2C;">
+        <div class="col-fixed p-2 text-white d-flex" style="background-color: #2C2C2C;"
+            [ngClass]="{'col-12 order-last' : isSmallScreen}"
+        >
             <app-bucket-card 
                 [orderProducts]="orderProducts"
                 [orderHolder]="orderHolder"
@@ -11,7 +13,7 @@
             <div class="row g-2 mt-1">
                 <div class="col-sm-7">
                   <div class="form-floating">
-                    <input type="email" class="form-control fw-medium shadow-lg" id="floatingInputGrid" placeholder="name@example.com" [(ngModel)]="orderPhone">
+                    <input type="text" class="form-control fw-medium shadow-lg" id="floatingInputGrid" mask="(00) 00000-0000" [(ngModel)]="orderPhone">
                     <label for="floatingInputGrid" style="color: black;">Telefone:</label>
                   </div>
                 </div>
@@ -62,7 +64,9 @@
         </div>
 
         <!-- Segunda coluna ocupando o restante -->
-        <div class="col-fluid text-white d-flex justify-content-start" style="background-color: #1E1E1E;">
+        <div class="col-fluid text-white d-flex justify-content-start" style="background-color: #1E1E1E;"
+            [ngClass]="{'col-12 order-first' : isSmallScreen}"
+        >
             <!-- Linha de Funções -->
             <div class="d-flex flex-wrap mt-2 mb-4 gap-2" style="min-height: 30px; width: 100%;">
                 <div class="input-group flex-nowrap rounded-6 flex-grow-1" style="min-width: 260px; max-width: 500px; border-radius: 0.75rem;">
@@ -138,7 +142,7 @@
                     </div>
                     
                 </div>
-                <div class="col-auto ms-auto">
+                <div class="col-auto ms-auto btn-custom">
                     <button type="button" class="btn btn-lg btn-primary fw-bold shadow-lg" (click)="addItem()" style="color: black;">ADICIONAR</button>
                 </div>
             </div>

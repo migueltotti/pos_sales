@@ -293,17 +293,22 @@ export class HomeComponent implements OnInit{
   }
 
   getTodayWorkDay(){
-    const todayDate = (new Date()).toISOString().split("T")[0]
+    const todayDate = new Date().toLocaleDateString('pt-BR').split('/').reverse().join('-');
 
     this.workDayService.getWorkDayByDate(todayDate)
     .subscribe({
       next: (res) => {
+        this.workDay = res.body
+        this.workDayService.isWorkDayInProgressSubject.next(true);
+
         if(res.body?.startDayTime != null && res.body?.finishDayTime != null){
           this.isWorkDayDone = true;
+          this.workDayService.isWorkDayInProgressSubject.next(false);
         }
       },
       error: (err) => {
         console.log(err);
+        this.workDayService.isWorkDayInProgressSubject.next(false);
       }
     })
   }
@@ -312,22 +317,23 @@ export class HomeComponent implements OnInit{
     if(this.userId == 0)
       return;
 
+    console.log(this.userId);
+
     this.isStartingLoading = true;
-    this.showFailToast(failedStartWorkDayToast);
 
     this.workDayService.startWokDay(this.userId)
     .subscribe({
       next: (res) => {
+        this.isStartingLoading = false;
         this.workDay = res.body;
         this.workDayService.isWorkDayInProgressSubject.next(true);
         this.showSuccessToast(successStartWorkDayToast);
-        this.isStartingLoading = false;
-        this.router.navigate(['/cadastroPedidos']);
+        this.router.navigate(['/configEstoque']);
       },
       error: (err) => {
+        this.isStartingLoading = false;
         console.log(err);
         this.showFailToast(failedStartWorkDayToast);
-        this.isStartingLoading = false;
       }
     })
   }
@@ -343,16 +349,17 @@ export class HomeComponent implements OnInit{
     this.workDayService.finishWokDay(workDayId)
     .subscribe({
       next: (res) => {
+        this.isFinishingLoading = false;
         this.workDay = res.body;
         this.isWorkDayDone = true;
         this.workDayService.isWorkDayInProgressSubject.next(false);
         this.showSuccessToast(successFinishWorkDayToast);
-        this.isFinishingLoading = false;
+        this.router.navigate(['/relatorio']);
       },
       error: (err) => {
+        this.isFinishingLoading = false;
         console.log(err);
         this.showFailToast(failedFinishWorkDayToast);
-        this.isFinishingLoading = false;
       }
     })
   }

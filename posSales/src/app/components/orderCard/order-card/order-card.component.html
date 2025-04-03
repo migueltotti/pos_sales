@@ -19,9 +19,17 @@
             }
             
         </div>
+
+        <p class="fs-6 mb-0">
+            {{"Tel.: " + this.order.note.split(":")[0]}}
+        </p>
+        <p class="fs-6 mb-0">
+            {{"Obs.: " + this.order.note.split(":")[1]}}
+        </p>
+
     </div>
 </div>
-<div class="triangle-container"  [ngClass]="{ 'border border-primary border-2': order.orderId == orderId}">
+<div class="triangle-container" [ngClass]="{ 'border border-primary border-2': order.orderId == orderId}">
     <!-- Criando 29 triângulos -->
     <div class="triangle"></div>
     <div class="triangle"></div>

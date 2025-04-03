@@ -1,13 +1,13 @@
 .worday-started{
     background-color: rgba(0, 128, 0, 0.3);
-    width: 25px;
+    width: 27px;
     height: 100%;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     font-size: x-small;
     color: rgba(0, 0, 0, 0.3);
-    padding-left: 6px;
-    padding-top: 1px;
+    padding-left: 7px;
+    padding-top: 3px;
 }
 
 .worday-started-true {
@@ -17,15 +17,15 @@
 
 .worday-finished{
     background-color: rgba(255, 0, 0, 0.3);
-    width: 25px;
+    width: 27px;
     height: 100%;
     margin-left: 1px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     font-size: x-small;
     color: rgba(0, 0, 0, 0.3);
-    padding-left: 4px;
-    padding-top: 1px;
+    padding-left: 3px;
+    padding-top: 3px;
 }
 
 .worday-finished-true {
