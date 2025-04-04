@@ -1,0 +1,92 @@
+<div class="container-fluid full-screen-container">
+    <div class="create-user-card">
+
+        <div class="user-icon-circle"></div>
+        <div class="user-icon-square"></div>
+        <i class="bi bi-person icon"></i>
+
+        <!--<div class="user-icon">
+            
+        </div>-->
+
+        <div class="user-card rounded-5">
+            <div class="row text-center mt-5">
+                <div class="col fs-2 fw-bold">Informações do Usuário</div>
+            </div>
+            <div class="row mx-3 mt-4">
+                <div class="col-7 order-first mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
+                    <label for="name" class="form-label mx-1 my-0 text-black nowrap-label">Nome:</label>
+                    <input type="text" class="form-control input-fields mx-1 shadow-lg" id="name" [(ngModel)]="name" style="max-width: 300px;" [disabled]="!isEditionMode">
+                    <div class="invalid-feedback" [ngClass]="{'d-block': isNameInvalid, 'd-none': !isNameInvalid}">
+                        Nome deve começar com maiusculo e ter pelo menos 3 caracteres.
+                    </div>
+                </div>
+                <div class="col-5 order-xl-2 order-sm-2 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
+                    <label for="cpf" class="form-label mx-1 my-0 text-black nowrap-label">CPF:</label>
+                    <input type="text" class="form-control input-fields mx-1 shadow-lg" id="cpf" [(ngModel)]="cpf" mask="000.000.000-00" style="max-width: 300px;" [disabled]="!isEditionMode">
+                </div>
+                <div class="col-12 order-xl-3 order-sm-3 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
+                    <label for="email" class="form-label mx-1 my-0 text-black nowrap-label">Email:</label>
+                    <input type="email" class="form-control input-fields mx-1 shadow-lg email-input" id="email" [(ngModel)]="email" [disabled]="!isEditionMode">
+                    <div class="invalid-feedback" [ngClass]="{'d-block': isEmailInvalid, 'd-none': !isEmailInvalid}">
+                        Email deve ter pelo menos 10 caracteres.
+                    </div>
+                </div>
+                <div class="col-7 order-xl-4 order-sm-4 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
+                    <label for="password" class="form-label mx-1 my-0 text-black nowrap-label">Senha:</label>
+                    <input type="text" class="form-control input-fields mx-1 shadow-lg" id="password" [(ngModel)]="password" style="max-width: 300px;" [disabled]="!isEditionMode">
+                    <div class="invalid-feedback" [ngClass]="{'d-block': isPasswordInvalid, 'd-none': !isPasswordInvalid}">
+                        Senha deve ter pelo menos 8 caracteres, uma letra maiuscula, uma minuscula e um caracter especial.
+                    </div>
+                </div>
+                <div class="col-5 order-xl-5 order-sm-5 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
+                    <label for="dateBirth" class="form-label mx-1 my-0 text-black nowrap-label">Data de Nascimento:</label>
+                    <input type="text" class="form-control input-fields mx-1 shadow-lg" id="dateBirth" [(ngModel)]="dateBirth" mask="00/00/0000" style="max-width: 300px;" [disabled]="!isEditionMode">
+                </div>
+            </div>
+
+            <div class="form-check mt-4 d-flex ms-4">
+                <p class="edit-text text-black fw-bold">Modo edição</p>
+                <input class="form-check-input edit-check-box mt-1 ms-2" type="checkbox" [(ngModel)]="isEditionMode" aria-label="Checkbox for following text input">
+            </div>
+
+            <div *ngIf="isLoading" class="d-flex justify-content-center mt-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+
+            <div class="d-flex fw-bold text-black mb-3 mt-4 mx-2" style="justify-content: space-evenly; flex-wrap: wrap; gap: 10px;">
+                <button type="button" class="btn btn-lg rounded-4 btn-create" (click)="updateUser()">
+                    Salvar Informações
+                </button>
+                <button type="button" class="btn btn-lg rounded-4 btn-cancel" (click)="cancel()">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="successToast" class="toast align-items-center text-bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+            <div class="toast-body">
+                {{ toastMessage }}
+            </div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="failedToast" class="toast align-items-center text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+            <div class="toast-body">
+                {{ toastMessage }}
+            </div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+</div>

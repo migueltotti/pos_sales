@@ -58,7 +58,7 @@ export class HomeComponent implements OnInit{
         label: 'Pedidos',
         data: this.ordersDataValues,
         backgroundColor: [
-          'rgba(125, 0, 9, 0.7)'
+          'rgba(125, 0, 9, 0.5)'
         ],
         borderColor: [
           'rgb(125, 0, 9, 1)'
@@ -95,7 +95,7 @@ export class HomeComponent implements OnInit{
         label: 'Pedidos',
         data: this.ordersDataValues.slice(0, 4),
         backgroundColor: [
-          'rgba(125, 0, 9, 0.7)'
+          'rgba(125, 0, 9, 0.5)'
         ],
         borderColor: [
           'rgb(125, 0, 9, 1)'
@@ -132,7 +132,7 @@ export class HomeComponent implements OnInit{
         label: 'Pedidos',
         data: this.secondOrdersDataValues,
         backgroundColor: [
-          'rgba(125, 0, 9, 0.7)'
+          'rgba(125, 0, 9, 0.5)'
         ],
         borderColor: [
           'rgb(125, 0, 9, 1)'
@@ -165,7 +165,7 @@ export class HomeComponent implements OnInit{
         label: 'Produtos',
         data: this.values,
         backgroundColor: [
-          'rgba(125, 0, 9, 0.7)',
+          'rgba(125, 0, 9, 0.5)',
           'rgba(253, 203, 88, 0.7)',
           'rgba(217, 217, 217, 0.7)',
           'rgba(255, 246, 167, 0.7)',

@@ -9,6 +9,8 @@ import { ReportComponent } from './pages/report/report.component';
 import { HomeComponent } from './pages/home/home.component';
 import { AuthGuard } from '../services/auth.guard';
 import { WorkDayGuard } from '../services/work-day.guard';
+import { CreateUserComponent } from './pages/create-user/create-user.component';
+import { UserInfoComponent } from './pages/user-info/user-info.component';
 
 export const routes: Routes = [
     {
@@ -45,6 +47,18 @@ export const routes: Routes = [
         path: 'relatorio',
         title: 'Relatório Diário',
         component: ReportComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'configUsuario',
+        title: 'Configuração de Usuario',
+        component: UserInfoComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'criarUsuario',
+        title: 'Criação de Usuário',
+        component: CreateUserComponent,
         canActivate: [AuthGuard]
     },
     {

@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Ropa+Sans:ital@0;1&display=swap');
+
+.full-screen-container {
+    height: calc(100vh - 56px); /* 100% da tela menos a altura da navbar */
+    display: flex;
+    flex-direction: column;
+    background-color: #1E1E1E;
+    justify-content: center;
+    align-items: center;
+}
+
+.create-user-card{
+    position: relative;
+    max-height: 545px;
+    max-width: 675px;
+}
+
+.user-icon{
+    position: relative;
+}
+
+.user-icon-circle {
+    position: absolute;
+    top: -35px;
+    left: 45%;
+    width: 80px;
+    height: 80px;
+    border-radius: 100%;
+    border-color: #7D0009;
+    border-width: 3px;
+    border-style: solid;
+    background-color: #FDCB58;
+}
+
+.icon{
+    position: absolute;
+    margin-left: 3px;
+    top: -30px;
+    left: 48%;
+    font-size: xx-large;
+}
+
+.user-icon-square {
+    position: absolute;
+    top: 3px;
+    left: 44%;
+    width: 90px;
+    height: 45px;
+    background-color: #FDCB58;
+}
+
+.user-card {
+    max-width: 675px;
+    height: 520px;
+    border-color: #7D0009;
+    border-width: 3px;
+    border-style: solid;
+    background-color: #FDCB58;
+}
+
+.input-fields{
+    border-color: black;
+    border-width: 1px;
+}
+
+.nowrap-label {
+    white-space: nowrap;
+    overflow: visible;
+    min-width: max-content;
+}
+
+.email-input{
+    max-width: 350px;
+}
+
+@media (max-width: 620px) {
+    .user-card {
+        height: 570px;
+    }
+}
+
+@media (max-width: 470px) {
+    .user-card {
+        height: 610px;
+    }
+
+    .email-input{
+        max-width: 300px;
+    }
+}
+
+.btn-create{
+    background-color: #00DF21;
+    border-width: 1px;
+    border-color: black;
+    width: 200px !important;
+}
+
+.btn-cancel{
+    background-color: #E60000;
+    border-width: 1px;
+    border-color: black;
+    width: 200px !important;
+}

@@ -51,6 +51,48 @@ export class UserService {
     );
   }
 
+  createUser(user: User): Observable<HttpResponse<User>>{
+    this.montarHeaderToken();
+
+    return this.http.post<User>(
+      apiUrl,
+      user,
+      { headers: httpOptions.headers, observe: 'response' }
+    ).pipe(
+      tap((User: any) => console.log('user created successfully')),
+      catchError(this.handleError<HttpResponse<User>>('getUcreateUserser'))
+    )
+  }
+
+  updateUser(user: User): Observable<HttpResponse<User>>{
+    const url = `${apiUrl}/${user.userId}`
+
+    this.montarHeaderToken();
+
+    return this.http.put<User>(
+      apiUrl,
+      user,
+      { headers: httpOptions.headers, observe: 'response' }
+    ).pipe(
+      tap((User: any) => console.log('user created successfully')),
+      catchError(this.handleError<HttpResponse<User>>('getUcreateUserser'))
+    )
+  }
+
+  deleteUser(userId: number): Observable<HttpResponse<User>>{
+    const url = `${apiUrl}/${userId}`
+
+    this.montarHeaderToken();
+
+    return this.http.delete(
+      apiUrl,
+      { headers: httpOptions.headers, observe: 'response' }
+    ).pipe(
+      tap((User: any) => console.log('user created successfully')),
+      catchError(this.handleError<HttpResponse<User>>('getUcreateUserser'))
+    )
+  }
+
   private handleError<T> (operation = 'operation', result?: T){
     return (error: any): Observable<T> => {
       console.error(error);
