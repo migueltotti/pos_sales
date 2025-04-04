@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, NgModule, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, NgModule, OnInit } from '@angular/core';
 import { Product } from '../../../entities/product';
 import { OrderInput } from '../../../entities/orderInput';
 import { OrderOutput } from '../../../entities/orderOutput';
@@ -18,112 +18,6 @@ import { WorkDayService } from '../../../services/work-day.service';
 import { OrderUpdate } from '../../../entities/orderUpdate';
 import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
-
-/*const testOrders: OrderOutput[] = [
-  new OrderOutput(
-      1,
-      150.00,
-      "2024-03-17T10:30:00Z",
-      1,
-      "Miguel Totti",
-      "Entrega urgente",
-      101,
-      [
-          new LineItemOutput(
-              1,
-              1,
-              201,
-              2,
-              50.00,
-              new Product(201, "Mouse Gamer", "Mouse óptico RGB", 50.00, 1, 10, "mouse.jpg", 1)
-          ),
-          new LineItemOutput(
-              2,
-              1,
-              202,
-              1,
-              50.00,
-              new Product(202, "Teclado Mecânico", "Teclado mecânico RGB", 50.00, 1, 5, "teclado.jpg", 1)
-          )
-      ]
-  ),
-  new OrderOutput(
-      2,
-      300.00,
-      "2024-03-16T15:45:00Z",
-      2,
-      "Ana Souza",
-      "Presente de aniversário",
-      102,
-      [
-          new LineItemOutput(
-              3,
-              2,
-              203,
-              1,
-              300.00,
-              new Product(203, "Monitor 27'", "Monitor 144Hz Full HD", 300.00, 1, 3, "monitor.jpg", 2)
-          )
-      ]
-  ),
-  new OrderOutput(
-      3,
-      90.00,
-      "2024-03-15T12:00:00Z",
-      3,
-      "Carlos Lima",
-      "Retirar na loja",
-      103,
-      [
-          new LineItemOutput(
-              4,
-              3,
-              204,
-              3,
-              30.00,
-              new Product(204, "Cabo HDMI", "Cabo HDMI 2 metros", 30.00, 1, 20, "cabo_hdmi.jpg", 3)
-          )
-      ]
-  ),
-  new OrderOutput(
-      4,
-      500.00,
-      "2024-03-14T09:15:00Z",
-      1,
-      "Mariana Ferreira",
-      "Entrega programada para sexta-feira",
-      104,
-      [
-          new LineItemOutput(
-              5,
-              4,
-              205,
-              1,
-              500.00,
-              new Product(205, "Placa de Vídeo", "RTX 3060 12GB", 500.00, 1, 2, "placa_video.jpg", 4)
-          )
-      ]
-  ),
-  new OrderOutput(
-      5,
-      200.00,
-      "2024-03-13T18:20:00Z",
-      2,
-      "Lucas Almeida",
-      "Pagamento via boleto",
-      105,
-      [
-          new LineItemOutput(
-              6,
-              5,
-              206,
-              4,
-              50.00,
-              new Product(206, "Fonte 600W", "Fonte 80 Plus Bronze", 50.00, 1, 8, "fonte.jpg", 5)
-          )
-      ]
-  )
-];*/
 
 const successCompleteToast = 'Pedido completo com sucesso!';
 const failedCompleteToast = 'Erro ao completar pedido!';
@@ -147,6 +41,7 @@ const failedExportToast = 'Erro ao exportar relatório!';
 })
 export class ReportComponent implements OnInit{
   collapses: { id: string; collapse: Collapse; isOpen: boolean }[] = [];
+  isSmallScreen: boolean = window.innerWidth <= 500;
 
   ordersReport!: OrderReport | null;
   workDay!: WorkDay | null;
@@ -292,6 +187,12 @@ export class ReportComponent implements OnInit{
     if(actionType == 1){
       this.returnOrder(this.orderId);
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.isSmallScreen = window.innerWidth <= 620;
+    //console.log(this.isSmallScreen);
   }
 
   showSuccessToast(text: string){
