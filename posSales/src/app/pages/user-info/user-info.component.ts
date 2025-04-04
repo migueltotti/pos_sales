@@ -6,6 +6,7 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { CommonModule } from '@angular/common';
 import Toast from 'bootstrap/js/dist/toast';
 import { AuthService } from '../../../services/auth.service';
+import { switchMap } from 'rxjs';
 
 const successToast = 'Usuario editado com sucesso!';
 const failedToast = 'Erro ao editar usuario!';
@@ -33,6 +34,7 @@ export class UserInfoComponent implements OnInit{
   email = '';
   cpf = '';
   password = '';
+  role = 0;
   dateBirth = '';
   user!: User | null;
 
@@ -64,6 +66,7 @@ export class UserInfoComponent implements OnInit{
         this.email = this.user?.email!;
         this.cpf = this.user?.cpf!;
         this.password = this.user?.password!;
+        this.role = this.user?.role!;
         this.dateBirth = this.user?.dateBirth.split('T')[0].split('-').reverse().join('-')!;
       },
       error: (err) => {
@@ -89,6 +92,10 @@ export class UserInfoComponent implements OnInit{
     this.isPasswordInvalid = false;
     //this.isDateBirthInvalid = false;
 
+    let day = this.dateBirth.slice(0, 2)
+    let month = this.dateBirth.slice(2, 4)
+    let year = this.dateBirth.slice(4, 8)
+
     this.user = new User(
       this.user?.userId!, 
       this.name, 
@@ -96,21 +103,27 @@ export class UserInfoComponent implements OnInit{
       this.password, 
       this.cpf,
       this.user?.points!,
-      this.dateBirth.split("/").reverse().join("-"),
+      `${year}-${month}-${day}`,
       this.user?.affiliateId!,
-      this.user?.role!
+      this.role
     );
 
     this.userService.updateUser(this.user)
-    .subscribe({
+    .pipe(
+      switchMap((data) =>{
+        return this.userService.getUserById(this.user?.userId!)
+      })
+    ).subscribe({
       next: (res) => {
         this.showSuccessToast(successToast);
         this.isLoading = false;
-        this.name = ''; 
-        this.email = ''; 
-        this.cpf = ''; 
-        this.password = ''; 
-        this.dateBirth = '';
+        this.user = res.body;
+        this.name = this.user?.name!;
+        this.email = this.user?.email!;
+        this.cpf = this.user?.cpf!;
+        this.password = this.user?.password!;
+        this.role = this.user?.role!;
+        this.dateBirth = this.user?.dateBirth.split('T')[0].split('-').reverse().join('-')!;
       },
       error: (err) => {
         console.log(err);

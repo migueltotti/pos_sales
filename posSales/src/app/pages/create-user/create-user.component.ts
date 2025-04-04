@@ -31,6 +31,7 @@ export class CreateUserComponent implements OnInit{
   email = '';
   cpf = '';
   password = '';
+  role = 0;
   dateBirth = '';
   user!: User;
 
@@ -65,6 +66,10 @@ export class CreateUserComponent implements OnInit{
     this.isEmailInvalid = false;
     this.isPasswordInvalid = false;
     //this.isDateBirthInvalid = false;
+    
+    let day = this.dateBirth.slice(0, 2)
+    let month = this.dateBirth.slice(2, 4)
+    let year = this.dateBirth.slice(4, 8)
 
     this.user = new User(
       0, 
@@ -73,21 +78,23 @@ export class CreateUserComponent implements OnInit{
       this.password, 
       this.cpf,
       0,
-      this.dateBirth.split("/").reverse().join("-"),
+      `${year}-${month}-${day}`,
       1,
-      3
+      this.role
     );
 
     this.userService.createUser(this.user)
     .subscribe({
       next: (res) => {
-        this.showSuccessToast(successToast);
-        this.isLoading = false;
-        this.name = ''; 
-        this.email = ''; 
-        this.cpf = ''; 
-        this.password = ''; 
-        this.dateBirth = '';
+        if(res.ok){
+          this.showSuccessToast(successToast);
+          this.isLoading = false;
+          this.name = ''; 
+          this.email = ''; 
+          this.cpf = ''; 
+          this.password = ''; 
+          this.dateBirth = '';
+        }
       },
       error: (err) => {
         console.log(err);

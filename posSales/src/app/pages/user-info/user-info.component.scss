@@ -58,6 +58,11 @@
     background-color: #FDCB58;
 }
 
+.user-card-error{
+    height: 595px;
+}
+
+
 .input-fields{
     border-color: black;
     border-width: 1px;
@@ -100,13 +105,21 @@
 
 @media (max-width: 620px) {
     .user-card {
-        height: 600px;
+        height: 655px;
+    }
+    
+    .full-screen-container {
+        justify-content: start;
+    }
+
+    .create-user-card{
+        margin-top: 45px;
     }
 }
 
 @media (max-width: 500px) {
     .user-card {
-        height: 650px;
+        height: 720px;
     }
 
     .full-screen-container {

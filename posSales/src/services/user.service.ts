@@ -60,7 +60,10 @@ export class UserService {
       { headers: httpOptions.headers, observe: 'response' }
     ).pipe(
       tap((User: any) => console.log('user created successfully')),
-      catchError(this.handleError<HttpResponse<User>>('getUcreateUserser'))
+      catchError(err => {
+        console.error('Erro capturado no serviço:', err);
+        return throwError(() => err);
+      })
     )
   }
 
@@ -70,12 +73,15 @@ export class UserService {
     this.montarHeaderToken();
 
     return this.http.put<User>(
-      apiUrl,
+      url,
       user,
       { headers: httpOptions.headers, observe: 'response' }
     ).pipe(
       tap((User: any) => console.log('user created successfully')),
-      catchError(this.handleError<HttpResponse<User>>('getUcreateUserser'))
+      catchError(err => {
+        console.error('Erro capturado no serviço:', err);
+        return throwError(() => err);
+      })
     )
   }
 

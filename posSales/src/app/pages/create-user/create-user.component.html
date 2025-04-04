@@ -9,7 +9,7 @@
             
         </div>-->
 
-        <div class="user-card rounded-5">
+        <div class="user-card rounded-5" [ngClass]="{'user-card-error': isEmailInvalid}">
             <div class="row text-center mt-5">
                 <div class="col fs-2 fw-bold">Novo Usuario</div>
             </div>
@@ -21,25 +21,33 @@
                         Nome deve começar com maiusculo e ter pelo menos 3 caracteres.
                     </div>
                 </div>
-                <div class="col-5 order-xl-2 order-sm-2 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
+                <div class="col-5 order-2 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
                     <label for="cpf" class="form-label mx-1 my-0 text-black nowrap-label">CPF:</label>
                     <input type="text" class="form-control input-fields mx-1 shadow-lg" id="cpf" [(ngModel)]="cpf" mask="000.000.000-00" style="max-width: 300px;">
                 </div>
-                <div class="col-12 order-xl-3 order-sm-3 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
+                <div class="col-7 order-3 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
                     <label for="email" class="form-label mx-1 my-0 text-black nowrap-label">Email:</label>
                     <input type="email" class="form-control input-fields mx-1 shadow-lg email-input" id="email" [(ngModel)]="email">
                     <div class="invalid-feedback" [ngClass]="{'d-block': isEmailInvalid, 'd-none': !isEmailInvalid}">
                         Email deve ter pelo menos 10 caracteres.
                     </div>
                 </div>
-                <div class="col-7 order-xl-4 order-sm-4 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
+                <div class="col-4 order-3 mt-1" [ngClass]="{'col-12 order-5 offset-1': isFirstBreakPoint}">
+                    <label for="role" class="form-label mx-1 my-0 text-black nowrap-label">Função:</label>
+                    <select  type="text" class="form-select input-fields mx-1 shadow-lg" id="role" [(ngModel)]="role" style="max-width: 300px;">
+                        <option value="0">Cliente</option>
+                        <option value="1">Empregado</option>
+                        <option value="2">Administrador</option>
+                    </select>
+                </div>
+                <div class="col-7 order-4 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
                     <label for="password" class="form-label mx-1 my-0 text-black nowrap-label">Senha:</label>
                     <input type="text" class="form-control input-fields mx-1 shadow-lg" id="password" [(ngModel)]="password" style="max-width: 300px;">
                     <div class="invalid-feedback" [ngClass]="{'d-block': isPasswordInvalid, 'd-none': !isPasswordInvalid}">
                         Senha deve ter pelo menos 8 caracteres, uma letra maiuscula, uma minuscula e um caracter especial.
                     </div>
                 </div>
-                <div class="col-5 order-xl-5 order-sm-5 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
+                <div class="col-5 order-5 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
                     <label for="dateBirth" class="form-label mx-1 my-0 text-black nowrap-label">Data de Nascimento:</label>
                     <input type="text" class="form-control input-fields mx-1 shadow-lg" id="dateBirth" [(ngModel)]="dateBirth" mask="00/00/0000" style="max-width: 300px;">
                 </div>
