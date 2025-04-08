@@ -20,6 +20,9 @@ export class AuthService {
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.isRefreshTokenExpirired());
   isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
+
+  private isUserAdminSubject = new BehaviorSubject<boolean>(false);
+  isAdmin$: Observable<boolean> = this.isUserAdminSubject.asObservable();
   
   private jwtHelper = new JwtHelperService();
 
@@ -35,7 +38,7 @@ export class AuthService {
       { headers: httpOptions.headers, observe: 'response' }
     ).pipe(
       tap((data: HttpResponse<LoginResponse>) => {
-        console.log('Login usuario com email =' + loginModel.email)
+        //console.log('Login usuario com email =' + loginModel.email)
         if(data.ok){
           this.setJwtTokenToStorage(data.body?.token!);
           this.setRefreshToken(data.body?.refreshToken!);
@@ -44,6 +47,7 @@ export class AuthService {
           this.setUserNameToStorage();
 
           this.isAuthenticatedSubject.next(true); // comunica que o usuario esta logado
+          this.isUserAdminSubject.next(this.isAdmin());
         }
         else
           console.error(data.body);
@@ -62,13 +66,16 @@ export class AuthService {
       { headers: httpOptions.headers, observe: 'response' }
     ).pipe(
       tap((data: HttpResponse<LoginResponse>) => {
-        console.log('Login usuario com refreshToken')
+        //console.log('Login usuario com refreshToken')
         if(data.ok){
           this.setJwtTokenToStorage(data.body?.token!);
           this.setRefreshToken(data.body?.refreshToken!);
           this.setJwtRefreshTokenExpirationTimeToStorage(data.body?.expiration!);
           this.setUserEmailToStorage();
           this.setUserNameToStorage();
+
+          this.isAuthenticatedSubject.next(true); // comunica que o usuario esta logado
+          this.isUserAdminSubject.next(this.isAdmin());
         }
         else
           console.error(data.body);
@@ -135,12 +142,20 @@ export class AuthService {
     return isExpired;
   }
 
-  isEmployeeOrAdmin(): boolean {
+  isAdmin(): boolean {
     const token = this.getToken();
     if (!token) return false;
 
     const decodedToken = this.jwtHelper.decodeToken(token);
-    return decodedToken?.role === 'Employee' || decodedToken?.role === 'Admin';
+    return decodedToken?.role === 'Admin';
+  }
+
+  isAdminOrEmployee(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+
+    const decodedToken = this.jwtHelper.decodeToken(token);
+    return decodedToken?.role === 'Admin' || decodedToken?.role === 'Employee';
   }
 
   setUserEmailToStorage(): boolean {

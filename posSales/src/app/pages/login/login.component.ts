@@ -23,6 +23,7 @@ export class LoginComponent{
   isPasswordVisible = false;
   passwordVisibilityType = 'password'
   isLoading = false;
+  userNotAllowed = false;
 
   email = '';
   password = '';
@@ -44,6 +45,7 @@ export class LoginComponent{
     }
 
     this.userNotFound = false;
+    this.userNotAllowed = false;
     this.isLoading = true;
 
     this.authService.login({ 
@@ -59,8 +61,13 @@ export class LoginComponent{
         this.isLoading = false;
         this.email = '';
         this.password = '';
-        this.authService.setUserIdToStorage(res.body?.userId!);
-        this.router.navigate(['/home']);
+        if(this.authService.isAdminOrEmployee()){
+          this.authService.setUserIdToStorage(res.body?.userId!);
+          this.router.navigate(['/home']);
+        }
+        else{
+          this.userNotAllowed = true;
+        }
       },
       error: (err) => {
         this.isLoading = false;
@@ -81,6 +88,7 @@ export class LoginComponent{
     this.isEmailInvalid = false;
     this.isPasswordInvalid = false;
     this.userNotFound = false;
+    this.userNotAllowed = false;
   }
 
   togglePasswordVisibility() {

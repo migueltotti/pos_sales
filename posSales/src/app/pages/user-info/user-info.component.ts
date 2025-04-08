@@ -6,7 +6,8 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { CommonModule } from '@angular/common';
 import Toast from 'bootstrap/js/dist/toast';
 import { AuthService } from '../../../services/auth.service';
-import { switchMap } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 const successToast = 'Usuario editado com sucesso!';
 const failedToast = 'Erro ao editar usuario!';
@@ -24,6 +25,9 @@ const failedToast = 'Erro ao editar usuario!';
   styleUrl: './user-info.component.scss'
 })
 export class UserInfoComponent implements OnInit{
+  private adminSubscription!: Subscription
+  isAdmin!: boolean;
+
   isLoading = false;
   isFirstBreakPoint: boolean = window.innerWidth <= 620;
   isSecondBreakPoint: boolean = window.innerWidth <= 540;
@@ -48,16 +52,30 @@ export class UserInfoComponent implements OnInit{
 
   constructor(
     private userService: UserService,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute
   ){}
 
   ngOnInit(): void {
-    this.getUser();
+    this.adminSubscription = this.authService.isAdmin$.subscribe(
+      (isAdmin) => {
+        this.isAdmin = isAdmin;
+        console.log(isAdmin);
+      }
+    );
+
+    const userId = this.route.snapshot.params['id'];
+
+    if(userId && this.isAdmin){
+      this.getUser(userId!);
+    }
+    else{
+      const userIdLogged = this.authService.getUserIdFromStorage();
+      this.getUser(userIdLogged!);
+    }
   }
 
-  getUser(){
-    const userId = this.authService.getUserIdFromStorage();
-    
+  getUser(userId: number){
     this.userService.getUserById(userId!)
     .subscribe({
       next: (res) => {

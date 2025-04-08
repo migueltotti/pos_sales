@@ -19,7 +19,7 @@ export class UserService {
 
   montarHeaderToken() {
     token = sessionStorage.getItem("jwt");
-    console.log('jwt header token ' + token)
+    //console.log('jwt header token ' + token)
     httpOptions = {headers: new HttpHeaders({"Authorization" : "Bearer " + token, "Content-Type": "application/json"})}
   }
 
@@ -48,6 +48,20 @@ export class UserService {
     ).pipe(
       tap((User: any) => console.log('user received successfully')),
       catchError(this.handleError<HttpResponse<User>>('getUser'))
+    );
+  }
+
+  getAllUsers(): Observable<HttpResponse<User[]>> {
+    const url = `${apiUrl}/getUsers?PageNumber=${1}&PageSize=${50}` 
+
+    this.montarHeaderToken();
+
+    return this.http.get<HttpResponse<User[]>>(
+      url,
+      { headers: httpOptions.headers, observe: 'response' }
+    ).pipe(
+      tap((User: any) => console.log('users received successfully')),
+      catchError(this.handleError<HttpResponse<User[]>>('getAllUsers'))
     );
   }
 

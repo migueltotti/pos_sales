@@ -46,6 +46,11 @@
                 [ngClass]="{'d-block': userNotFound, 'd-none': !userNotFound}">
                 Email ou Senha estão incorretos. Tente novamente
             </div>
+
+            <div class="d-flex fw-bold mt-1 mb-3" style="color: #7D0009; font-size: medium; justify-content: center;"
+                [ngClass]="{'d-block': userNotAllowed, 'd-none': !userNotAllowed}">
+                Usuário não permitido! Apenas Empregados ou Administradores
+            </div>
         </div>
 
         <div class="d-flex g-4" style="width: 330px; justify-content: space-between;">

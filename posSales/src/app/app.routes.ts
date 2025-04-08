@@ -11,6 +11,7 @@ import { AuthGuard } from '../services/auth.guard';
 import { WorkDayGuard } from '../services/work-day.guard';
 import { CreateUserComponent } from './pages/create-user/create-user.component';
 import { UserInfoComponent } from './pages/user-info/user-info.component';
+import { UsersListComponent } from './pages/users-list/users-list.component';
 
 export const routes: Routes = [
     {
@@ -56,9 +57,21 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
+        path: 'configUsuario/:id',
+        title: 'Configuração de Usuario',
+        component: UserInfoComponent,
+        canActivate: [AuthGuard]
+    },
+    {
         path: 'criarUsuario',
         title: 'Criação de Usuário',
         component: CreateUserComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'listaUsuarios',
+        title: 'Listagem de Usuarios',
+        component: UsersListComponent,
         canActivate: [AuthGuard]
     },
     {
