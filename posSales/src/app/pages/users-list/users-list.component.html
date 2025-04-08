@@ -1,0 +1,40 @@
+<div class="container-fluid full-screen-container">
+
+    <div class="d-flex flex-column p-3 mt-3 rounded-4 table-custom-width w-100" style="max-height: 100vh">
+      <h1 class="fw-bold fs-3">Listagem de Usuários</h1>
+      <div class="table-responsive">
+        <table class="table table-hover table-borderless w-100">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th colspan="2" scope="col">Nome</th>
+                <th colspan="2" scope="col">CPF</th>
+                <th colspan="2" scope="col">Função</th>
+                <th scope="col">Data de Nascimento</th>
+              </tr>
+            </thead>
+            <tbody>
+                @for (user of users_list; track $index) {
+                    <tr (click)="openUserOptionsModal(user.userId)">
+                      <th scope="row">{{user.userId}}</th>
+                      <td colspan="2" scope="row">{{user.name}}</td>
+                      <td colspan="2" scope="row">{{user.cpf.replace('/[.-]/g', "") | mask:'000.000.000-00' }}</td>
+                      <td colspan="2" scope="row">{{roles.get(user.role)}}</td>
+                      <td scope="row">{{user.dateBirth.split("T")[0].split("-").reverse().join()| mask:'00/00/0000' }}</td>
+                    </tr>
+                }
+            </tbody>
+          </table>
+      </div>
+    </div>
+
+    <app-user-options-modal
+      #userOptionsModal
+      (userOption)="catchEvent($event)"
+    ></app-user-options-modal>
+
+    <app-delete-user-modal
+      #userDeleteModal
+      (deleteConfirmation)="catchEvent($event)"
+    ></app-delete-user-modal>
+</div>

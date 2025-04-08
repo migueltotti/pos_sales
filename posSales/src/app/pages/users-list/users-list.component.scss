@@ -1,0 +1,22 @@
+.full-screen-container {
+    height: calc(100vh - 56px); /* 100% da tela menos a altura da navbar */
+    display: flex;
+    flex-direction: column;
+    background-color: #1E1E1E;
+    //justify-content: center;
+    align-items: center;
+}
+
+.table-custom-width{
+    background-color: white; 
+}
+
+table {
+    height: 200px !important;
+}
+
+@media (max-width: 760px) {
+    table {
+        width: 700px !important;
+    }
+}
