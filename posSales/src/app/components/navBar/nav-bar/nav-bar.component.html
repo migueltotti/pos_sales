@@ -12,7 +12,17 @@
                 <a class="nav-link" routerLink="/pedidos">Pedidos</a>
                 <a class="nav-link" routerLink="/configEstoque">Configuração de Estoque</a>
                 <a class="nav-link" routerLink="/relatorio">Relatório</a>
-            </div>
+                <div class="dropdown" [ngClass]="{'d-block': isAdmin, 'd-none': !isAdmin}">
+                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" 
+                          data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #FFFFFF; color: rgba(0, 0, 0, 0.65); border-color: white;">
+                    Usuários
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" routerLink="/listaUsuarios">Listagem</a></li>
+                    <li><a class="dropdown-item" routerLink="/criarUsuario">Criar Usuário</a></li>
+                  </ul>
+                </div>
+            </div>  
         </div>
 
         <div class="dropdown dropstart d-flex flex-row">

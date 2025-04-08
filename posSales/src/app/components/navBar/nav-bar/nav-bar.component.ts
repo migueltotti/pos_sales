@@ -20,8 +20,10 @@ import { WorkDayService } from '../../../../services/work-day.service';
 export class NavBarComponent {
   isLoggedIn: boolean = false;
   isWorkDayInProgress = false;
+  isAdmin!: boolean;
   private authSubscription!: Subscription;
   private workDaySubscription!: Subscription;
+  private adminSubscription!: Subscription;
 
   constructor(private authService: AuthService, 
     private router: Router, 
@@ -40,6 +42,13 @@ export class NavBarComponent {
       (isInProgress) => {
         this.isWorkDayInProgress = isInProgress
         console.log(isInProgress)
+      }
+    );
+
+    this.adminSubscription = this.authService.isAdmin$.subscribe(
+      (isAdmin) => {
+        this.isAdmin = isAdmin;
+        console.log(isAdmin);
       }
     );
   }
