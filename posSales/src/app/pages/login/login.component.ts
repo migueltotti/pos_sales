@@ -48,10 +48,10 @@ export class LoginComponent{
     this.userNotAllowed = false;
     this.isLoading = true;
 
-    this.authService.login({ 
-      email: this.email,
-      password: this.password
-    }).pipe(
+    var loginModel = new LoginModel(this.email, this.password)
+
+    this.authService.login(loginModel)
+    .pipe(
       switchMap((data) => {
         console.log(this.email)
         return this.userService.getUserByEmail(this.email);
