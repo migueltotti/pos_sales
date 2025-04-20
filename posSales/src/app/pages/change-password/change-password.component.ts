@@ -76,10 +76,11 @@ export class ChangePasswordComponent implements OnInit{
   cancel(){
     this.oldPassword = '';
     this.newPassword = '';
+    this.isLoading = false;
+    this.isPasswordInvalid = false;
   }
 
   checkPasswordRequirements(){
-
     this.oneLowerCaseLetter = this.newPassword.search(/^(?=.*[a-z])/) > -1 ? true : false;
     this.oneUpperCaseLetter = this.newPassword.search(/^(?=.*[A-Z])/) > -1 ? true : false;
     this.oneNumber = this.newPassword.search(/^(?=.*[0-9])/) > -1 ? true : false;

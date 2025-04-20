@@ -72,8 +72,8 @@ export const routes: Routes = [
     {
         path: 'usuario/alterarSenha/:id',
         title: 'Alterar Senha',
-        component: ChangePasswordComponent
-        //canActivate: [AuthGuard]
+        component: ChangePasswordComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'usuario/listagem',

@@ -159,7 +159,9 @@ export class UserInfoComponent implements OnInit{
   }
 
   navigateToChangePassword(){
-    this.router.navigate(['/usuario/alterarSenha', this.userId]);
+    console.log(this.user?.userId);
+    this.router.navigate(['/usuario/alterarSenha', this.user?.userId]);
+    
   }
 
   cancel(){

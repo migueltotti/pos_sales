@@ -40,8 +40,8 @@
                         <option value="2">Administrador</option>
                     </select>
                 </div>
-                <div class="col-7 order-4 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
-                    <i (click)="navigateToChangePassword()" class="nowrap-label fw-bold">Alterar Senha</i>
+                <div class="col-7 order-4 mt-1 d-flex align-items-end" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
+                    <a (click)="navigateToChangePassword()" class="nowrap-label fw-bold ms-2">Alterar Senha</a>
                 </div>
                 <div class="col-5 order-5 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
                     <label for="dateBirth" class="form-label mx-1 my-0 text-black nowrap-label">Data de Nascimento:</label>
