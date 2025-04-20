@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { WorkDay } from '../../../entities/workDay';
 import { Observable } from 'rxjs/internal/Observable';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { NumberOfOrderByDate } from '../../../entities/numberOfOrderByDate';
 
 Chart.register(...registerables);
 Chart.defaults.color = 'rgba(255, 255, 255, 1)'
@@ -225,20 +226,28 @@ export class HomeComponent implements OnInit{
   }
 
   getOrders(){
+    let numberOfOrdersByDate: NumberOfOrderByDate[] = [];
+
+    const last8Sundays = (this.getLast8Sundays()).reverse();
+    var numberOfOrders = new Map<string, number>()
+    last8Sundays.forEach(s => {
+      var date = s.split('/');
+      numberOfOrders.set(date[2]+'-'+date[1]+'-'+date[0], 0)
+    })
+
     this.orderService.getNumberOfOrdersFromTodayToLast8Weeks().
     subscribe({
       next: (res) => {
-        res.body?.forEach(day => {
-          this.ordersDataValues.push(day.numberOfOrders)
-        });
+        numberOfOrdersByDate = res.body || [];
 
-        if(this.ordersDataValues.length < 8){
-          for (let i = this.ordersDataValues.length; i < 8; i++) {
-            this.ordersDataValues.push(0);
-          }
+        numberOfOrdersByDate.forEach(no => numberOfOrders.set(no.date, no.numberOfOrders));
+
+        var numberOfOrderList = Array.from(numberOfOrders.values());
+
+        // Data Principal Chart
+        for(let i = 0; i < 8; i++){
+          this.ordersDataValues.push(numberOfOrderList[i]);
         }
-
-        this.ordersDataValues = this.ordersDataValues.reverse();
 
         // Data First Chart
         for (let i = 0; i < 4; i++) {
