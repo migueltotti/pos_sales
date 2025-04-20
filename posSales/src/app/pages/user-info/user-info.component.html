@@ -41,11 +41,7 @@
                     </select>
                 </div>
                 <div class="col-7 order-4 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
-                    <label for="password" class="form-label mx-1 my-0 text-black nowrap-label">Senha:</label>
-                    <input type="text" class="form-control input-fields mx-1 shadow-lg" id="password" [(ngModel)]="password" style="max-width: 300px;" [disabled]="!isEditionMode">
-                    <div class="invalid-feedback" [ngClass]="{'d-block': isPasswordInvalid, 'd-none': !isPasswordInvalid}">
-                        Senha deve ter pelo menos 8 caracteres, uma letra maiuscula, uma minuscula e um caracter especial.
-                    </div>
+                    <i (click)="navigateToChangePassword()" class="nowrap-label fw-bold">Alterar Senha</i>
                 </div>
                 <div class="col-5 order-5 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
                     <label for="dateBirth" class="form-label mx-1 my-0 text-black nowrap-label">Data de Nascimento:</label>

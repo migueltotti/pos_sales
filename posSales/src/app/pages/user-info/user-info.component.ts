@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import Toast from 'bootstrap/js/dist/toast';
 import { AuthService } from '../../../services/auth.service';
 import { Subscription, switchMap } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 const successToast = 'Usuario editado com sucesso!';
 const failedToast = 'Erro ao editar usuario!';
@@ -34,6 +34,7 @@ export class UserInfoComponent implements OnInit{
 
   isEditionMode = false;
 
+  userId!: number;
   name = '';
   email = '';
   cpf = '';
@@ -53,7 +54,8 @@ export class UserInfoComponent implements OnInit{
   constructor(
     private userService: UserService,
     private authService: AuthService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ){}
 
   ngOnInit(): void {
@@ -64,10 +66,10 @@ export class UserInfoComponent implements OnInit{
       }
     );
 
-    const userId = this.route.snapshot.params['id'];
+    this.userId = this.route.snapshot.params['id'];
 
-    if(userId && this.isAdmin){
-      this.getUser(userId!);
+    if(this.userId && this.isAdmin){
+      this.getUser(this.userId!);
     }
     else{
       const userIdLogged = this.authService.getUserIdFromStorage();
@@ -154,6 +156,10 @@ export class UserInfoComponent implements OnInit{
         //this.isDateBirthInvalid = true;
       }
     })
+  }
+
+  navigateToChangePassword(){
+    this.router.navigate(['/usuario/alterarSenha', this.userId]);
   }
 
   cancel(){

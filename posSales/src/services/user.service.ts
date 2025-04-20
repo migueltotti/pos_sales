@@ -3,6 +3,7 @@ import { catchError, of, tap, throwError } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { User } from '../entities/user';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { EncryptService } from './encrypt.service';
 
 const apiUrl = 'https://localhost:44373/api/Users';
 var httpOptions = {headers: new HttpHeaders({
@@ -15,7 +16,10 @@ var token: string | null;
 })
 export class UserService {
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private encryptService: EncryptService
+  ) { }
 
   montarHeaderToken() {
     token = sessionStorage.getItem("jwt");
@@ -89,6 +93,29 @@ export class UserService {
     return this.http.put<User>(
       url,
       user,
+      { headers: httpOptions.headers, observe: 'response' }
+    ).pipe(
+      tap((User: any) => console.log('user created successfully')),
+      catchError(err => {
+        console.error('Erro capturado no serviço:', err);
+        return throwError(() => err);
+      })
+    )
+  }
+
+  changeUserPassword(userId: number, oldPassword: string, newPassword: string): Observable<HttpResponse<User>>{
+    const url = `${apiUrl}/ChangePassword/${userId}`
+
+    this.montarHeaderToken();
+
+    const encryptedOldPassword = this.encryptService.encryptByRSA(oldPassword);
+    const encryptedNewPassword = this.encryptService.encryptByRSA(newPassword);
+
+    console.log(encryptedNewPassword);
+
+    return this.http.put<User>(
+      url,
+      {userId: userId, oldPassword: encryptedOldPassword, newPassword: encryptedNewPassword},
       { headers: httpOptions.headers, observe: 'response' }
     ).pipe(
       tap((User: any) => console.log('user created successfully')),

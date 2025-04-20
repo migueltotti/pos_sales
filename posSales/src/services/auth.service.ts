@@ -7,6 +7,7 @@ import { LoginRefreshToken } from '../entities/loginRefreshToken';
 import { Router } from '@angular/router';
 import { LoginModel } from '../entities/loginModel';
 import * as forge from 'node-forge'
+import { EncryptService } from './encrypt.service';
 
 const apiLoginUrl = 'https://localhost:44373/api/Auth/Login';
 var httpOptions = {
@@ -15,14 +16,7 @@ var httpOptions = {
   })
 };
 
-const publicRSAKey: string = `-----BEGIN PUBLIC KEY-----
-                              MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQ
-                              DCqU1vHWDMHHiUofJTdL4TMcetd+6tvtk5MLfx
-                              szqPkKoN7f6FrymNeRYpIwarz1QaLVHBcLXbHg
-                              D2W8qCVA08esEq8nvr5eAUvaU0HpmDv+lQPp/0
-                              LgG4A8HIFVAwLt3PWaef+M5QaVazN/zcxZERLD
-                              gxB2E6N+Q17WkjKc8PlwIDAQAB
-                              -----END PUBLIC KEY-----` 
+
 
 @Injectable({
   providedIn: 'root'
@@ -39,14 +33,13 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private encryptService: EncryptService
   ) {}
 
   login (loginModel: LoginModel) : Observable<HttpResponse<LoginResponse>>{
-    // Set the rsa algo with the public key
-    var rsa = forge.pki.publicKeyFromPem(publicRSAKey);
-    // Encrypt password => bytes array; Convert the bytes array to base64 string;
-    var encryptedPassword = window.btoa(rsa.encrypt(loginModel.password))
+    
+    var encryptedPassword = this.encryptService.encryptByRSA(loginModel.password);
 
     loginModel.password = encryptedPassword;
 

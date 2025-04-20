@@ -12,6 +12,7 @@ import { WorkDayGuard } from '../services/work-day.guard';
 import { CreateUserComponent } from './pages/create-user/create-user.component';
 import { UserInfoComponent } from './pages/user-info/user-info.component';
 import { UsersListComponent } from './pages/users-list/users-list.component';
+import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 
 export const routes: Routes = [
     {
@@ -67,6 +68,12 @@ export const routes: Routes = [
         title: 'Criação de Usuário',
         component: CreateUserComponent,
         canActivate: [AuthGuard]
+    },
+    {
+        path: 'usuario/alterarSenha/:id',
+        title: 'Alterar Senha',
+        component: ChangePasswordComponent
+        //canActivate: [AuthGuard]
     },
     {
         path: 'listaUsuarios',
