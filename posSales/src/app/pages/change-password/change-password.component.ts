@@ -63,7 +63,7 @@ export class ChangePasswordComponent implements OnInit{
       next: (res) => {
         this.isLoading = false;
         this.showSuccessToast(successToast);
-        this.router.navigate(['/configUsuario', this.userId]);
+        this.router.navigate(['/usuario/config', this.userId]);
       },
       error: (err) => {
         this.isLoading = false;
@@ -85,32 +85,6 @@ export class ChangePasswordComponent implements OnInit{
     this.oneNumber = this.newPassword.search(/^(?=.*[0-9])/) > -1 ? true : false;
     this.oneSpecialCaracter = this.newPassword.search(/^(?=.*[!@#$%^&*()_+])/) > -1 ? true : false;
     this.min8Max30Caracters = (8 <= this.newPassword.length && this.newPassword.length <= 30) ? true : false;
-
-    /*if(this.newPassword.search(/^(?=.*[a-z])/) > 0)
-      this.oneLowerCaseLetter = true;
-    else
-      this.oneLowerCaseLetter = false;
-
-    if(this.newPassword.search(/^(?=.*[A-Z])/) > 0)
-      this.oneUpperCaseLetter = true;
-    else
-      this.oneUpperCaseLetter = false;
-
-    if(this.newPassword.search(/^(?=.*[0-9])/) > 0)
-      this.oneNumber = true;
-    else
-      this.oneNumber = false;
-
-    if(this.newPassword.search(/^(?=.*[!@#$%^&*()_+])/) > 0)
-      this.oneSpecialCaracter = true;
-    else
-      this.oneSpecialCaracter = false;
-
-    if(8 <= this.newPassword.length || this.newPassword.length <= 30)
-      this.min8Max30Caracters = true;
-    else
-      this.min8Max30Caracters = false;*/
-
   }
 
   @HostListener('window:resize', ['$event'])

@@ -328,7 +328,7 @@ export class HomeComponent implements OnInit{
         this.workDay = res.body;
         this.workDayService.isWorkDayInProgressSubject.next(true);
         this.showSuccessToast(successStartWorkDayToast);
-        this.router.navigate(['/configEstoque']);
+        this.router.navigate(['/estoque/config']);
       },
       error: (err) => {
         this.isStartingLoading = false;

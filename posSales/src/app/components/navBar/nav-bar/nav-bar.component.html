@@ -8,9 +8,9 @@
 
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link" aria-current="page" routerLink="/cadastroPedidos">Cadastro de Pedidos</a>
+                <a class="nav-link" aria-current="page" routerLink="/pedidos/registro">Registro de Pedidos</a>
                 <a class="nav-link" routerLink="/pedidos">Pedidos</a>
-                <a class="nav-link" routerLink="/configEstoque">Configuração de Estoque</a>
+                <a class="nav-link" routerLink="/estoque/config">Configuração de Estoque</a>
                 <a class="nav-link" routerLink="/relatorio">Relatório</a>
                 <div class="dropdown" [ngClass]="{'d-block': isAdmin, 'd-none': !isAdmin}">
                   <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" 
@@ -18,8 +18,8 @@
                     Usuários
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" routerLink="/listaUsuarios">Listagem</a></li>
-                    <li><a class="dropdown-item" routerLink="/criarUsuario">Criar Usuário</a></li>
+                    <li><a class="dropdown-item" routerLink="/usuario/listagem">Listagem</a></li>
+                    <li><a class="dropdown-item" routerLink="/usuario/criar">Criar Usuário</a></li>
                   </ul>
                 </div>
             </div>  
@@ -40,7 +40,7 @@
           </a>
           <ul class="dropdown-menu" style="margin-top: 25px; margin-right: -70px;">
               <li>
-                <a class="dropdown-item" routerLink="/configUsuario">Configurações</a>
+                <a class="dropdown-item" routerLink="/usuario/config">Configurações</a>
               </li>
               <li><a class="dropdown-item" routerLink="/login"
                 [ngClass]="{'d-block': !isLoggedIn, 'd-none': isLoggedIn}">
@@ -48,7 +48,7 @@
                 </a>
               </li>
               <li>
-                <a class="dropdown-item" routerLink="/criarUsuario">Criar Usuario</a>
+                <a class="dropdown-item" routerLink="/usuario/criar">Criar Usuario</a>
               </li>
               <li><a class="d-none dropdown-item" data-bs-toggle="modal" data-bs-target="#logoutModal"
                   [ngClass]="{'d-block': isLoggedIn, 'd-none': !isLoggedIn}">
@@ -72,19 +72,19 @@
     <div class="offcanvas-body">
         <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link" style="color: black;" aria-current="page" routerLink="/cadastroPedidos">Cadastro de Pedidos</a>
+              <a class="nav-link" style="color: black;" aria-current="page" routerLink="/pedidos/registro">Registro de Pedidos</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" style="color: black;" routerLink="/pedidos">Pedidos</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" style="color: black;" routerLink="/configEstoque">Configuração de Estoque</a>
+              <a class="nav-link" style="color: black;" routerLink="/estoque/config">Configuração de Estoque</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" style="color: black;" routerLink="/relatorio">Relatório</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" style="color: black;" routerLink="/criarUsuario">Criar Usuário</a>
+              <a class="nav-link" style="color: black;" routerLink="/usuario/listagem">Listagem de Usuário</a>
             </li>
           </ul>
     </div>

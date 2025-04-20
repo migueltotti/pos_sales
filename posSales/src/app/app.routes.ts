@@ -16,7 +16,7 @@ import { ChangePasswordComponent } from './pages/change-password/change-password
 
 export const routes: Routes = [
     {
-        path: 'cadastroPedidos',
+        path: 'pedidos/registro',
         title: 'POS',
         component: CreateOrderComponent,
         canActivate: [AuthGuard, WorkDayGuard]
@@ -40,7 +40,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'configEstoque',
+        path: 'estoque/config',
         title: 'Configuração de Estoque',
         component: DailyStockComponent,
         canActivate: [AuthGuard, WorkDayGuard]
@@ -52,19 +52,19 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'configUsuario',
+        path: 'usuario/config',
         title: 'Configuração de Usuario',
         component: UserInfoComponent,
         canActivate: [AuthGuard]
     },
     {
-        path: 'configUsuario/:id',
+        path: 'usuario/config/:id',
         title: 'Configuração de Usuario',
         component: UserInfoComponent,
         canActivate: [AuthGuard]
     },
     {
-        path: 'criarUsuario',
+        path: 'usuario/criar',
         title: 'Criação de Usuário',
         component: CreateUserComponent,
         canActivate: [AuthGuard]
@@ -76,7 +76,7 @@ export const routes: Routes = [
         //canActivate: [AuthGuard]
     },
     {
-        path: 'listaUsuarios',
+        path: 'usuario/listagem',
         title: 'Listagem de Usuarios',
         component: UsersListComponent,
         canActivate: [AuthGuard]

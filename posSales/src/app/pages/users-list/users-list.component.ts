@@ -67,7 +67,7 @@ export class UsersListComponent implements OnInit{
   catchEvent(option: number){
     if(this.userId != 0){
       if(option == 1){
-        this.router.navigate(['/configUsuario', this.userId])
+        this.router.navigate(['/usuario/config', this.userId])
       }
       else{
         this.userDeleteModal.openModal();
