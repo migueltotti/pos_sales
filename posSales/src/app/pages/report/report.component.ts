@@ -1,23 +1,22 @@
-import { AfterViewInit, Component, HostListener, NgModule, OnInit } from '@angular/core';
-import { Product } from '../../../entities/product';
-import { OrderInput } from '../../../entities/orderInput';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { OrderOutput } from '../../../entities/orderOutput';
-import { FormsModule, NgModel } from '@angular/forms';
-import { CommonModule, NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import Collapse from 'bootstrap/js/dist/collapse';
 import { OrderCardComponent } from "../../components/orderCard/order-card/order-card.component";
-import { LineItemOutput } from '../../../entities/lineItemOutput';
 import Toast from 'bootstrap/js/dist/toast';
 import { OrderService } from '../../../services/order.service';
 import { ModalComponent } from "../../components/modal/modal.component";
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { HttpStatusCode } from '@angular/common/http';
 import { OrderReport } from '../../../entities/orderReport';
 import { WorkDay } from '../../../entities/workDay';
 import { WorkDayService } from '../../../services/work-day.service';
 import { OrderUpdate } from '../../../entities/orderUpdate';
 import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
+import { ReportService } from '../../../services/report.service';
+import { ReportType } from '../../../entities/reportType';
+import { AuthService } from '../../../services/auth.service';
 
 const successCompleteToast = 'Pedido completo com sucesso!';
 const failedCompleteToast = 'Erro ao completar pedido!';
@@ -42,6 +41,10 @@ const failedExportToast = 'Erro ao exportar relatório!';
 export class ReportComponent implements OnInit{
   collapses: { id: string; collapse: Collapse; isOpen: boolean }[] = [];
   isSmallScreen: boolean = window.innerWidth <= 500;
+  reportTypeOptions = [
+    { label: 'Excel', value: ReportType.Excel },
+    { label: 'PDF', value: ReportType.PDF }
+  ];
 
   ordersReport!: OrderReport | null;
   workDay!: WorkDay | null;
@@ -56,31 +59,25 @@ export class ReportComponent implements OnInit{
   estimatedRevenue = 0;
   orderAmount = 0;
   ordersCanceled = 0;
-  exportType = '';
+  exportType = 1;
 
   toastMessage = '';
 
   modalBody = '';
   modalTitle = '';
 
-  constructor(private orderService: OrderService, private workDayService: WorkDayService) {}
+  constructor(
+    private orderService: OrderService, 
+    private workDayService: WorkDayService,
+    private reportService: ReportService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    //this.orders = testOrders;
-    // get today orders
-    //this.searchByDate(this.date);
-
-    //this.employee = this.workDay?.employeeName!;
-    //this.estimatedRevenue = this.ordersReport?.totalValue!;
-    //this.orderAmount = this.workDay?.numberOfOrders!;
-    //this.ordersCanceled = this.workDay?.numberOfCanceledOrders!;
-
     this.todayDate = new Date().toLocaleDateString('pt-BR').split('/').reverse().join('-');
   }
 
   searchByDate(date: string){
-    console.log(date);
-
     this.searchReportByDate(date);
     this.getWorkDayByDate(date);
   }
@@ -117,7 +114,19 @@ export class ReportComponent implements OnInit{
   }
 
   exportReport(){
-    // export report
+    this.reportService.sendReportTo(
+      this.date,
+      this.authService.getUserEmailFromStorage()!,
+      this.exportType
+    ).subscribe({
+      next: (res) => {
+        this.showSuccessToast(successExportToast);
+      },
+      error: (err) => {
+        console.log(err);
+        this.showFailToast(failedExportToast);
+      }
+    })
   }
 
   returnOrder(orderId: number){
@@ -174,7 +183,6 @@ export class ReportComponent implements OnInit{
 
   triggerModal(){
     var ord = this.ordersReport?.orders.find(o => o.orderId == this.orderId)!;
-    console.log(ord);
 
     this.modalTitle = 'Retornar Produto';
 

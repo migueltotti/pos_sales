@@ -196,6 +196,15 @@ export class AuthService {
     return true;
   }
 
+  getUserEmailFromStorage(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const email = sessionStorage.getItem('email')!;
+    
+    return email;
+  }
+
   getUserNameFromStorage(): string | null {
     const token = this.getToken();
     if (!token) return null;

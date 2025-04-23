@@ -41,12 +41,11 @@
 
         <div class="col-4 col-sm-3 col-12 d-flex flex-column mt-2 mb-3">
             <label for="reportOrderAmount" class="form-label mx-1 my-0" style="color: white;">Exportar Relatório:</label>
-            <select class="form-select input-fields w-75" aria-label="Default select example">
-                <option value="1" selected>Excel</option>
-                <option value="2">PDF</option>
-                <option value="3">WORD</option>
-                <option value="3">Email</option>
-              </select>
+            <select class="form-select input-fields w-75" aria-label="Default select example" [(ngModel)]="exportType">
+                <option *ngFor="let option of reportTypeOptions" [value]="option.value">
+                    {{ option.label }}
+                </option>
+            </select>
 
             <button type="button" class="btn btn-export fw-bold text-black mx-0 mt-1 w-50" (click)="exportReport()">
                 EXPORTAR

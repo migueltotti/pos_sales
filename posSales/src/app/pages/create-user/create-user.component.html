@@ -34,18 +34,23 @@
                 </div>
                 <div class="col-4 order-3 mt-1" [ngClass]="{'col-12 order-5 offset-1': isFirstBreakPoint}">
                     <label for="role" class="form-label mx-1 my-0 text-black nowrap-label">Função:</label>
-                    <select  type="text" class="form-select input-fields mx-1 shadow-lg" id="role" [(ngModel)]="role" style="max-width: 300px;">
-                        <option value="0">Cliente</option>
-                        <option value="1">Empregado</option>
-                        <option value="2">Administrador</option>
+                    <select  type="text" class="form-select input-fields mx-1 shadow-lg" id="role" [(ngModel)]="role" (ngModelChange)="role = +$event" style="max-width: 300px;">
+                        <option *ngFor="let option of roleOptions" [value]="option.value">
+                            {{ option.label }}
+                        </option>
                     </select>
                 </div>
-                <div class="col-7 order-4 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
+                <div class="col-7 order-4 mt-1 position-relative" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
                     <label for="password" class="form-label mx-1 my-0 text-black nowrap-label">Senha:</label>
-                    <input type="text" class="form-control input-fields mx-1 shadow-lg" id="password" [(ngModel)]="password" style="max-width: 300px;">
+                    <input [type]="PasswordVisibilityType" class="form-control input-fields mx-1 shadow-lg" id="password" [(ngModel)]="password" style="max-width: 300px;">
                     <div class="invalid-feedback" [ngClass]="{'d-block': isPasswordInvalid, 'd-none': !isPasswordInvalid}">
                         Senha deve ter pelo menos 8 caracteres, uma letra maiuscula, uma minuscula e um caracter especial.
                     </div>
+                    <button type="button" class="btn position-absolute translate-middle-y me-2"
+                        style="top: 70%; right: 15%; margin-right: 0px !important;"
+                        (click)="togglePasswordVisibility()">
+                        <i [ngClass]="isPasswordVisible ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                    </button>
                 </div>
                 <div class="col-5 order-5 mt-1" [ngClass]="{'col-12 offset-1': isFirstBreakPoint}">
                     <label for="dateBirth" class="form-label mx-1 my-0 text-black nowrap-label">Data de Nascimento:</label>

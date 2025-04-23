@@ -5,6 +5,8 @@ import { User } from '../../../entities/user';
 import { FormsModule } from '@angular/forms';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import Toast from 'bootstrap/js/dist/toast';
+import { Role } from '../../../entities/role';
+import { EncryptService } from '../../../services/encrypt.service';
 
 const successToast = 'Usuario criado com sucesso!';
 const failedToast = 'Erro ao criar usuario!';
@@ -26,12 +28,20 @@ export class CreateUserComponent implements OnInit{
   isFirstBreakPoint: boolean = window.innerWidth <= 620;
   isSecondBreakPoint: boolean = window.innerWidth <= 540;
   isThirdBreakPoint: boolean = window.innerWidth <= 620;
+  isPasswordVisible = false;
+  PasswordVisibilityType = 'password'
+
+  roleOptions = [
+    { label: 'Cliente', value: Role.CLIENT },
+    { label: 'Empregado', value: Role.EMPLOYEE },
+    { label: 'Administrador', value: Role.ADMIN }
+  ];
 
   name = '';
   email = '';
   cpf = '';
   password = '';
-  role = 0;
+  role: number = 0;
   dateBirth = '';
   user!: User;
 
@@ -44,7 +54,8 @@ export class CreateUserComponent implements OnInit{
   //isDateBirthInvalid = false;
 
   constructor(
-    private userService: UserService
+    private userService: UserService,
+    private encryptService: EncryptService
   ){}
 
   ngOnInit(): void {
@@ -75,7 +86,7 @@ export class CreateUserComponent implements OnInit{
       0, 
       this.name, 
       this.email, 
-      this.password, 
+      this.encryptService.encryptByRSA(this.password), 
       this.cpf,
       0,
       `${year}-${month}-${day}`,
@@ -83,17 +94,16 @@ export class CreateUserComponent implements OnInit{
       this.role
     );
 
+    console.log(this.user);
+    console.log(typeof(this.role))
+
     this.userService.createUser(this.user)
     .subscribe({
       next: (res) => {
         if(res.ok){
           this.showSuccessToast(successToast);
           this.isLoading = false;
-          this.name = ''; 
-          this.email = ''; 
-          this.cpf = ''; 
-          this.password = ''; 
-          this.dateBirth = '';
+          this.cancel()
         }
       },
       error: (err) => {
@@ -115,6 +125,7 @@ export class CreateUserComponent implements OnInit{
     this.cpf = ''; 
     this.password = ''; 
     this.dateBirth = '';
+    this.role = 0;
   }
 
   @HostListener('window:resize', ['$event'])
@@ -122,6 +133,11 @@ export class CreateUserComponent implements OnInit{
     this.isFirstBreakPoint = window.innerWidth <= 620;
     this.isSecondBreakPoint = window.innerWidth <= 540;
     //console.log(this.isSmallScreen);
+  }
+
+  togglePasswordVisibility() {
+    this.isPasswordVisible = !this.isPasswordVisible;
+    this.PasswordVisibilityType = this.isPasswordVisible == true ? 'text' : 'password'
   }
 
   showSuccessToast(text: string){
