@@ -4,7 +4,7 @@
             <i class="bi bi-list"></i>
           </button>
 
-        <a class="navbar-brand" href="/home">Sales POS</a>
+        <a class="navbar-brand" routerLink="/home">Sales POS</a>
 
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
@@ -42,13 +42,16 @@
               <li>
                 <a class="dropdown-item" routerLink="/usuario/config">Configurações</a>
               </li>
+              <li>
+                <a class="dropdown-item" routerLink="/usuario/criar"
+                [ngClass]="{'d-block': isAdmin, 'd-none': !isAdmin}">
+                  Criar Usuario
+                </a>
+              </li>
               <li><a class="dropdown-item" routerLink="/login"
                 [ngClass]="{'d-block': !isLoggedIn, 'd-none': isLoggedIn}">
                   Log In
                 </a>
-              </li>
-              <li>
-                <a class="dropdown-item" routerLink="/usuario/criar">Criar Usuario</a>
               </li>
               <li><a class="d-none dropdown-item" data-bs-toggle="modal" data-bs-target="#logoutModal"
                   [ngClass]="{'d-block': isLoggedIn, 'd-none': !isLoggedIn}">
@@ -83,8 +86,11 @@
             <li class="nav-item">
               <a class="nav-link" style="color: black;" routerLink="/relatorio">Relatório</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" [ngClass]="{'d-block': isAdmin, 'd-none': !isAdmin}">
               <a class="nav-link" style="color: black;" routerLink="/usuario/listagem">Listagem de Usuário</a>
+            </li>
+            <li class="nav-item" [ngClass]="{'d-block': isAdmin, 'd-none': !isAdmin}">
+              <a class="nav-link" style="color: black;" routerLink="/usuario/criar">Criar novo Usuário</a>
             </li>
           </ul>
     </div>

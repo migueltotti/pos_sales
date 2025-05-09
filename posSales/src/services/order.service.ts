@@ -7,8 +7,9 @@ import { OrderInput } from '../entities/orderInput';
 import { OrderOutput } from '../entities/orderOutput';
 import { NumberOfOrderByDate } from '../entities/numberOfOrderByDate';
 import { OrderReport } from '../entities/orderReport';
+import { environment } from '../environments/environment';
 
-const apiUrl = 'https://localhost:44373/api/Orders';
+const apiUrl = `${environment.apiUrl}/Orders`;
 var httpOptions = {
   headers: new HttpHeaders({
   'Content-Type': 'application/json'

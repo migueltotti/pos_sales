@@ -4,8 +4,9 @@ import { Observable } from 'rxjs/internal/Observable';
 import { User } from '../entities/user';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { EncryptService } from './encrypt.service';
+import { environment } from '../environments/environment';
 
-const apiUrl = 'https://localhost:44373/api/Users';
+const apiUrl = `${environment.apiUrl}/Users`;
 var httpOptions = {headers: new HttpHeaders({
   "Content-Type": "application/json"
 })};

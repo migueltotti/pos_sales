@@ -2,8 +2,9 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
 import { WorkDay } from '../entities/workDay';
+import { environment } from '../environments/environment';
 
-const apiUrl = 'https://localhost:44373/api/WorkDays';
+const apiUrl = `${environment.apiUrl}/WorkDays`;
 var httpOptions = {
   headers: new HttpHeaders({
   'Content-Type': 'application/json'

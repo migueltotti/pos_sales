@@ -3,8 +3,9 @@ import { catchError, Observable, of, tap, throwError } from 'rxjs';
 import { Product } from '../entities/product';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { NumberOfProduct } from '../entities/numberOfProduct ';
+import { environment } from '../environments/environment';
 
-const apiUrl = 'https://localhost:44373/api/Products';
+const apiUrl = `${environment.apiUrl}/Products`;
 var httpOptions = {headers: new HttpHeaders({
   "Content-Type": "application/json"
 })};

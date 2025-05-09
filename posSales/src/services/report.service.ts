@@ -2,8 +2,9 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ReportType } from '../entities/reportType';
 import { catchError, Observable, of, switchMap, tap, throwError } from 'rxjs';
+import { environment } from '../environments/environment';
 
-const apiUrl = 'https://localhost:44373/api/Orders';
+const apiUrl = `${environment.apiUrl}/Orders`;
 var httpOptions = {
   headers: new HttpHeaders({
   'Content-Type': 'application/json'

@@ -8,8 +8,9 @@ import { Router } from '@angular/router';
 import { LoginModel } from '../entities/loginModel';
 import * as forge from 'node-forge'
 import { EncryptService } from './encrypt.service';
+import { environment } from '../environments/environment';
 
-const apiLoginUrl = 'https://localhost:44373/api/Auth/Login';
+const apiLoginUrl = `${environment.apiUrl}/Auth/Login`;
 var httpOptions = {
   headers: new HttpHeaders({
   'Content-Type': 'application/json'

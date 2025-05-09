@@ -3,8 +3,9 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, of, tap } from 'rxjs';
 import { Category } from '../entities/category';
 import { Product } from '../entities/product';
+import { environment } from '../environments/environment';
 
-const apiUrl = 'https://localhost:44373/api/Categories';
+const apiUrl = `${environment.apiUrl}/Categories`;
 var httpOptions = {
   headers: new HttpHeaders({
   'Content-Type': 'application/json'
