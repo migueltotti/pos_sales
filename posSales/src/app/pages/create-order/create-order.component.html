@@ -76,7 +76,19 @@
                             (click)="getAllProductsByName()"
                         ><i class="bi bi-search"></i>
                     </button>
-                    <input type="text" class="form-control search-input" style="color: black; border-radius: 0 0.75rem 0.75rem 0;" [(ngModel)]="prodName" placeholder="" aria-label="" aria-describedby="addon-wrapping">
+                    <!--<input type="text" class="form-control search-input" style="color: black; border-radius: 0 0.75rem 0.75rem 0; min-width: 260px; max-width: 500px;" [(ngModel)]="prodName" placeholder="" aria-label="" aria-describedby="addon-wrapping">
+                    -->
+                    <div class="w-100" style="position: relative;">
+                        <input type="text" class="form-control search-input" style="color: black; border-radius: 0 0.75rem 0.75rem 0; min-width: 260px; max-width: 500px;" [(ngModel)]="prodName" placeholder="" aria-label="" aria-describedby="addon-wrapping">
+                        
+                        <button class="btn btn-sm btn-outline-secondary search-input" 
+                            style="color: #7D0009; border-radius: 0 0.75rem 0.75rem 0; position: absolute; top: 1%; right: 0%" 
+                            type="button" id="button-addon1"
+                            (click)="getAllProducts()"
+                            ><i class="bi bi-x search-input text-black fs-5"></i>
+                        </button>
+                    </div>
+                    
                 </div>
                 @for (cat of categories; track $index) {
                     <button type="button" 

@@ -7,6 +7,7 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import Toast from 'bootstrap/js/dist/toast';
 import { Role } from '../../../entities/role';
 import { EncryptService } from '../../../services/encrypt.service';
+import { Router } from '@angular/router';
 
 const successToast = 'Usuario criado com sucesso!';
 const failedToast = 'Erro ao criar usuario!';
@@ -55,7 +56,8 @@ export class CreateUserComponent implements OnInit{
 
   constructor(
     private userService: UserService,
-    private encryptService: EncryptService
+    private encryptService: EncryptService,
+    private router: Router
   ){}
 
   ngOnInit(): void {
@@ -104,6 +106,7 @@ export class CreateUserComponent implements OnInit{
           this.showSuccessToast(successToast);
           this.isLoading = false;
           this.cancel()
+          this.router.navigate(['/home']);
         }
       },
       error: (err) => {
