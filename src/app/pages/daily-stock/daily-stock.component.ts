@@ -8,7 +8,7 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ProductService } from '../../../services/product.service';
 import { CategoryService } from '../../../services/category.service';
 import { ModalComponent } from '../../components/modal/modal.component';
-import { switchMap } from 'rxjs';
+import { catchError, of, switchMap } from 'rxjs';
 import Toast from 'bootstrap/js/dist/toast';
 
 const testCategories = [
@@ -191,9 +191,18 @@ export class DailyStockComponent implements AfterViewInit, OnInit{
   }
 
   createProduct(prod: Product){
+    var success = false;
+    this.isLoadind = true;
     this.productService.createProduct(prod)
     .pipe(
+      catchError((err) => {
+        this.isLoadind = false;
+        console.log(err);
+        // Continua a stream para ainda buscar os produtos
+        return of({ ok: false });
+      }),
       switchMap((data) => {
+        // Se falhou na criação, ainda assim busca os produtos
         return this.productService.getProducts();
       })
     )
@@ -201,22 +210,39 @@ export class DailyStockComponent implements AfterViewInit, OnInit{
       next: (data) => {
         if(data.ok){
           this.products = data.body || [];
+          this.isLoadind = false;
           this.filterProducts();
-          this.showSuccessToast(successCreateToast);
+          success = true;
         }
       },
       error: (err) => {
+        this.isLoadind = false;
         this.showFailToast(failedCreateToast);
         console.log(err);
       }
     });
+
+    if(success){
+      this.showSuccessToast(successCreateToast);
+    }
+    else{
+      this.showFailToast(failedCreateToast);
+    }
   }
 
   saveProduct(prodId: number, product: Product){
+    var success = false;
+    this.isLoadind = true;
     this.productService.updateProduct(prodId, product)
     .pipe(
+      catchError((err) => {
+        this.isLoadind = false;
+        console.log(err);
+        // Continua a stream para ainda buscar os produtos
+        return of({ ok: false });
+      }),
       switchMap((data) => {
-        console.log(data.statusText);
+        // Se falhou na criação, ainda assim busca os produtos
         return this.productService.getProducts();
       })
     )
@@ -224,18 +250,28 @@ export class DailyStockComponent implements AfterViewInit, OnInit{
       next: (data) => {
         if(data.ok){
           this.products = data.body || [];
+          this.isLoadind = false;
           this.filterProducts();
-          this.showSuccessToast(successUpdateToast);
+          success = true;
         }
       },
       error: (err) => {
+        this.isLoadind = false;
         this.showFailToast(faileUpdateToast);
         console.log(err);
       }
     });
+
+    if(success){
+      this.showSuccessToast(successCreateToast);
+    }
+    else{
+      this.showFailToast(failedCreateToast);
+    }
   }
 
   removeProduct(prodId: number){
+    this.isLoadind = true;
     this.productService.deleteProduct(prodId)
     .pipe(
       switchMap((data) => {
@@ -246,11 +282,13 @@ export class DailyStockComponent implements AfterViewInit, OnInit{
       next: (data) => {
         if(data.ok){
           this.products = data.body || [];
+          this.isLoadind = false;
           this.filterProducts();
           this.showSuccessToast(successDeleteToast);
         }
       },
       error: (err) => {
+        this.isLoadind = false;
         this.showFailToast(failedDeleteToast);
         console.log(err);
       }
